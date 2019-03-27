@@ -8,7 +8,7 @@ import static org.junit.Assert.assertEquals;
 
 public class StringsTest {
 
-    @org.junit.Test
+    @Test
     public void safeString() {
         assertEquals("a_b_c", Strings.safeString("a,b.c", "ab"));
         assertEquals("ab", Strings.safeString(null, "ab"));

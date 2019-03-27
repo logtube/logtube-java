@@ -53,18 +53,11 @@
     </scm>
 
     <dependencies>
-        <!-- SLF4J -->
+        <!-- SLF4J API -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.7.26</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>1.7.26</version>
-            <scope>test</scope>
         </dependency>
 
         <!-- Jetbrains Annotations -->
@@ -75,19 +68,11 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- JUNIT FOR TEST -->
+        <!-- JUnit -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- GSON FOR TEST -->
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.8.5</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
