@@ -1,10 +1,10 @@
-package io.github.logtube.slf4j;
+package io.github.logtube.classic;
 
 import org.slf4j.helpers.MarkerIgnoringBase;
 
-public class LogtubeLogger extends MarkerIgnoringBase {
+public class ClassicLogger extends MarkerIgnoringBase {
 
-    public LogtubeLogger(String name) {
+    public ClassicLogger(String name) {
     }
 
     @Override

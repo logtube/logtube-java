@@ -1,4 +1,4 @@
-package io.github.logtube.slf4j;
+package io.github.logtube.classic;
 
 import org.slf4j.ILoggerFactory;
 import org.slf4j.Logger;
@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-public class LogtubeLoggerFactory implements ILoggerFactory {
+public class ClassicLoggerFactory implements ILoggerFactory {
 
     private final ConcurrentMap<String, Logger> loggerMap = new ConcurrentHashMap<String, Logger>();
 
@@ -16,7 +16,7 @@ public class LogtubeLoggerFactory implements ILoggerFactory {
         if (simpleLogger != null) {
             return simpleLogger;
         } else {
-            Logger newInstance = new LogtubeLogger(name);
+            Logger newInstance = new ClassicLogger(name);
             Logger oldInstance = loggerMap.putIfAbsent(name, newInstance);
             return oldInstance == null ? newInstance : oldInstance;
         }
