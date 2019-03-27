@@ -1,5 +1,7 @@
-package io.github.logtube;
+package io.github.logtube.serializers;
 
+import io.github.logtube.Event;
+import io.github.logtube.EventBuilder;
 import org.junit.Test;
 
 import java.util.TimeZone;
