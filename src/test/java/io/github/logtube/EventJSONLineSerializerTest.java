@@ -2,12 +2,15 @@ package io.github.logtube;
 
 import org.junit.Test;
 
+import java.util.TimeZone;
+
 import static org.junit.Assert.assertEquals;
 
 public class EventJSONLineSerializerTest {
 
     @Test
     public void serialize() {
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));
         EventBuilder eb = new EventBuilder("test.example.com", "test-proj", "test");
         Event e = eb.timestamp(1553678195987L).message("hello, world").keyword("hello", "world").extra("duration", 1, "e", true).build();
         EventSerializer s = new EventJSONLineSerializer();
