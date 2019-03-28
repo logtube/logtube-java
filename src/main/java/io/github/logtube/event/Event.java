@@ -1,5 +1,6 @@
-package io.github.logtube;
+package io.github.logtube.event;
 
+import io.github.logtube.IEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -8,11 +9,7 @@ import java.util.HashMap;
 /**
  * Event logtube log event in compact format
  */
-public class Event {
-
-    public static final String EMPTY_CRID = "-";
-
-    public static final String EMPTY_TOPIC = "info";
+public class Event implements IEvent {
 
     private long timestamp;
 
@@ -20,7 +17,7 @@ public class Event {
     private String hostname = "";
 
     @NotNull
-    private String env = "";
+    private String environment = "";
 
     @NotNull
     private String project = "";
@@ -40,6 +37,7 @@ public class Event {
     @Nullable
     private HashMap<String, Object> extra;
 
+    @Override
     public long getTimestamp() {
         return timestamp;
     }
@@ -48,6 +46,7 @@ public class Event {
         this.timestamp = timestamp;
     }
 
+    @Override
     @NotNull
     public String getHostname() {
         return hostname;
@@ -57,13 +56,14 @@ public class Event {
         this.hostname = hostname;
     }
 
+    @Override
     @NotNull
-    public String getEnv() {
-        return env;
+    public String getEnvironment() {
+        return environment;
     }
 
-    public void setEnv(@NotNull String env) {
-        this.env = env;
+    public void setEnvironment(@NotNull String environment) {
+        this.environment = environment;
     }
 
     @NotNull
@@ -75,6 +75,7 @@ public class Event {
         this.project = project;
     }
 
+    @Override
     @NotNull
     public String getTopic() {
         return topic;
@@ -85,6 +86,7 @@ public class Event {
     }
 
 
+    @Override
     @NotNull
     public String getCrid() {
         return crid;
@@ -94,6 +96,7 @@ public class Event {
         this.crid = crid;
     }
 
+    @Override
     @Nullable
     public String getMessage() {
         return message;
@@ -103,6 +106,7 @@ public class Event {
         this.message = message;
     }
 
+    @Override
     @Nullable
     public String getKeyword() {
         return keyword;
@@ -112,6 +116,7 @@ public class Event {
         this.keyword = keyword;
     }
 
+    @Override
     @Nullable
     public HashMap<String, Object> getExtra() {
         return extra;

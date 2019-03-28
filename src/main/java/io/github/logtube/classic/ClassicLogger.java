@@ -1,15 +1,21 @@
 package io.github.logtube.classic;
 
+import io.github.logtube.Logtube;
 import org.slf4j.helpers.MarkerIgnoringBase;
+
+import static io.github.logtube.ILogger.*;
 
 public class ClassicLogger extends MarkerIgnoringBase {
 
+    private final String name;
+
     public ClassicLogger(String name) {
+        this.name = name;
     }
 
     @Override
     public boolean isTraceEnabled() {
-        return false;
+        return Logtube.isTopicEnabled(CLASSIC_TOPIC_TRACE);
     }
 
     @Override
@@ -34,7 +40,7 @@ public class ClassicLogger extends MarkerIgnoringBase {
 
     @Override
     public boolean isDebugEnabled() {
-        return false;
+        return Logtube.isTopicEnabled(CLASSIC_TOPIC_DEBUG);
     }
 
     @Override
@@ -63,7 +69,7 @@ public class ClassicLogger extends MarkerIgnoringBase {
 
     @Override
     public boolean isInfoEnabled() {
-        return false;
+        return Logtube.isTopicEnabled(CLASSIC_TOPIC_INFO);
     }
 
     @Override
@@ -93,7 +99,7 @@ public class ClassicLogger extends MarkerIgnoringBase {
 
     @Override
     public boolean isWarnEnabled() {
-        return false;
+        return Logtube.isTopicEnabled(CLASSIC_TOPIC_WARN);
     }
 
     @Override
@@ -122,7 +128,7 @@ public class ClassicLogger extends MarkerIgnoringBase {
 
     @Override
     public boolean isErrorEnabled() {
-        return false;
+        return Logtube.isTopicEnabled(CLASSIC_TOPIC_ERROR);
     }
 
     @Override

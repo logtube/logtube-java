@@ -1,7 +1,6 @@
 package io.github.logtube.serializers;
 
 import io.github.logtube.IEvent;
-import io.github.logtube.IEventSerializer;
 import io.github.logtube.utils.JSONWriter;
 import org.jetbrains.annotations.NotNull;
 
@@ -9,17 +8,15 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
 
-public class EventJSONSerializer implements IEventSerializer {
+public class EventFileJSONSerializer extends EventFileBaseSerializer {
 
     @Override
     public void serialize(@NotNull IEvent e, @NotNull Writer w) throws IOException {
+        super.serialize(e, w);
+
         JSONWriter j = new JSONWriter(w);
+
         j.beginObject();
-        j.name("t").value(e.getTimestamp());
-        j.name("h").value(e.getHostname());
-        j.name("e").value(e.getEnvironment());
-        j.name("p").value(e.getProject());
-        j.name("o").value(e.getTopic());
         j.name("c").value(e.getCrid());
         if (e.getMessage() != null) {
             j.name("m").value(e.getMessage());
@@ -35,7 +32,7 @@ public class EventJSONSerializer implements IEventSerializer {
             j.endObject();
         }
         j.endObject();
-        j.flush();
+        j.close();
     }
 
 }

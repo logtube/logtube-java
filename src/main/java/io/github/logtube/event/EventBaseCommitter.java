@@ -1,24 +1,24 @@
-package io.github.logtube;
+package io.github.logtube.event;
 
+import io.github.logtube.IEvent;
+import io.github.logtube.IEventCommitter;
 import io.github.logtube.utils.Strings;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 
 /**
- * EventBuilder builder for logtube Event
+ * EventBaseCommitter builder for logtube Event
  */
-public class EventBuilder {
+public class EventBaseCommitter implements IEventCommitter {
 
     private final Event event = new Event();
 
-    public EventBuilder(@NotNull String hostname, @NotNull String project, @NotNull String env) {
+    public EventBaseCommitter(@NotNull String hostname, @NotNull String project, @NotNull String env) {
         this.event.setHostname(hostname);
         this.event.setProject(project);
-        this.event.setEnv(env);
-        this.event.setTimestamp(System.currentTimeMillis());
+        this.event.setEnvironment(env);
     }
 
     /**
@@ -27,9 +27,9 @@ public class EventBuilder {
      * @param timestamp timestamp
      * @return builder
      */
+    @Override
     @NotNull
-    @Contract("_ -> this")
-    public EventBuilder timestamp(long timestamp) {
+    public EventBaseCommitter timestamp(long timestamp) {
         this.event.setTimestamp(timestamp);
         return this;
     }
@@ -40,10 +40,10 @@ public class EventBuilder {
      * @param topic topic
      * @return builder
      */
+    @Override
     @NotNull
-    @Contract("_ -> this")
-    public EventBuilder topic(@Nullable String topic) {
-        this.event.setTopic(Strings.safeString(topic, Event.EMPTY_TOPIC));
+    public EventBaseCommitter topic(@Nullable String topic) {
+        this.event.setTopic(Strings.safeString(topic, IEvent.EMPTY_TOPIC));
         return this;
     }
 
@@ -53,10 +53,10 @@ public class EventBuilder {
      * @param crid crid
      * @return builder
      */
+    @Override
     @NotNull
-    @Contract("_ -> this")
-    public EventBuilder crid(@Nullable String crid) {
-        this.event.setCrid(Strings.safeString(crid, Event.EMPTY_CRID));
+    public EventBaseCommitter crid(@Nullable String crid) {
+        this.event.setCrid(Strings.safeString(crid, IEvent.EMPTY_CRID));
         return this;
     }
 
@@ -66,9 +66,9 @@ public class EventBuilder {
      * @param message message
      * @return builder
      */
+    @Override
     @NotNull
-    @Contract("_ -> this")
-    public EventBuilder message(@NotNull String message) {
+    public EventBaseCommitter message(@NotNull String message) {
         this.event.setMessage(message);
         return this;
     }
@@ -79,9 +79,9 @@ public class EventBuilder {
      * @param keywords keyword
      * @return builder
      */
+    @Override
     @NotNull
-    @Contract("_ -> this")
-    public EventBuilder keyword(@NotNull String... keywords) {
+    public EventBaseCommitter keyword(@NotNull String... keywords) {
         if (this.event.getKeyword() == null) {
             this.event.setKeyword(String.join(",", keywords));
         } else {
@@ -96,9 +96,9 @@ public class EventBuilder {
      * @param kvs array of key-value
      * @return builder
      */
+    @Override
     @NotNull
-    @Contract("_ -> this")
-    public EventBuilder extra(@NotNull Object... kvs) {
+    public EventBaseCommitter extra(@NotNull Object... kvs) {
         if (kvs.length == 0 || kvs.length % 2 != 0) {
             throw new IllegalArgumentException("extra key value not match");
         }
@@ -120,6 +120,12 @@ public class EventBuilder {
     @NotNull
     public Event build() {
         return this.event;
+    }
+
+
+    @Override
+    public void commit() {
+        throw new RuntimeException("never call EventBaseCommitter#commit");
     }
 
 }

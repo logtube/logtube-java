@@ -1,30 +1,23 @@
 package io.github.logtube.serializers;
 
 import io.github.logtube.IEvent;
-import io.github.logtube.IEventSerializer;
-import io.github.logtube.utils.Strings;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
 
-public class EventConsoleSerializer implements IEventSerializer {
+public class EventFileRawSerializer extends EventFileBaseSerializer {
 
     @Override
     public void serialize(@NotNull IEvent e, @NotNull Writer w) throws IOException {
-        w.write(Strings.formatLineTimestampPrefix(e.getTimestamp()));
-        w.write(' ');
-        w.write(e.getEnvironment());
-        w.write('/');
-        w.write(e.getProject());
-        w.write('/');
-        w.write(e.getTopic());
-        w.write(" (");
+        super.serialize(e, w);
+
+        w.write("CRID[");
         w.write(e.getCrid());
-        w.write(")");
+        w.write("] ");
         if (e.getKeyword() != null) {
-            w.write(" [");
+            w.write("KEYWORD[");
             w.write(e.getKeyword());
             w.write("] ");
         }
