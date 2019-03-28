@@ -12,8 +12,8 @@ public class EventPlainFileOutput extends EventBaseFileOutput {
 
     private static final IEventSerializer SERIALIZER = new EventPlainFileSerializer();
 
-    public EventPlainFileOutput(@NotNull String dir) {
-        super(dir);
+    public EventPlainFileOutput(@NotNull String dir, @NotNull String signal) {
+        super(dir, signal);
     }
 
     @Override

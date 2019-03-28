@@ -2,6 +2,8 @@ package io.github.logtube.outputs;
 
 import io.github.logtube.IEvent;
 import io.github.logtube.IEventOutput;
+import io.github.logtube.utils.IntervalChecker;
+import io.github.logtube.utils.SignalChecker;
 import io.github.logtube.utils.TopicAware;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,10 +22,15 @@ public abstract class EventBaseFileOutput extends TopicAware implements IEventOu
 
     private final String dir;
 
+    private final SignalChecker signalChecker;
+
+    private final IntervalChecker signalIntervalChecker = new IntervalChecker(30 * 1000);
+
     private final HashMap<String, FileWriter> writers = new HashMap<>();
 
-    public EventBaseFileOutput(@NotNull String dir) {
+    public EventBaseFileOutput(@NotNull String dir, @NotNull String signal) {
         this.dir = dir;
+        this.signalChecker = new SignalChecker(signal);
     }
 
     private void closeWriters() throws IOException {
@@ -33,11 +40,20 @@ public abstract class EventBaseFileOutput extends TopicAware implements IEventOu
         writers.clear();
     }
 
-    private void closeWritersIfNeeded() {
-        // TODO: implements
+    private void closeWritersIfNeeded() throws IOException {
+        // skip if recently checked
+        if (!this.signalIntervalChecker.check()) {
+            return;
+        }
+        // skip if signal file not modified
+        if (!this.signalChecker.check()) {
+            return;
+        }
+        // reopen file
+        closeWriters();
     }
 
-    private FileWriter getWriter(@NotNull IEvent e) throws IOException {
+    private synchronized FileWriter getWriter(@NotNull IEvent e) throws IOException {
         // close unused files
         closeWritersIfNeeded();
 
@@ -61,14 +77,14 @@ public abstract class EventBaseFileOutput extends TopicAware implements IEventOu
         if (!isTopicEnabled(e.getTopic())) {
             return;
         }
-        synchronized (this) {
-            try {
-                FileWriter w = getWriter(e);
+        try {
+            FileWriter w = getWriter(e);
+            synchronized (w) {
                 serializeLine(e, w);
                 w.write(NEW_LINE);
                 w.flush();
-            } catch (IOException ignored) {
             }
+        } catch (IOException ignored) {
         }
     }
 

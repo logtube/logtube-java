@@ -7,7 +7,7 @@ public class EventFileOutputTest {
 
     @Test
     public void appendEvent() {
-        EventBaseFileOutput o = new EventJSONFileOutput("/tmp/logtube-test");
+        EventBaseFileOutput o = new EventJSONFileOutput("/tmp/logtube-test", "/tmp/signal.txt");
         o.enableTopic("info");
         o.appendEvent(
                 new EventBaseCommitter("example.com", "test-proj", "test-env")
@@ -16,7 +16,7 @@ public class EventFileOutputTest {
                         .message("hello, world")
                         .build()
         );
-        o = new EventPlainFileOutput("/tmp/logtube-test");
+        o = new EventPlainFileOutput("/tmp/logtube-test", "/tmp/signal.txt");
         o.appendEvent(
                 new EventBaseCommitter("example.com", "test-proj", "test-env")
                         .timestamp(System.currentTimeMillis())

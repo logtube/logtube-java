@@ -15,6 +15,7 @@ console:
 plain:
   enabled: true
   dir: /tmp/logtube-java-test
+  signal: /tmp/xlog.reopen.txt
   topics:
     - info
     - debug
@@ -23,6 +24,7 @@ plain:
 json:
   enabled: true
   dir: /tmp/logtube-java-test
+  signal: /tmp/xlog.reopen.txt
   topics:
     - x-access
     - x-redis

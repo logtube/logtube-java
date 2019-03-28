@@ -12,8 +12,8 @@ public class EventJSONFileOutput extends EventBaseFileOutput {
 
     private static final IEventSerializer SERIALIZER = new EventJSONFileSerializer();
 
-    public EventJSONFileOutput(@NotNull String dir) {
-        super(dir);
+    public EventJSONFileOutput(@NotNull String dir, @NotNull String signal) {
+        super(dir, signal);
     }
 
     @Override
