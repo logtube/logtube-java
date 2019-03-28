@@ -12,6 +12,8 @@ import java.io.Writer;
 
 public class EventConsoleOutput implements IEventOutput {
 
+    private static final char[] NEW_LINE = new char[]{'\r', '\n'};
+
     private final IEventSerializer serializer = new EventConsoleSerializer();
 
     private final Writer writer = new PrintWriter(System.out);
@@ -20,8 +22,7 @@ public class EventConsoleOutput implements IEventOutput {
     public synchronized void appendEvent(@NotNull IEvent e) {
         try {
             this.serializer.serialize(e, writer);
-            writer.write('\r');
-            writer.write('\n');
+            writer.write(NEW_LINE);
             writer.flush();
         } catch (IOException ignored) {
         }
