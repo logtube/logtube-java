@@ -6,7 +6,7 @@ import io.github.logtube.IEventOutput;
 import io.github.logtube.ILogger;
 import io.github.logtube.event.EventBaseCommitter;
 import io.github.logtube.event.NOPEventCommitter;
-import io.github.logtube.utils.Strings;
+import io.github.logtube.utils.StringUtil;
 import io.github.logtube.utils.TopicAware;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -30,7 +30,7 @@ public abstract class BaseLogger extends TopicAware implements ILogger, IEventOu
 
     @Override
     public @NotNull IEventCommitter topic(@Nullable String topic) {
-        topic = Strings.safeString(topic, EMPTY_TOPIC);
+        topic = StringUtil.safeString(topic, EMPTY_TOPIC);
         if (isTopicEnabled(topic)) {
             return new EventCommitter(topic);
         }
@@ -49,12 +49,12 @@ public abstract class BaseLogger extends TopicAware implements ILogger, IEventOu
     public abstract String getProject();
 
     @NotNull
-    public abstract String getEnvironment();
+    public abstract String getEnv();
 
     private class EventCommitter extends EventBaseCommitter {
 
         EventCommitter(@NotNull String topic) {
-            super(getHostname(), getProject(), getEnvironment());
+            super(getHostname(), getProject(), getEnv());
             topic(topic);
             timestamp(System.currentTimeMillis());
         }

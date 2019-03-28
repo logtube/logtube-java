@@ -6,19 +6,19 @@ import java.util.TimeZone;
 
 import static org.junit.Assert.assertEquals;
 
-public class EpochsTest {
+public class EpochUtilTest {
 
 
     @Test
     public void beginningOfTheDay() {
         TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));
-        assertEquals(1553702400000L, Epochs.beginningOfTheDay(1553754429477L));
+        assertEquals(1553702400000L, EpochUtil.beginningOfTheDay(1553754429477L));
     }
 
     @Test
     public void endOfTheDay() {
 
         TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));
-        assertEquals(1553788799000L, Epochs.endOfTheDay(1553754429477L));
+        assertEquals(1553788799000L, EpochUtil.endOfTheDay(1553754429477L));
     }
 }

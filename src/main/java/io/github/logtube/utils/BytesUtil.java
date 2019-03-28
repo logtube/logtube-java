@@ -2,7 +2,7 @@ package io.github.logtube.utils;
 
 import java.security.SecureRandom;
 
-public class Bytes {
+public class BytesUtil {
 
     private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 

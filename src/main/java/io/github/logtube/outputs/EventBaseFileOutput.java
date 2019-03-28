@@ -61,9 +61,9 @@ public abstract class EventBaseFileOutput extends TopicAware implements IEventOu
         if (w == null) {
             // make parent directories
             //noinspection ResultOfMethodCallIgnored
-            Paths.get(this.dir, e.getEnvironment(), e.getTopic()).toFile().mkdirs();
+            Paths.get(this.dir, e.getEnv(), e.getTopic()).toFile().mkdirs();
             // calculate full file path
-            Path path = Paths.get(this.dir, e.getEnvironment(), e.getTopic(), e.getProject() + ".log");
+            Path path = Paths.get(this.dir, e.getEnv(), e.getTopic(), e.getProject() + ".log");
             // create file writer
             w = new FileWriter(path.toAbsolutePath().toString(), true);
             // cache file writer

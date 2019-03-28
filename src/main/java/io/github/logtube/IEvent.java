@@ -17,7 +17,7 @@ public interface IEvent {
     String getHostname();
 
     @NotNull
-    String getEnvironment();
+    String getEnv();
 
     @NotNull
     String getProject();

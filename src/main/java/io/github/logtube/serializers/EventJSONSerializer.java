@@ -17,7 +17,7 @@ public class EventJSONSerializer implements IEventSerializer {
         j.beginObject();
         j.name("t").value(e.getTimestamp());
         j.name("h").value(e.getHostname());
-        j.name("e").value(e.getEnvironment());
+        j.name("e").value(e.getEnv());
         j.name("p").value(e.getProject());
         j.name("o").value(e.getTopic());
         j.name("c").value(e.getCrid());

@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 
-public class Epochs {
+public class EpochUtil {
 
     public static long beginningOfTheDay(long epoch) {
         LocalDateTime time = epochToLocalDateTime(epoch);

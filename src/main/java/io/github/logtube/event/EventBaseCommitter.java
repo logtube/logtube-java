@@ -2,7 +2,7 @@ package io.github.logtube.event;
 
 import io.github.logtube.IEvent;
 import io.github.logtube.IEventCommitter;
-import io.github.logtube.utils.Strings;
+import io.github.logtube.utils.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,7 +18,7 @@ public class EventBaseCommitter implements IEventCommitter {
     public EventBaseCommitter(@NotNull String hostname, @NotNull String project, @NotNull String env) {
         this.event.setHostname(hostname);
         this.event.setProject(project);
-        this.event.setEnvironment(env);
+        this.event.setEnv(env);
     }
 
     /**
@@ -43,7 +43,7 @@ public class EventBaseCommitter implements IEventCommitter {
     @Override
     @NotNull
     public EventBaseCommitter topic(@Nullable String topic) {
-        this.event.setTopic(Strings.safeString(topic, IEvent.EMPTY_TOPIC));
+        this.event.setTopic(StringUtil.safeString(topic, IEvent.EMPTY_TOPIC));
         return this;
     }
 
@@ -56,7 +56,7 @@ public class EventBaseCommitter implements IEventCommitter {
     @Override
     @NotNull
     public EventBaseCommitter crid(@Nullable String crid) {
-        this.event.setCrid(Strings.safeString(crid, IEvent.EMPTY_CRID));
+        this.event.setCrid(StringUtil.safeString(crid, IEvent.EMPTY_CRID));
         return this;
     }
 

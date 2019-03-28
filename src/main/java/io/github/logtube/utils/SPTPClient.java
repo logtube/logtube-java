@@ -65,7 +65,7 @@ public class SPTPClient {
         // single packet payload
         if (payload.length < PACKET_PAYLOAD_MAX_SIZE) {
             buffer[1] = MODE_SIMPLE;
-            Bytes.copy(buffer, 2, payload, 0, payload.length);
+            BytesUtil.copy(buffer, 2, payload, 0, payload.length);
             sendPacket(hostIdx, payload.length + 2);
         }
         // chunked packet payload
@@ -76,7 +76,7 @@ public class SPTPClient {
         }
         // prepare chunked header
         buffer[1] = MODE_CHUNKED;
-        Bytes.random(buffer, 2, 8);
+        BytesUtil.random(buffer, 2, 8);
         buffer[10] = (byte) total;
         for (int i = 0; i < total; i++) {
             buffer[11] = (byte) i;
@@ -85,7 +85,7 @@ public class SPTPClient {
             if (offsetTo > payload.length) {
                 offsetTo = payload.length;
             }
-            Bytes.copy(buffer, 12, payload, offsetFrom, offsetTo - offsetFrom);
+            BytesUtil.copy(buffer, 12, payload, offsetFrom, offsetTo - offsetFrom);
             sendPacket(hostIdx, 12 + offsetTo - offsetFrom);
         }
     }

@@ -17,7 +17,7 @@ public class Event implements IEvent {
     private String hostname = "";
 
     @NotNull
-    private String environment = "";
+    private String env = "";
 
     @NotNull
     private String project = "";
@@ -58,12 +58,12 @@ public class Event implements IEvent {
 
     @Override
     @NotNull
-    public String getEnvironment() {
-        return environment;
+    public String getEnv() {
+        return env;
     }
 
-    public void setEnvironment(@NotNull String environment) {
-        this.environment = environment;
+    public void setEnv(@NotNull String env) {
+        this.env = env;
     }
 
     @NotNull

@@ -30,7 +30,7 @@ public class Logger extends BaseLogger {
 
     @Override
     @NotNull
-    public String getEnvironment() {
+    public String getEnv() {
         return this.environment;
     }
 

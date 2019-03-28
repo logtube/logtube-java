@@ -6,12 +6,16 @@ import org.jetbrains.annotations.Nullable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Strings {
+public class StringUtil {
 
     @NotNull
-    public static String safeString(@Nullable String str, @NotNull String dftStr) {
+    public static String safeString(@Nullable String str, @NotNull String defaultValue) {
         if (str == null) {
-            return dftStr;
+            return defaultValue;
+        }
+        str = str.trim();
+        if (str.length() == 0) {
+            return defaultValue;
         }
         return str.toLowerCase().replaceAll("[^0-9a-zA-Z_-]", "_");
     }
@@ -39,8 +43,8 @@ public class Strings {
             return cache.str;
         }
         cache = new PathSuffixCache();
-        cache.from = Epochs.beginningOfTheDay(epoch);
-        cache.to = Epochs.endOfTheDay(epoch);
+        cache.from = EpochUtil.beginningOfTheDay(epoch);
+        cache.to = EpochUtil.endOfTheDay(epoch);
         cache.str = PATH_SUFFIX_FORMAT.format(new Date(epoch));
         PATH_SUFFIX_CACHE = cache;
         return cache.str;
