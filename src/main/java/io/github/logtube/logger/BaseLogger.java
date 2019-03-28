@@ -7,17 +7,16 @@ import io.github.logtube.ILogger;
 import io.github.logtube.event.EventBaseCommitter;
 import io.github.logtube.event.NOPEventCommitter;
 import io.github.logtube.utils.Strings;
+import io.github.logtube.utils.TopicAware;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static io.github.logtube.IEvent.EMPTY_TOPIC;
 
-public abstract class BaseLogger implements ILogger, IEventOutput {
+public abstract class BaseLogger extends TopicAware implements ILogger, IEventOutput {
 
     private List<IEventOutput> outputs = new ArrayList<>();
 
@@ -27,24 +26,6 @@ public abstract class BaseLogger implements ILogger, IEventOutput {
 
     public void addOutput(@NotNull IEventOutput output) {
         outputs.add(output);
-    }
-
-    private Set<String> topics = new HashSet<>();
-
-    public void enableTopic(@NotNull String topic) {
-        this.topics.add(topic);
-    }
-
-    public void disableTopic(@NotNull String topic) {
-        this.topics.remove(topic);
-    }
-
-    public void setTopics(@NotNull Set<String> topics) {
-        this.topics = topics;
-    }
-
-    public boolean isTopicEnabled(@NotNull String topic) {
-        return this.topics.contains(topic);
     }
 
     @Override

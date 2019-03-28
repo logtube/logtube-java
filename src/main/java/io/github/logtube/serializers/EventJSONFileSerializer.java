@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
 
-public class EventFileJSONSerializer extends EventFileBaseSerializer {
+public class EventJSONFileSerializer extends EventFileBaseSerializer {
 
     @Override
     public void serialize(@NotNull IEvent e, @NotNull Writer w) throws IOException {

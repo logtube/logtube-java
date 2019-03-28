@@ -5,15 +5,12 @@ import io.github.logtube.event.Event;
 import io.github.logtube.event.EventBaseCommitter;
 import org.junit.Test;
 
-import java.util.TimeZone;
-
 import static org.junit.Assert.assertEquals;
 
 public class EventConsoleSerializerTest {
 
     @Test
     public void serialize() {
-        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));
         EventBaseCommitter eb = new EventBaseCommitter("test.example.com", "test-proj", "test");
         Event e = eb.timestamp(1553678195987L).crid("aa").message("hello, world").keyword("hello", "world").extra("duration", 1, "e", true).build();
         IEventSerializer s = new EventConsoleSerializer();
