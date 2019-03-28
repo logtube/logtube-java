@@ -31,8 +31,12 @@ public abstract class BaseLogger implements ILogger, IEventOutput {
 
     private Set<String> topics = new HashSet<>();
 
-    public void addTopic(@NotNull String topic) {
+    public void enableTopic(@NotNull String topic) {
         this.topics.add(topic);
+    }
+
+    public void disableTopic(@NotNull String topic) {
+        this.topics.remove(topic);
     }
 
     public void setTopics(@NotNull Set<String> topics) {

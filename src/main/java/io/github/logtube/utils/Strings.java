@@ -19,8 +19,31 @@ public class Strings {
     private static final SimpleDateFormat LINE_TIMESTAMP_PREFIX_FORMAT = new SimpleDateFormat("[yyyy-MM-dd HH:mm:ss.SSS ZZZZZ]");
 
     @NotNull
-    public static String formatLineTimestampPrefix(long epoch) {
+    public static String formatLineTimestamp(long epoch) {
         return LINE_TIMESTAMP_PREFIX_FORMAT.format(new Date(epoch));
+    }
+
+    private static final SimpleDateFormat PATH_SUFFIX_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+
+    private static class PathSuffixCache {
+        long from;
+        long to;
+        String str;
+    }
+
+    private static PathSuffixCache PATH_SUFFIX_CACHE = null;
+
+    public static String formatPathSuffix(long epoch) {
+        PathSuffixCache cache = PATH_SUFFIX_CACHE;
+        if (cache != null && cache.from <= epoch && cache.to > epoch) {
+            return cache.str;
+        }
+        cache = new PathSuffixCache();
+        cache.from = Epochs.beginningOfTheDay(epoch);
+        cache.to = Epochs.endOfTheDay(epoch);
+        cache.str = PATH_SUFFIX_FORMAT.format(new Date(epoch));
+        PATH_SUFFIX_CACHE = cache;
+        return cache.str;
     }
 
 }

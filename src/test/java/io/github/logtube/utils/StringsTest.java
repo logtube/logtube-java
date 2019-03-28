@@ -18,6 +18,6 @@ public class StringsTest {
     @Test
     public void formatTimestampLinePrefix() {
         TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));
-        assertEquals("[2019-03-27 16:04:24.388 +0800]", Strings.formatLineTimestampPrefix(1553673864388L));
+        assertEquals("[2019-03-27 16:04:24.388 +0800]", Strings.formatLineTimestamp(1553673864388L));
     }
 }

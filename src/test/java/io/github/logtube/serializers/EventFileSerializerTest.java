@@ -25,7 +25,7 @@ public class EventFileSerializerTest {
         TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));
         EventBaseCommitter eb = new EventBaseCommitter("test.example.com", "test-proj", "test");
         Event e = eb.timestamp(1553678195987L).crid("aa").message("hello, world").keyword("hello", "world").extra("duration", 1, "e", true).build();
-        IEventSerializer s = new EventFileRawSerializer();
+        IEventSerializer s = new EventFilePlainSerializer();
         assertEquals(s.toString(e), "[2019-03-27 17:16:35.987 +0800] CRID[aa] KEYWORD[hello,world] hello, world {duration=1 e=true }");
     }
 }

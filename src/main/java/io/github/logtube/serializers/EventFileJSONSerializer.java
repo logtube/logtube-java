@@ -32,7 +32,6 @@ public class EventFileJSONSerializer extends EventFileBaseSerializer {
             j.endObject();
         }
         j.endObject();
-        j.close();
     }
 
 }

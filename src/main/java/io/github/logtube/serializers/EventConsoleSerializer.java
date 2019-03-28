@@ -13,7 +13,7 @@ public class EventConsoleSerializer implements IEventSerializer {
 
     @Override
     public void serialize(@NotNull IEvent e, @NotNull Writer w) throws IOException {
-        w.write(Strings.formatLineTimestampPrefix(e.getTimestamp()));
+        w.write(Strings.formatLineTimestamp(e.getTimestamp()));
         w.write(' ');
         w.write(e.getEnvironment());
         w.write('/');
@@ -22,9 +22,9 @@ public class EventConsoleSerializer implements IEventSerializer {
         w.write(e.getTopic());
         w.write(" (");
         w.write(e.getCrid());
-        w.write(")");
+        w.write(") ");
         if (e.getKeyword() != null) {
-            w.write(" [");
+            w.write("[");
             w.write(e.getKeyword());
             w.write("] ");
         }

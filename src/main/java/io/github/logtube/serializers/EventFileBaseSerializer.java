@@ -12,7 +12,7 @@ public class EventFileBaseSerializer implements IEventSerializer {
 
     @Override
     public void serialize(@NotNull IEvent e, @NotNull Writer w) throws IOException {
-        w.write(Strings.formatLineTimestampPrefix(e.getTimestamp()));
+        w.write(Strings.formatLineTimestamp(e.getTimestamp()));
         w.write(' ');
     }
 

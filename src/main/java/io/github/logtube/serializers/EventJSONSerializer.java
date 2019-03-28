@@ -35,7 +35,6 @@ public class EventJSONSerializer implements IEventSerializer {
             j.endObject();
         }
         j.endObject();
-        j.flush();
     }
 
 }
