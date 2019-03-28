@@ -11,7 +11,7 @@ console:
     - x-access
     - x-redis
 
-# PlainFile output
+# Plain output
 plain:
   enabled: true
   dir: /tmp/logtube-java-test
@@ -19,7 +19,7 @@ plain:
     - info
     - debug
 
-# JSONFile output
+# JSON output
 json:
   enabled: true
   dir: /tmp/logtube-java-test

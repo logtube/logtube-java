@@ -2,7 +2,6 @@ package io.github.logtube.outputs;
 
 import io.github.logtube.IEvent;
 import io.github.logtube.IEventOutput;
-import io.github.logtube.utils.Strings;
 import io.github.logtube.utils.TopicAware;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,6 +12,7 @@ import java.io.Writer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.Map;
 
 public abstract class EventBaseFileOutput extends TopicAware implements IEventOutput, Closeable {
 
@@ -22,34 +22,38 @@ public abstract class EventBaseFileOutput extends TopicAware implements IEventOu
 
     private final HashMap<String, FileWriter> writers = new HashMap<>();
 
-    private void closeUnusedFiles() {
-        // TODO: implements
-    }
-
     public EventBaseFileOutput(@NotNull String dir) {
         this.dir = dir;
     }
 
+    private void closeWriters() throws IOException {
+        for (Map.Entry<String, FileWriter> entry : writers.entrySet()) {
+            entry.getValue().close();
+        }
+        writers.clear();
+    }
+
+    private void closeWritersIfNeeded() {
+        // TODO: implements
+    }
+
     private FileWriter getWriter(@NotNull IEvent e) throws IOException {
         // close unused files
-        closeUnusedFiles();
-        // calculate full file path
-        Path path = Paths.get(
-                this.dir,
-                e.getEnvironment(),
-                e.getTopic(),
-                e.getProject() + "." + Strings.formatPathSuffix(e.getTimestamp()) + ".log");
-        String absolutePath = path.toAbsolutePath().toString();
-        FileWriter fw = this.writers.get(absolutePath);
-        if (fw == null) {
+        closeWritersIfNeeded();
+
+        FileWriter w = this.writers.get(e.getTopic());
+        if (w == null) {
             // make parent directories
+            //noinspection ResultOfMethodCallIgnored
             Paths.get(this.dir, e.getEnvironment(), e.getTopic()).toFile().mkdirs();
+            // calculate full file path
+            Path path = Paths.get(this.dir, e.getEnvironment(), e.getTopic(), e.getProject() + ".log");
             // create file writer
-            fw = new FileWriter(path.toAbsolutePath().toString(), true);
+            w = new FileWriter(path.toAbsolutePath().toString(), true);
             // cache file writer
-            this.writers.put(absolutePath, fw);
+            this.writers.put(e.getTopic(), w);
         }
-        return fw;
+        return w;
     }
 
     @Override
@@ -71,7 +75,8 @@ public abstract class EventBaseFileOutput extends TopicAware implements IEventOu
     abstract void serializeLine(@NotNull IEvent e, @NotNull Writer w) throws IOException;
 
     @Override
-    public void close() throws IOException {
+    public synchronized void close() throws IOException {
+        closeWriters();
     }
 
 }
