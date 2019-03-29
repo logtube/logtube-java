@@ -1,5 +1,6 @@
 package io.github.logtube.utils;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -8,8 +9,9 @@ import java.util.Date;
 
 public class StringUtil {
 
-    @NotNull
-    public static String safeString(@Nullable String str, @NotNull String defaultValue) {
+    @Nullable
+    @Contract("_, !null -> !null")
+    public static String safeString(@Nullable String str, @Nullable String defaultValue) {
         if (str == null) {
             return defaultValue;
         }

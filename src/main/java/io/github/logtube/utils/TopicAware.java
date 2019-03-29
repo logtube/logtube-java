@@ -1,27 +1,51 @@
 package io.github.logtube.utils;
 
+import io.github.logtube.ILogger;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class TopicAware {
 
-    private Set<String> topics = new HashSet<>();
+    private Set<String> topics = null;
 
-    public void setTopics(@NotNull Set<String> topics) {
-        this.topics = topics;
-    }
+    private boolean blacklist = false;
 
-    public void enableTopic(@NotNull String topic) {
-        this.topics.add(topic);
-    }
+    public void setTopics(@Nullable Set<String> topics) {
+        // null for "*"
+        if (topics == null) {
+            this.topics = null;
+            this.blacklist = false;
+            return;
+        }
+        HashSet<String> result = new HashSet<>();
+        if (topics.contains("*")) {
+            // blacklist mode
+            topics.remove("*");
+            topics.forEach((e) -> {
+                if (e.startsWith("-")) {
+                    result.add(StringUtil.safeString(e.substring(1), ILogger.CLASSIC_TOPIC_INFO));
+                }
+            });
+            this.blacklist = true;
+        } else {
+            // whitelist mode
+            topics.forEach((e) -> result.add(StringUtil.safeString(e, ILogger.CLASSIC_TOPIC_INFO)));
+            this.blacklist = false;
+        }
 
-    public void disableTopic(@NotNull String topic) {
-        this.topics.remove(topic);
+        this.topics = result;
     }
 
     public boolean isTopicEnabled(@NotNull String topic) {
+        if (this.topics == null) {
+            return true;
+        }
+        if (this.blacklist) {
+            return !this.topics.contains(topic);
+        }
         return this.topics.contains(topic);
     }
 
