@@ -1,4 +1,4 @@
-package io.github.logtube.classic;
+package io.github.logtube.slf4j;
 
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -11,7 +11,7 @@ public class SLF4JBindingTest {
     @Test
     public void binding() {
         Logger logger = LoggerFactory.getLogger("demo");
-        assertEquals(logger.getClass().getCanonicalName(), ClassicLogger.class.getCanonicalName());
+        assertEquals(logger.getClass().getCanonicalName(), LogtubeLogger.class.getCanonicalName());
     }
 
 }

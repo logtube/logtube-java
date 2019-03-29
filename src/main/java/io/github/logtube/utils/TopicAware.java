@@ -1,6 +1,6 @@
 package io.github.logtube.utils;
 
-import io.github.logtube.ILogger;
+import io.github.logtube.IEventLogger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,13 +26,13 @@ public class TopicAware {
             topics.remove("*");
             topics.forEach((e) -> {
                 if (e.startsWith("-")) {
-                    result.add(StringUtil.safeString(e.substring(1), ILogger.CLASSIC_TOPIC_INFO));
+                    result.add(StringUtil.safeString(e.substring(1), IEventLogger.CLASSIC_TOPIC_INFO));
                 }
             });
             this.blacklist = true;
         } else {
             // whitelist mode
-            topics.forEach((e) -> result.add(StringUtil.safeString(e, ILogger.CLASSIC_TOPIC_INFO)));
+            topics.forEach((e) -> result.add(StringUtil.safeString(e, IEventLogger.CLASSIC_TOPIC_INFO)));
             this.blacklist = false;
         }
 

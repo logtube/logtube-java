@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
 
-public class EventPlainFileSerializer extends EventFileBaseSerializer {
+public class EventPlainFileSerializer extends BaseEventFileSerializer {
 
     @Override
     public void serialize(@NotNull IEvent e, @NotNull Writer w) throws IOException {

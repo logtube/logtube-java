@@ -1,6 +1,6 @@
 package io.github.logtube;
 
-import io.github.logtube.logger.Logger;
+import io.github.logtube.event.EventLogger;
 import io.github.logtube.outputs.EventConsoleOutput;
 import io.github.logtube.outputs.EventJSONFileOutput;
 import io.github.logtube.outputs.EventPlainFileOutput;
@@ -10,12 +10,12 @@ import org.jetbrains.annotations.Nullable;
 
 public class Logtube {
 
-    private static final Logger DEFAULT_LOGGER;
+    private static final EventLogger DEFAULT_LOGGER;
 
     static {
         LogtubeOptions options = LogtubeOptions.fromClasspath();
 
-        DEFAULT_LOGGER = new Logger(LogtubeOptions.getHostname(), options.getProject(), options.getEnv());
+        DEFAULT_LOGGER = new EventLogger(LogtubeOptions.getHostname(), options.getProject(), options.getEnv());
         DEFAULT_LOGGER.setTopics(options.getTopics());
 
         if (options.getConsoleEnabled()) {

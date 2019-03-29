@@ -9,13 +9,13 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 
 /**
- * EventBaseCommitter builder for logtube Event
+ * BaseEventCommitter builder for logtube Event
  */
-public class EventBaseCommitter implements IEventCommitter {
+public class BaseEventCommitter implements IEventCommitter {
 
     private final Event event = new Event();
 
-    public EventBaseCommitter(@NotNull String hostname, @NotNull String project, @NotNull String env) {
+    public BaseEventCommitter(@NotNull String hostname, @NotNull String project, @NotNull String env) {
         this.event.setHostname(hostname);
         this.event.setProject(project);
         this.event.setEnv(env);
@@ -29,7 +29,7 @@ public class EventBaseCommitter implements IEventCommitter {
      */
     @Override
     @NotNull
-    public EventBaseCommitter timestamp(long timestamp) {
+    public BaseEventCommitter timestamp(long timestamp) {
         this.event.setTimestamp(timestamp);
         return this;
     }
@@ -42,7 +42,7 @@ public class EventBaseCommitter implements IEventCommitter {
      */
     @Override
     @NotNull
-    public EventBaseCommitter topic(@Nullable String topic) {
+    public BaseEventCommitter topic(@Nullable String topic) {
         this.event.setTopic(StringUtil.safeString(topic, IEvent.EMPTY_TOPIC));
         return this;
     }
@@ -55,7 +55,7 @@ public class EventBaseCommitter implements IEventCommitter {
      */
     @Override
     @NotNull
-    public EventBaseCommitter crid(@Nullable String crid) {
+    public BaseEventCommitter crid(@Nullable String crid) {
         this.event.setCrid(StringUtil.safeString(crid, IEvent.EMPTY_CRID));
         return this;
     }
@@ -68,7 +68,7 @@ public class EventBaseCommitter implements IEventCommitter {
      */
     @Override
     @NotNull
-    public EventBaseCommitter message(@NotNull String message) {
+    public BaseEventCommitter message(@NotNull String message) {
         this.event.setMessage(message);
         return this;
     }
@@ -81,7 +81,7 @@ public class EventBaseCommitter implements IEventCommitter {
      */
     @Override
     @NotNull
-    public EventBaseCommitter keyword(@NotNull String... keywords) {
+    public BaseEventCommitter keyword(@NotNull String... keywords) {
         if (this.event.getKeyword() == null) {
             this.event.setKeyword(String.join(",", keywords));
         } else {
@@ -98,7 +98,7 @@ public class EventBaseCommitter implements IEventCommitter {
      */
     @Override
     @NotNull
-    public EventBaseCommitter extra(@NotNull Object... kvs) {
+    public BaseEventCommitter extra(@NotNull Object... kvs) {
         if (kvs.length == 0 || kvs.length % 2 != 0) {
             throw new IllegalArgumentException("extra key value not match");
         }
@@ -125,7 +125,7 @@ public class EventBaseCommitter implements IEventCommitter {
 
     @Override
     public void commit() {
-        throw new RuntimeException("never call EventBaseCommitter#commit");
+        throw new RuntimeException("never call BaseEventCommitter#commit");
     }
 
 }

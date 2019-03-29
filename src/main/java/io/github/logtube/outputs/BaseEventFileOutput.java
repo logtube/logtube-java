@@ -16,7 +16,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class EventBaseFileOutput extends TopicAware implements IEventOutput, Closeable {
+public abstract class BaseEventFileOutput extends TopicAware implements IEventOutput, Closeable {
 
     private static final char[] NEW_LINE = new char[]{'\r', '\n'};
 
@@ -28,7 +28,7 @@ public abstract class EventBaseFileOutput extends TopicAware implements IEventOu
 
     private final HashMap<String, FileWriter> writers = new HashMap<>();
 
-    public EventBaseFileOutput(@NotNull String dir, @NotNull String signal) {
+    public BaseEventFileOutput(@NotNull String dir, @NotNull String signal) {
         this.dir = dir;
         this.signalChecker = new SignalChecker(signal);
     }

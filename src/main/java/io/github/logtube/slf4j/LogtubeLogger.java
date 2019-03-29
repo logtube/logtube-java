@@ -1,15 +1,15 @@
-package io.github.logtube.classic;
+package io.github.logtube.slf4j;
 
 import io.github.logtube.Logtube;
 import org.slf4j.helpers.MarkerIgnoringBase;
 
-import static io.github.logtube.ILogger.*;
+import static io.github.logtube.IEventLogger.*;
 
-public class ClassicLogger extends MarkerIgnoringBase {
+public class LogtubeLogger extends MarkerIgnoringBase {
 
     private final String name;
 
-    public ClassicLogger(String name) {
+    public LogtubeLogger(String name) {
         this.name = name;
     }
 

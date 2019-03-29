@@ -1,11 +1,9 @@
-package io.github.logtube.logger;
+package io.github.logtube.event;
 
 import io.github.logtube.IEvent;
 import io.github.logtube.IEventCommitter;
+import io.github.logtube.IEventLogger;
 import io.github.logtube.IEventOutput;
-import io.github.logtube.ILogger;
-import io.github.logtube.event.EventBaseCommitter;
-import io.github.logtube.event.NOPEventCommitter;
 import io.github.logtube.utils.StringUtil;
 import io.github.logtube.utils.TopicAware;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +14,7 @@ import java.util.List;
 
 import static io.github.logtube.IEvent.EMPTY_TOPIC;
 
-public abstract class BaseLogger extends TopicAware implements ILogger, IEventOutput {
+public abstract class BaseEventLogger extends TopicAware implements IEventLogger, IEventOutput {
 
     private List<IEventOutput> outputs = new ArrayList<>();
 
@@ -51,7 +49,7 @@ public abstract class BaseLogger extends TopicAware implements ILogger, IEventOu
     @NotNull
     public abstract String getEnv();
 
-    private class EventCommitter extends EventBaseCommitter {
+    private class EventCommitter extends BaseEventCommitter {
 
         EventCommitter(@NotNull String topic) {
             super(getHostname(), getProject(), getEnv());

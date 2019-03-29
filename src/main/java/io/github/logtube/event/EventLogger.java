@@ -1,8 +1,8 @@
-package io.github.logtube.logger;
+package io.github.logtube.event;
 
 import org.jetbrains.annotations.NotNull;
 
-public class Logger extends BaseLogger {
+public class EventLogger extends BaseEventLogger {
 
     private final String hostname;
 
@@ -10,7 +10,7 @@ public class Logger extends BaseLogger {
 
     private final String environment;
 
-    public Logger(@NotNull String hostname, @NotNull String project, @NotNull String environment) {
+    public EventLogger(@NotNull String hostname, @NotNull String project, @NotNull String environment) {
         this.hostname = hostname;
         this.project = project;
         this.environment = environment;

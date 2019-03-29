@@ -3,7 +3,7 @@ package io.github.logtube;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public interface ILogger {
+public interface IEventLogger {
 
     String CLASSIC_TOPIC_TRACE = "trace";
 
