@@ -125,7 +125,7 @@ public class LogtubeOptions {
 
     @NotNull
     public String getFilePlainDir() {
-        return stringValue("logtube.file-plain.dir", "dirs");
+        return stringValue("logtube.file-plain.dir", "logs");
     }
 
     @NotNull
@@ -144,7 +144,7 @@ public class LogtubeOptions {
 
     @NotNull
     public String getFileJSONDir() {
-        return stringValue("logtube.file-json.dir", "dirs");
+        return stringValue("logtube.file-json.dir", "logs");
     }
 
     @NotNull
