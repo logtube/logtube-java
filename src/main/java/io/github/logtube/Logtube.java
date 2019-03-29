@@ -8,21 +8,12 @@ import io.github.logtube.outputs.EventRemoteOutput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.InputStream;
-import java.util.Properties;
-
 public class Logtube {
 
     private static final Logger DEFAULT_LOGGER;
 
     static {
-        Properties props = new Properties();
-        try (final InputStream stream = Logtube.class.getResourceAsStream("logtube.properties")) {
-            props.load(stream);
-        } catch (Exception ignored) {
-        }
-
-        LogtubeOptions options = new LogtubeOptions(props);
+        LogtubeOptions options = LogtubeOptions.fromClasspath();
 
         DEFAULT_LOGGER = new Logger(LogtubeOptions.getHostname(), options.getProject(), options.getEnv());
         DEFAULT_LOGGER.setTopics(options.getTopics());

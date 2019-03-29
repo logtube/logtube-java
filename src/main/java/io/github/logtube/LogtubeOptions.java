@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.InputStream;
 import java.net.InetAddress;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -29,6 +30,20 @@ public class LogtubeOptions {
         return new HashSet<>(Arrays.asList(values));
     }
 
+    public static LogtubeOptions fromClasspath() {
+        Properties properties = new Properties();
+        try (InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("logtube.properties")) {
+            if (stream != null) {
+                properties.load(stream);
+            } else {
+                System.err.println("logtube.properties not found in class path, using default options");
+            }
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            System.err.println("failed to load logtube.properties, using default options.");
+        }
+        return new LogtubeOptions(properties);
+    }
 
     @NotNull
     private final Properties properties;
