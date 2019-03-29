@@ -7,10 +7,6 @@ import java.util.Map;
 
 public interface IEvent {
 
-    String EMPTY_CRID = "-";
-
-    String EMPTY_TOPIC = IEventLogger.CLASSIC_TOPIC_INFO;
-
     long getTimestamp();
 
     @NotNull
@@ -24,7 +20,6 @@ public interface IEvent {
 
     @NotNull
     String getTopic();
-
 
     @NotNull
     String getCrid();

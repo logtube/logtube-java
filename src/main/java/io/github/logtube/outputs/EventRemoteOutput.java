@@ -4,8 +4,8 @@ import io.github.logtube.IEvent;
 import io.github.logtube.IEventOutput;
 import io.github.logtube.IEventSerializer;
 import io.github.logtube.serializers.EventJSONSerializer;
+import io.github.logtube.topic.TopicAware;
 import io.github.logtube.utils.SPTPClient;
-import io.github.logtube.utils.TopicAware;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;

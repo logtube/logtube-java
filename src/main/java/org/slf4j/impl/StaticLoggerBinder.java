@@ -1,6 +1,6 @@
 package org.slf4j.impl;
 
-import io.github.logtube.slf4j.LogtubeLoggerFactory;
+import io.github.logtube.LogtubeLoggerFactory;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.spi.LoggerFactoryBinder;
 
@@ -16,7 +16,7 @@ public class StaticLoggerBinder implements LoggerFactoryBinder {
     public static String REQUESTED_API_VERSION = "1.7.26"; // !final
 
     public StaticLoggerBinder() {
-        loggerFactory = new LogtubeLoggerFactory();
+        loggerFactory = LogtubeLoggerFactory.getSingleton();
     }
 
     public static StaticLoggerBinder getSingleton() {

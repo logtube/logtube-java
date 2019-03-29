@@ -6,12 +6,11 @@ import org.slf4j.LoggerFactory;
 
 public class LogtubeTest {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(LogtubeTest.class);
 
     @Test
-    public void topic() {
-        Logtube.topic("info").message("hello").commit();
-        LOGGER.error("TEST ERROR");
+    public void binding() {
+        Logger logger = LoggerFactory.getLogger(LogtubeTest.class);
+        logger.info("hello world");
     }
 
 }

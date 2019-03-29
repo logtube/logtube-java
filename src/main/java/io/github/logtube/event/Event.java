@@ -1,32 +1,43 @@
 package io.github.logtube.event;
 
-import io.github.logtube.IEvent;
+import io.github.logtube.ICommittableEvent;
+import io.github.logtube.utils.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Event logtube log event in compact format
  */
-public class Event implements IEvent {
+public class Event implements ICommittableEvent {
+
+    public static final String UNKNOWN_HOSTNAME = "unknown-host";
+
+    public static final String UNKNOWN_PROJECT = "unknown-project";
+
+    public static final String UNKNOWN_ENV = "unknown-env";
+
+    public static final String UNKNOWN_TOPIC = "unknown-topic";
+
+    public static final String UNKNOWN_CRID = "-";
 
     private long timestamp;
 
-    @NotNull
-    private String hostname = "";
+    @Nullable
+    private String hostname = null;
 
-    @NotNull
-    private String env = "";
+    @Nullable
+    private String env = null;
 
-    @NotNull
-    private String project = "";
+    @Nullable
+    private String project = null;
 
-    @NotNull
-    private String topic = EMPTY_TOPIC;
+    @Nullable
+    private String topic = null;
 
-    @NotNull
-    private String crid = EMPTY_CRID;
+    @Nullable
+    private String crid = null;
 
     @Nullable
     private String message = null;
@@ -35,13 +46,14 @@ public class Event implements IEvent {
     private String keyword = null;
 
     @Nullable
-    private HashMap<String, Object> extra;
+    private Map<String, Object> extra;
 
     @Override
     public long getTimestamp() {
         return timestamp;
     }
 
+    @Override
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
     }
@@ -49,51 +61,56 @@ public class Event implements IEvent {
     @Override
     @NotNull
     public String getHostname() {
-        return hostname;
+        return hostname == null ? UNKNOWN_HOSTNAME : hostname;
     }
 
-    public void setHostname(@NotNull String hostname) {
+    @Override
+    public void setHostname(@Nullable String hostname) {
         this.hostname = hostname;
     }
 
     @Override
     @NotNull
     public String getEnv() {
-        return env;
+        return env == null ? UNKNOWN_ENV : env;
     }
 
-    public void setEnv(@NotNull String env) {
-        this.env = env;
+    @Override
+    public void setEnv(@Nullable String env) {
+        this.env = StringUtil.safeString(env, null);
     }
 
     @NotNull
     public String getProject() {
-        return project;
+        return project == null ? UNKNOWN_PROJECT : project;
     }
 
-    public void setProject(@NotNull String project) {
-        this.project = project;
+    @Override
+    public void setProject(@Nullable String project) {
+        this.project = StringUtil.safeString(project, null);
     }
 
     @Override
     @NotNull
     public String getTopic() {
-        return topic;
+        return topic == null ? UNKNOWN_TOPIC : topic;
     }
 
-    public void setTopic(@NotNull String topic) {
-        this.topic = topic;
+    @Override
+    public void setTopic(@Nullable String topic) {
+        this.topic = StringUtil.safeString(topic, null);
     }
 
 
     @Override
     @NotNull
     public String getCrid() {
-        return crid;
+        return crid == null ? UNKNOWN_CRID : crid;
     }
 
-    public void setCrid(@NotNull String crid) {
-        this.crid = crid;
+    @Override
+    public void setCrid(@Nullable String crid) {
+        this.crid = StringUtil.safeString(crid, null);
     }
 
     @Override
@@ -102,6 +119,7 @@ public class Event implements IEvent {
         return message;
     }
 
+    @Override
     public void setMessage(@Nullable String message) {
         this.message = message;
     }
@@ -112,18 +130,25 @@ public class Event implements IEvent {
         return keyword;
     }
 
+    @Override
     public void setKeyword(@Nullable String keyword) {
         this.keyword = keyword;
     }
 
     @Override
     @Nullable
-    public HashMap<String, Object> getExtra() {
+    public Map<String, Object> getExtra() {
         return extra;
     }
 
-    public void setExtra(@Nullable HashMap<String, Object> extra) {
+    @Override
+    public void setExtra(@Nullable Map<String, Object> extra) {
         this.extra = extra;
+    }
+
+    @Override
+    public void commit() {
+        throw new RuntimeException("never call Event#commit");
     }
 
 }

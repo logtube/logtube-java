@@ -2,9 +2,9 @@ package io.github.logtube.outputs;
 
 import io.github.logtube.IEvent;
 import io.github.logtube.IEventOutput;
+import io.github.logtube.topic.TopicAware;
 import io.github.logtube.utils.IntervalChecker;
 import io.github.logtube.utils.SignalChecker;
-import io.github.logtube.utils.TopicAware;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Closeable;

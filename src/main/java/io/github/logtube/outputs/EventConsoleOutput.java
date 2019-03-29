@@ -4,7 +4,7 @@ import io.github.logtube.IEvent;
 import io.github.logtube.IEventOutput;
 import io.github.logtube.IEventSerializer;
 import io.github.logtube.serializers.EventConsoleSerializer;
-import io.github.logtube.utils.TopicAware;
+import io.github.logtube.topic.TopicAware;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
