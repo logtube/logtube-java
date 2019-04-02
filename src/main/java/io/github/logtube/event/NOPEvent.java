@@ -1,6 +1,6 @@
 package io.github.logtube.event;
 
-import io.github.logtube.ICommittableEvent;
+import io.github.logtube.IMutableEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -8,7 +8,7 @@ import java.util.Map;
 
 import static io.github.logtube.event.Event.*;
 
-public class NOPEvent implements ICommittableEvent {
+public class NOPEvent implements IMutableEvent {
 
     private static final NOPEvent SINGLETON = new NOPEvent();
 

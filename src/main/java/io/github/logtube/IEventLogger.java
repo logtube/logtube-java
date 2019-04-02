@@ -17,10 +17,10 @@ public interface IEventLogger extends ITopicAware, Logger {
     IEventLogger derive(@NotNull String name, @Nullable IEventFilter filter);
 
     @NotNull
-    ICommittableEvent event();
+    IMutableEvent event();
 
     @NotNull
-    default ICommittableEvent topic(@NotNull String topic) {
+    default IMutableEvent topic(@NotNull String topic) {
         if (isTopicEnabled(topic)) {
             return event().topic(topic);
         }
@@ -83,23 +83,23 @@ public interface IEventLogger extends ITopicAware, Logger {
         event().topic(topic).message(buf.toString()).commit();
     }
 
-    default ICommittableEvent trace() {
+    default IMutableEvent trace() {
         return topic("trace");
     }
 
-    default ICommittableEvent debug() {
+    default IMutableEvent debug() {
         return topic("debug");
     }
 
-    default ICommittableEvent info() {
+    default IMutableEvent info() {
         return topic("info");
     }
 
-    default ICommittableEvent warn() {
+    default IMutableEvent warn() {
         return topic("warn");
     }
 
-    default ICommittableEvent error() {
+    default IMutableEvent error() {
         return topic("error");
     }
 

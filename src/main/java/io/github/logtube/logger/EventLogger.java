@@ -1,9 +1,9 @@
 package io.github.logtube.logger;
 
-import io.github.logtube.ICommittableEvent;
 import io.github.logtube.IEventFilter;
 import io.github.logtube.IEventLogger;
 import io.github.logtube.IEventOutput;
+import io.github.logtube.IMutableEvent;
 import io.github.logtube.event.Event;
 import io.github.logtube.topic.TopicAware;
 import org.jetbrains.annotations.NotNull;
@@ -89,8 +89,8 @@ public class EventLogger extends TopicAware implements IEventLogger {
     }
 
     @Override
-    public @NotNull ICommittableEvent event() {
-        ICommittableEvent e = new CommittableEvent()
+    public @NotNull IMutableEvent event() {
+        IMutableEvent e = new CommittableEvent()
                 .timestamp(System.currentTimeMillis())
                 .hostname(getHostname())
                 .env(getEnv())

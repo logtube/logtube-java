@@ -1,8 +1,8 @@
 package io.github.logtube.logger;
 
-import io.github.logtube.ICommittableEvent;
 import io.github.logtube.IEventFilter;
 import io.github.logtube.IEventLogger;
+import io.github.logtube.IMutableEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,8 +36,8 @@ public class DerivedEventLogger implements IEventLogger {
     }
 
     @Override
-    public @NotNull ICommittableEvent event() {
-        ICommittableEvent event = parent.event();
+    public @NotNull IMutableEvent event() {
+        IMutableEvent event = parent.event();
         if (this.filter != null) {
             filter.handle(event);
         }

@@ -1,6 +1,6 @@
 package io.github.logtube.event;
 
-import io.github.logtube.ICommittableEvent;
+import io.github.logtube.IMutableEvent;
 import io.github.logtube.utils.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * Event logtube log event in compact format
  */
-public class Event implements ICommittableEvent {
+public class Event implements IMutableEvent {
 
     public static final String UNKNOWN_HOSTNAME = "unknown-host";
 

@@ -4,6 +4,6 @@ import org.jetbrains.annotations.NotNull;
 
 public interface IEventFilter {
 
-    void handle(@NotNull ICommittableEvent event);
+    void handle(@NotNull IMutableEvent event);
 
 }
