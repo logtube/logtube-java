@@ -39,7 +39,7 @@ public class DerivedLogger implements IEventLogger {
     public @NotNull IMutableEvent event() {
         IMutableEvent event = parent.event();
         if (this.filter != null) {
-            filter.filter(event);
+            event = filter.filter(event);
         }
         return event;
     }
