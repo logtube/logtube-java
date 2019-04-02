@@ -1,13 +1,12 @@
 package io.github.logtube.logger;
 
 import io.github.logtube.ICommittableEvent;
-import io.github.logtube.ICompatibleLogger;
 import io.github.logtube.IEventFilter;
 import io.github.logtube.IEventLogger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class DerivedEventLogger implements ICompatibleLogger {
+public class DerivedEventLogger implements IEventLogger {
 
     @Nullable
     private final IEventFilter filter;
