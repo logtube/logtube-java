@@ -5,6 +5,11 @@ import org.jetbrains.annotations.NotNull;
 public class Logtube {
 
     @NotNull
+    public static IRootEventLogger getRootLogger() {
+        return LogtubeLoggerFactory.getSingleton().getRootLogger();
+    }
+
+    @NotNull
     public static IEventLogger getLogger(@NotNull String name) {
         return LogtubeLoggerFactory.getSingleton().getDerivedLogger(name);
     }

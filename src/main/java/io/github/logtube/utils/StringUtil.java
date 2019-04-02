@@ -4,6 +4,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -29,27 +30,22 @@ public class StringUtil {
         return LINE_TIMESTAMP_PREFIX_FORMAT.format(new Date(epoch));
     }
 
-    private static final SimpleDateFormat PATH_SUFFIX_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private final static char[] HEX_ARRAY = "0123456789abcdef".toCharArray();
 
-    private static class PathSuffixCache {
-        long from;
-        long to;
-        String str;
-    }
-
-    private static PathSuffixCache PATH_SUFFIX_CACHE = null;
-
-    public static String formatPathSuffix(long epoch) {
-        PathSuffixCache cache = PATH_SUFFIX_CACHE;
-        if (cache != null && cache.from <= epoch && cache.to > epoch) {
-            return cache.str;
+    public static String randomHex(int bytesLen) {
+        try {
+            byte[] buf = new byte[bytesLen];
+            char[] out = new char[bytesLen * 2];
+            new SecureRandom().nextBytes(buf);
+            for (int i = 0; i < buf.length; i++) {
+                int v = buf[i] & 0xFF;
+                out[i * 2] = HEX_ARRAY[v >>> 4];
+                out[i * 2 + 1] = HEX_ARRAY[v & 0x0F];
+            }
+            return new String(out);
+        } catch (Exception e) {
+            return "";
         }
-        cache = new PathSuffixCache();
-        cache.from = EpochUtil.beginningOfTheDay(epoch);
-        cache.to = EpochUtil.endOfTheDay(epoch);
-        cache.str = PATH_SUFFIX_FORMAT.format(new Date(epoch));
-        PATH_SUFFIX_CACHE = cache;
-        return cache.str;
     }
 
 }

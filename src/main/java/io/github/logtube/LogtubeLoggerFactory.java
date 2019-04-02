@@ -1,6 +1,6 @@
 package io.github.logtube;
 
-import io.github.logtube.logger.EventLogger;
+import io.github.logtube.logger.RootLogger;
 import io.github.logtube.outputs.EventConsoleOutput;
 import io.github.logtube.outputs.EventJSONFileOutput;
 import io.github.logtube.outputs.EventPlainFileOutput;
@@ -22,21 +22,22 @@ public class LogtubeLoggerFactory implements ILoggerFactory {
 
     private final ConcurrentMap<String, IEventLogger> derivedLoggers = new ConcurrentHashMap<>();
 
-    private final EventLogger rootLogger;
+    private final IRootEventLogger rootLogger;
 
     private LogtubeLoggerFactory() {
         LogtubeOptions options = LogtubeOptions.fromClasspath();
 
-        this.rootLogger = new EventLogger();
-        this.rootLogger.setHostname(LogtubeOptions.getHostname());
-        this.rootLogger.setProject(options.getProject());
-        this.rootLogger.setEnv(options.getEnv());
-        this.rootLogger.setTopics(options.getTopics());
+        RootLogger rootLogger = new RootLogger();
+
+        rootLogger.setHostname(LogtubeOptions.getHostname());
+        rootLogger.setProject(options.getProject());
+        rootLogger.setEnv(options.getEnv());
+        rootLogger.setTopics(options.getTopics());
 
         if (options.getConsoleEnabled()) {
             EventConsoleOutput output = new EventConsoleOutput();
             output.setTopics(options.getConsoleTopics());
-            this.rootLogger.addOutput(output);
+            rootLogger.addOutput(output);
         }
 
         if (options.getFilePlainEnabled()) {
@@ -45,7 +46,7 @@ public class LogtubeLoggerFactory implements ILoggerFactory {
                     options.getFilePlainSignal()
             );
             output.setTopics(options.getFilePlainTopics());
-            this.rootLogger.addOutput(output);
+            rootLogger.addOutput(output);
         }
 
         if (options.getFileJSONEnabled()) {
@@ -54,7 +55,7 @@ public class LogtubeLoggerFactory implements ILoggerFactory {
                     options.getFileJSONSignal()
             );
             output.setTopics(options.getFileJSONTopics());
-            this.rootLogger.addOutput(output);
+            rootLogger.addOutput(output);
         }
 
         if (options.getRemoteEnabled()) {
@@ -62,12 +63,14 @@ public class LogtubeLoggerFactory implements ILoggerFactory {
                     options.getRemoteHosts()
             );
             output.setTopics(options.getRemoteTopics());
-            this.rootLogger.addOutput(output);
+            rootLogger.addOutput(output);
         }
+
+        this.rootLogger = rootLogger;
     }
 
     @NotNull
-    public IEventLogger getRootLogger() {
+    public IRootEventLogger getRootLogger() {
         return this.rootLogger;
     }
 

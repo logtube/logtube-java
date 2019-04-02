@@ -9,6 +9,7 @@ public class LogtubeTest {
 
     @Test
     public void binding() {
+        Logtube.getRootLogger().setCrid(null);
         Logger logger = LoggerFactory.getLogger(LogtubeTest.class);
         logger.info("hello world");
     }

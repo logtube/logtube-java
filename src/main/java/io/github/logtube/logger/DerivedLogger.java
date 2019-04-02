@@ -6,7 +6,7 @@ import io.github.logtube.IMutableEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class DerivedEventLogger implements IEventLogger {
+public class DerivedLogger implements IEventLogger {
 
     @Nullable
     private final IEventFilter filter;
@@ -17,7 +17,7 @@ public class DerivedEventLogger implements IEventLogger {
     @NotNull
     private final String name;
 
-    public DerivedEventLogger(@NotNull IEventLogger parent, @NotNull String name, @Nullable IEventFilter filter) {
+    public DerivedLogger(@NotNull IEventLogger parent, @NotNull String name, @Nullable IEventFilter filter) {
         this.filter = filter;
         this.parent = parent;
         this.name = name;
@@ -32,14 +32,14 @@ public class DerivedEventLogger implements IEventLogger {
     @Override
     @NotNull
     public IEventLogger derive(@NotNull String name, @NotNull IEventFilter filter) {
-        return new DerivedEventLogger(this, name, filter);
+        return new DerivedLogger(this, name, filter);
     }
 
     @Override
     public @NotNull IMutableEvent event() {
         IMutableEvent event = parent.event();
         if (this.filter != null) {
-            filter.handle(event);
+            filter.filter(event);
         }
         return event;
     }

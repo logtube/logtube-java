@@ -28,6 +28,11 @@ public interface IEventLogger extends ITopicAware, Logger {
     }
 
     @NotNull
+    default IEventLogger derive(@Nullable IEventFilter filter) {
+        return derive(getName(), filter);
+    }
+
+    @NotNull
     default IEventLogger keyword(@NotNull String... keywords) {
         return derive(getName(), e -> e.keyword(keywords));
     }

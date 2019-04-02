@@ -1,11 +1,9 @@
 package io.github.logtube.logger;
 
-import io.github.logtube.IEventFilter;
-import io.github.logtube.IEventLogger;
-import io.github.logtube.IEventOutput;
-import io.github.logtube.IMutableEvent;
+import io.github.logtube.*;
 import io.github.logtube.event.Event;
 import io.github.logtube.topic.TopicAware;
+import io.github.logtube.utils.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -13,7 +11,7 @@ import org.slf4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EventLogger extends TopicAware implements IEventLogger {
+public class RootLogger extends TopicAware implements IRootEventLogger {
 
     private String hostname = null;
 
@@ -21,60 +19,73 @@ public class EventLogger extends TopicAware implements IEventLogger {
 
     private String env = null;
 
+    @Override
+    @Nullable
     public String getHostname() {
         return hostname;
     }
 
-    public void setHostname(String hostname) {
+    @Override
+    public void setHostname(@Nullable String hostname) {
         this.hostname = hostname;
     }
 
+    @Override
+    @Nullable
     public String getProject() {
         return project;
     }
 
-    public void setProject(String project) {
+    @Override
+    public void setProject(@Nullable String project) {
         this.project = project;
     }
 
+    @Override
+    @Nullable
     public String getEnv() {
         return env;
     }
 
-    public void setEnv(String env) {
+    @Override
+    public void setEnv(@Nullable String env) {
         this.env = env;
     }
 
     @NotNull
     private List<IEventOutput> outputs = new ArrayList<>();
 
-    @NotNull
-    private List<IEventFilter> filters = new ArrayList<>();
-
+    @Override
     public void setOutputs(@NotNull List<IEventOutput> outputs) {
         this.outputs = outputs;
     }
 
-    @Nullable
+    @Override
+    @NotNull
     public List<IEventOutput> getOutputs() {
         return this.outputs;
     }
 
-    public void addOutput(@NotNull IEventOutput output) {
-        this.outputs.add(output);
+    private final CridThreadLocal cridThreadLocal = new CridThreadLocal();
+
+    @Override
+    public void clearCrid() {
+        this.cridThreadLocal.remove();
     }
 
+    @Override
+    public void setCrid(@Nullable String crid) {
+        if (crid != null) {
+            this.cridThreadLocal.set(crid);
+        } else {
+            this.cridThreadLocal.set(StringUtil.randomHex(8));
+        }
+    }
+
+    @Override
     @NotNull
-    public List<IEventFilter> getFilters() {
-        return filters;
-    }
-
-    public void setFilters(@NotNull List<IEventFilter> filters) {
-        this.filters = filters;
-    }
-
-    public void addFilter(@NotNull IEventFilter filter) {
-        this.filters.add(filter);
+    public String getCrid() {
+        return this.cridThreadLocal.get();
     }
 
     @Override
@@ -85,29 +96,35 @@ public class EventLogger extends TopicAware implements IEventLogger {
     @Override
     @NotNull
     public IEventLogger derive(@NotNull String name, @Nullable IEventFilter filter) {
-        return new DerivedEventLogger(this, name, filter);
+        return new DerivedLogger(this, name, filter);
     }
 
     @Override
     public @NotNull IMutableEvent event() {
-        IMutableEvent e = new CommittableEvent()
+        return new MutableEvent()
                 .timestamp(System.currentTimeMillis())
                 .hostname(getHostname())
                 .env(getEnv())
+                .crid(getCrid())
                 .project(getProject());
-        getFilters().forEach(f -> f.handle(e));
-        return e;
     }
 
-    private class CommittableEvent extends Event {
+    private class MutableEvent extends Event {
 
         @Override
         public void commit() {
             if (isTopicEnabled(getTopic())) {
-                if (getOutputs() != null) {
-                    getOutputs().forEach(o -> o.appendEvent(this));
-                }
+                getOutputs().forEach(o -> o.appendEvent(this));
             }
+        }
+
+    }
+
+    public class CridThreadLocal extends ThreadLocal<String> {
+
+        @Override
+        protected String initialValue() {
+            return "-";
         }
 
     }

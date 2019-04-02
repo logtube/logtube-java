@@ -20,4 +20,9 @@ public class StringUtilTest {
         TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));
         assertEquals("[2019-03-27 16:04:24.388 +0800]", StringUtil.formatLineTimestamp(1553673864388L));
     }
+
+    @Test
+    public void randomHex() {
+        assertEquals(16, StringUtil.randomHex(8).length());
+    }
 }
