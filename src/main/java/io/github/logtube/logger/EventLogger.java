@@ -1,9 +1,6 @@
 package io.github.logtube.logger;
 
-import io.github.logtube.ICommittableEvent;
-import io.github.logtube.IEventFilter;
-import io.github.logtube.IEventLogger;
-import io.github.logtube.IEventOutput;
+import io.github.logtube.*;
 import io.github.logtube.event.Event;
 import io.github.logtube.topic.TopicAware;
 import org.jetbrains.annotations.NotNull;
@@ -13,7 +10,7 @@ import org.slf4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EventLogger extends TopicAware implements IEventLogger {
+public class EventLogger extends TopicAware implements ICompatibleLogger {
 
     private String hostname = null;
 
