@@ -1,6 +1,5 @@
 package io.github.logtube;
 
-import io.github.logtube.event.NOPEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -17,15 +16,7 @@ public interface IEventLogger extends ITopicAware, Logger {
     IEventLogger derive(@NotNull String name, @Nullable IEventFilter filter);
 
     @NotNull
-    IMutableEvent event();
-
-    @NotNull
-    default IMutableEvent topic(@NotNull String topic) {
-        if (isTopicEnabled(topic)) {
-            return event().topic(topic);
-        }
-        return NOPEvent.getSingleton();
-    }
+    IMutableEvent topic(@NotNull String topic);
 
     @NotNull
     default IEventLogger derive(@Nullable IEventFilter filter) {
@@ -85,7 +76,7 @@ public interface IEventLogger extends ITopicAware, Logger {
             buf.append("\r\n");
             t.printStackTrace(new PrintWriter(buf));
         }
-        event().topic(topic).message(buf.toString()).commit();
+        topic(topic).message(buf.toString()).commit();
     }
 
     default IMutableEvent trace() {

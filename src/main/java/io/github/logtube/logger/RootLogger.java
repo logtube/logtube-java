@@ -2,6 +2,7 @@ package io.github.logtube.logger;
 
 import io.github.logtube.*;
 import io.github.logtube.event.Event;
+import io.github.logtube.event.NOPEvent;
 import io.github.logtube.topic.TopicAware;
 import io.github.logtube.utils.StringUtil;
 import org.jetbrains.annotations.NotNull;
@@ -100,11 +101,15 @@ public class RootLogger extends TopicAware implements IRootEventLogger {
     }
 
     @Override
-    public @NotNull IMutableEvent event() {
+    public @NotNull IMutableEvent topic(@NotNull String topic) {
+        if (!isTopicEnabled(topic)) {
+            return NOPEvent.getSingleton();
+        }
         return new MutableEvent()
                 .timestamp(System.currentTimeMillis())
                 .hostname(getHostname())
                 .env(getEnv())
+                .topic(topic)
                 .crid(getCrid())
                 .project(getProject());
     }

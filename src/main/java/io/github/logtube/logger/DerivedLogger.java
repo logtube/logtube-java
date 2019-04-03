@@ -36,8 +36,8 @@ public class DerivedLogger implements IEventLogger {
     }
 
     @Override
-    public @NotNull IMutableEvent event() {
-        IMutableEvent event = parent.event();
+    public @NotNull IMutableEvent topic(@NotNull String topic) {
+        IMutableEvent event = parent.topic(topic);
         if (this.filter != null) {
             event = filter.filter(event);
         }
