@@ -1,10 +1,12 @@
 package io.github.logtube;
 
-import io.github.logtube.logger.RootLogger;
-import io.github.logtube.outputs.EventConsoleOutput;
-import io.github.logtube.outputs.EventJSONFileOutput;
-import io.github.logtube.outputs.EventPlainFileOutput;
-import io.github.logtube.outputs.EventRemoteOutput;
+import io.github.logtube.core.IEventLogger;
+import io.github.logtube.core.IRootEventLogger;
+import io.github.logtube.core.logger.RootLogger;
+import io.github.logtube.core.outputs.EventConsoleOutput;
+import io.github.logtube.core.outputs.EventJSONFileOutput;
+import io.github.logtube.core.outputs.EventPlainFileOutput;
+import io.github.logtube.core.outputs.EventRemoteOutput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.ILoggerFactory;

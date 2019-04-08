@@ -1,5 +1,7 @@
 package io.github.logtube;
 
+import io.github.logtube.core.IEventLogger;
+import io.github.logtube.core.IRootEventLogger;
 import org.jetbrains.annotations.NotNull;
 
 public class Logtube {

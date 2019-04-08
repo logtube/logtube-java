@@ -1,6 +1,6 @@
 package io.github.logtube;
 
-import io.github.logtube.utils.StringUtil;
+import io.github.logtube.core.utils.StringUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
