@@ -156,6 +156,7 @@ public class LogtubeHttpServletRequestWrapper extends HttpServletRequestWrapper 
      * @param paramStr
      */
     private void processJsonBody(String paramStr) {
+        // TODO: remove dependency on Gson
         // 避免Gson将int 转成了double
         Gson gson = new GsonBuilder().registerTypeAdapter(new TypeToken<TreeMap<String, Object>>() {
         }.getType(), new JsonDeserializer<TreeMap<String, Object>>() {
