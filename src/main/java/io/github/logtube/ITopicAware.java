@@ -6,5 +6,4 @@ public interface ITopicAware {
 
     boolean isTopicEnabled(@NotNull String topic);
 
-
 }

@@ -7,6 +7,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 可写日志事件，这是用户最常接触的接口，用于创建日志事件，并最终提交事件到日志器，并包含一系列糖方法
+ */
 public interface IMutableEvent extends IEvent {
 
     void setTimestamp(long timestamp);
@@ -29,51 +32,44 @@ public interface IMutableEvent extends IEvent {
 
     void commit();
 
-    @NotNull
     @Contract("_ -> this")
-    default IMutableEvent timestamp(long timestamp) {
+    default @NotNull IMutableEvent timestamp(long timestamp) {
         setTimestamp(timestamp);
         return this;
     }
 
-    @NotNull
     @Contract("_ -> this")
-    default IMutableEvent hostname(@Nullable String hostname) {
+    default @NotNull IMutableEvent hostname(@Nullable String hostname) {
         setHostname(hostname);
         return this;
     }
 
-    @NotNull
     @Contract("_ -> this")
-    default IMutableEvent project(@Nullable String project) {
+    default @NotNull IMutableEvent project(@Nullable String project) {
         setProject(project);
         return this;
     }
 
-    @NotNull
     @Contract("_ -> this")
-    default IMutableEvent env(@Nullable String env) {
+    default @NotNull IMutableEvent env(@Nullable String env) {
         setEnv(env);
         return this;
     }
 
-    @NotNull
     @Contract("_ -> this")
-    default IMutableEvent topic(@Nullable String topic) {
+    default @NotNull IMutableEvent topic(@Nullable String topic) {
         setTopic(topic);
         return this;
     }
 
-    @NotNull
     @Contract("_ -> this")
-    default IMutableEvent crid(@Nullable String crid) {
+    default @NotNull IMutableEvent crid(@Nullable String crid) {
         setCrid(crid);
         return this;
     }
 
-    @NotNull
     @Contract("_ -> this")
-    default IMutableEvent message(@Nullable String message) {
+    default @NotNull IMutableEvent message(@Nullable String message) {
         if (message == null) {
             return this;
         }
@@ -86,9 +82,8 @@ public interface IMutableEvent extends IEvent {
         return this;
     }
 
-    @NotNull
     @Contract("_ -> this")
-    default IMutableEvent keyword(@NotNull String... keywords) {
+    default @NotNull IMutableEvent keyword(@NotNull String... keywords) {
         if (keywords.length == 0) {
             return this;
         }

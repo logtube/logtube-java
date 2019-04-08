@@ -6,8 +6,12 @@ import org.jetbrains.annotations.Nullable;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+/**
+ * 简单的类，同时存储 IP 地址 和 端口号
+ */
 public class InetAddressAndPort {
 
+    @NotNull
     private final InetAddress address;
 
     private final int port;
@@ -17,8 +21,7 @@ public class InetAddressAndPort {
         this.port = port;
     }
 
-    @NotNull
-    public InetAddress getAddress() {
+    public @NotNull InetAddress getAddress() {
         return address;
     }
 
@@ -26,8 +29,14 @@ public class InetAddressAndPort {
         return port;
     }
 
-    @Nullable
-    public static InetAddressAndPort fromString(@NotNull String str, int defaultPort) {
+    /**
+     * 从字符串分析出地址和端口号，以冒号分割，因此暂时不支持 IPv6
+     *
+     * @param str         字符串
+     * @param defaultPort 默认端口号
+     * @return IP地址和端口号
+     */
+    public static @Nullable InetAddressAndPort fromString(@NotNull String str, int defaultPort) {
         String host = null;
         int port = 0;
         if (str.contains(":")) {

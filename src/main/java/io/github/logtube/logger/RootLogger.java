@@ -12,17 +12,19 @@ import org.slf4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 根日志器，通常一个项目只有一个根日志器，存储 主机名、项目名 和 环境名，包含多个日志输出，并且存储线程级 CRID
+ */
 public class RootLogger extends TopicAware implements IRootEventLogger {
 
-    private String hostname = null;
+    private @Nullable String hostname = null;
 
-    private String project = null;
+    private @Nullable String project = null;
 
-    private String env = null;
+    private @Nullable String env = null;
 
     @Override
-    @Nullable
-    public String getHostname() {
+    public @Nullable String getHostname() {
         return hostname;
     }
 
@@ -32,8 +34,7 @@ public class RootLogger extends TopicAware implements IRootEventLogger {
     }
 
     @Override
-    @Nullable
-    public String getProject() {
+    public @Nullable String getProject() {
         return project;
     }
 
@@ -43,8 +44,7 @@ public class RootLogger extends TopicAware implements IRootEventLogger {
     }
 
     @Override
-    @Nullable
-    public String getEnv() {
+    public @Nullable String getEnv() {
         return env;
     }
 
@@ -62,8 +62,7 @@ public class RootLogger extends TopicAware implements IRootEventLogger {
     }
 
     @Override
-    @NotNull
-    public List<IEventOutput> getOutputs() {
+    public @NotNull List<IEventOutput> getOutputs() {
         return this.outputs;
     }
 
@@ -84,8 +83,7 @@ public class RootLogger extends TopicAware implements IRootEventLogger {
     }
 
     @Override
-    @NotNull
-    public String getCrid() {
+    public @NotNull String getCrid() {
         return this.cridThreadLocal.get();
     }
 
@@ -95,15 +93,14 @@ public class RootLogger extends TopicAware implements IRootEventLogger {
     }
 
     @Override
-    @NotNull
-    public IEventLogger derive(@Nullable String name, @Nullable IEventFilter filter) {
+    public @NotNull IEventLogger derive(@Nullable String name, @Nullable IEventMiddleware middleware) {
         if (name == null) {
-            if (filter == null) {
+            if (middleware == null) {
                 return this;
             }
             name = getName();
         }
-        return new DerivedLogger(this, name, filter);
+        return new DerivedLogger(this, name, middleware);
     }
 
     @Override
@@ -111,7 +108,7 @@ public class RootLogger extends TopicAware implements IRootEventLogger {
         if (!isTopicEnabled(topic)) {
             return NOPEvent.getSingleton();
         }
-        return new MutableEvent()
+        return new LoggerEvent()
                 .timestamp(System.currentTimeMillis())
                 .hostname(getHostname())
                 .env(getEnv())
@@ -120,7 +117,10 @@ public class RootLogger extends TopicAware implements IRootEventLogger {
                 .project(getProject());
     }
 
-    private class MutableEvent extends Event {
+    /**
+     * 从 Event 继承而来的子类，将 commit 方法交给 Logger 来执行
+     */
+    private class LoggerEvent extends Event {
 
         @Override
         public void commit() {
@@ -131,7 +131,7 @@ public class RootLogger extends TopicAware implements IRootEventLogger {
 
     }
 
-    public class CridThreadLocal extends ThreadLocal<String> {
+    private class CridThreadLocal extends ThreadLocal<String> {
 
         @Override
         protected String initialValue() {

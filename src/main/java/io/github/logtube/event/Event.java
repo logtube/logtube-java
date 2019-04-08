@@ -8,45 +8,52 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 
 /**
- * Event logtube log event in compact format
+ * Logtube 事件
  */
 public class Event implements IMutableEvent {
 
+    /**
+     * 默认主机名
+     */
     public static final String UNKNOWN_HOSTNAME = "unknown-host";
 
+    /**
+     * 默认项目名
+     */
     public static final String UNKNOWN_PROJECT = "unknown-project";
 
+    /**
+     * 默认环境名
+     */
     public static final String UNKNOWN_ENV = "unknown-env";
 
+    /**
+     * 默认主题
+     */
     public static final String UNKNOWN_TOPIC = "unknown-topic";
 
+    /**
+     * 默认 CRID
+     */
     public static final String UNKNOWN_CRID = "-";
 
-    private long timestamp;
+    private long timestamp = 0;
 
-    @Nullable
-    private String hostname = null;
+    private @Nullable String hostname = null;
 
-    @Nullable
-    private String env = null;
+    private @Nullable String env = null;
 
-    @Nullable
-    private String project = null;
+    private @Nullable String project = null;
 
-    @Nullable
-    private String topic = null;
+    private @Nullable String topic = null;
 
-    @Nullable
-    private String crid = null;
+    private @Nullable String crid = null;
 
-    @Nullable
-    private String message = null;
+    private @Nullable String message = null;
 
-    @Nullable
-    private String keyword = null;
+    private @Nullable String keyword = null;
 
-    @Nullable
-    private Map<String, Object> extra;
+    private @Nullable Map<String, Object> extra;
 
     @Override
     public long getTimestamp() {
@@ -59,8 +66,7 @@ public class Event implements IMutableEvent {
     }
 
     @Override
-    @NotNull
-    public String getHostname() {
+    public @NotNull String getHostname() {
         return hostname == null ? UNKNOWN_HOSTNAME : hostname;
     }
 
@@ -70,8 +76,7 @@ public class Event implements IMutableEvent {
     }
 
     @Override
-    @NotNull
-    public String getEnv() {
+    public @NotNull String getEnv() {
         return env == null ? UNKNOWN_ENV : env;
     }
 
@@ -91,8 +96,7 @@ public class Event implements IMutableEvent {
     }
 
     @Override
-    @NotNull
-    public String getTopic() {
+    public @NotNull String getTopic() {
         return topic == null ? UNKNOWN_TOPIC : topic;
     }
 
@@ -101,10 +105,8 @@ public class Event implements IMutableEvent {
         this.topic = StringUtil.safeString(topic, null);
     }
 
-
     @Override
-    @NotNull
-    public String getCrid() {
+    public @NotNull String getCrid() {
         return crid == null ? UNKNOWN_CRID : crid;
     }
 
@@ -114,8 +116,7 @@ public class Event implements IMutableEvent {
     }
 
     @Override
-    @Nullable
-    public String getMessage() {
+    public @Nullable String getMessage() {
         return message;
     }
 
@@ -125,8 +126,7 @@ public class Event implements IMutableEvent {
     }
 
     @Override
-    @Nullable
-    public String getKeyword() {
+    public @Nullable String getKeyword() {
         return keyword;
     }
 
@@ -136,8 +136,7 @@ public class Event implements IMutableEvent {
     }
 
     @Override
-    @Nullable
-    public Map<String, Object> getExtra() {
+    public @Nullable Map<String, Object> getExtra() {
         return extra;
     }
 
@@ -146,6 +145,11 @@ public class Event implements IMutableEvent {
         this.extra = extra;
     }
 
+    /**
+     * 禁止使用 Event 的 commit 方法，因为没有意义
+     *
+     * @throws RuntimeException 任何情况下抛出该异常
+     */
     @Override
     public void commit() {
         throw new RuntimeException("never call Event#commit");

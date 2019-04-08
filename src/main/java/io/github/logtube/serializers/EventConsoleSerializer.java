@@ -14,13 +14,9 @@ public class EventConsoleSerializer implements IEventSerializer {
     @Override
     public void serialize(@NotNull IEvent e, @NotNull Writer w) throws IOException {
         w.write(StringUtil.formatLineTimestamp(e.getTimestamp()));
-        w.write(' ');
-        w.write(e.getEnv());
-        w.write('/');
-        w.write(e.getProject());
-        w.write('/');
+        w.write(" [");
         w.write(e.getTopic());
-        w.write(" (");
+        w.write("] (");
         w.write(e.getCrid());
         w.write(") ");
         if (e.getKeyword() != null) {

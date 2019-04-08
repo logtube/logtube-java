@@ -7,6 +7,9 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * SPTP 客户端，支持负载均衡，每隔一段时间会重新解析一遍主机名
+ */
 public class SPTPClient {
 
     private static final int DEFAULT_PORT = 9921;
@@ -65,7 +68,7 @@ public class SPTPClient {
         // single packet payload
         if (payload.length < PACKET_PAYLOAD_MAX_SIZE) {
             buffer[1] = MODE_SIMPLE;
-            BytesUtil.copy(buffer, 2, payload, 0, payload.length);
+            System.arraycopy(payload, 0, buffer, 2, payload.length);
             sendPacket(hostIdx, payload.length + 2);
         }
         // chunked packet payload
@@ -76,7 +79,7 @@ public class SPTPClient {
         }
         // prepare chunked header
         buffer[1] = MODE_CHUNKED;
-        BytesUtil.random(buffer, 2, 8);
+        StringUtil.randomBytes(buffer, 2, 8);
         buffer[10] = (byte) total;
         for (int i = 0; i < total; i++) {
             buffer[11] = (byte) i;
@@ -85,7 +88,7 @@ public class SPTPClient {
             if (offsetTo > payload.length) {
                 offsetTo = payload.length;
             }
-            BytesUtil.copy(buffer, 12, payload, offsetFrom, offsetTo - offsetFrom);
+            System.arraycopy(payload, offsetFrom, buffer, 12, offsetTo - offsetFrom);
             sendPacket(hostIdx, 12 + offsetTo - offsetFrom);
         }
     }

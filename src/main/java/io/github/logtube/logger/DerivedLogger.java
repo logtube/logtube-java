@@ -1,15 +1,18 @@
 package io.github.logtube.logger;
 
-import io.github.logtube.IEventFilter;
 import io.github.logtube.IEventLogger;
+import io.github.logtube.IEventMiddleware;
 import io.github.logtube.IMutableEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * 从 根日志器 派生出来的 日志器
+ */
 public class DerivedLogger implements IEventLogger {
 
     @Nullable
-    private final IEventFilter filter;
+    private final IEventMiddleware middleware;
 
     @NotNull
     private final IEventLogger parent;
@@ -17,8 +20,15 @@ public class DerivedLogger implements IEventLogger {
     @NotNull
     private final String name;
 
-    public DerivedLogger(@NotNull IEventLogger parent, @NotNull String name, @Nullable IEventFilter filter) {
-        this.filter = filter;
+    /**
+     * 创建一个新的子日志器
+     *
+     * @param parent     父
+     * @param name       名字
+     * @param middleware 可选的过滤器
+     */
+    public DerivedLogger(@NotNull IEventLogger parent, @NotNull String name, @Nullable IEventMiddleware middleware) {
+        this.middleware = middleware;
         this.parent = parent;
         this.name = name;
     }
@@ -31,21 +41,21 @@ public class DerivedLogger implements IEventLogger {
 
     @Override
     @NotNull
-    public IEventLogger derive(@Nullable String name, @Nullable IEventFilter filter) {
+    public IEventLogger derive(@Nullable String name, @Nullable IEventMiddleware middleware) {
         if (name == null) {
-            if (filter == null) {
+            if (middleware == null) {
                 return this;
             }
             name = getName();
         }
-        return new DerivedLogger(this, name, filter);
+        return new DerivedLogger(this, name, middleware);
     }
 
     @Override
     public @NotNull IMutableEvent topic(@NotNull String topic) {
         IMutableEvent event = this.parent.topic(topic);
-        if (this.filter != null) {
-            event = filter.filter(event);
+        if (this.middleware != null) {
+            event = middleware.handle(event);
         }
         return event;
     }

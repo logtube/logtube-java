@@ -8,18 +8,21 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * 将 topic 筛选逻辑封装为一个基类，提供给 日志器 和 日志输出使用
+ */
 public class TopicAware implements ITopicMutableAware {
 
     private Set<String> topics = null;
 
-    private boolean isBlacklistTopics = false;
+    private boolean isTopicsBlacklist = false;
 
     @Override
     public void setTopics(@Nullable Set<String> topics) {
         // null for "*"
         if (topics == null) {
             this.topics = null;
-            this.isBlacklistTopics = false;
+            this.isTopicsBlacklist = false;
             return;
         }
         HashSet<String> result = new HashSet<>();
@@ -34,7 +37,7 @@ public class TopicAware implements ITopicMutableAware {
                     }
                 }
             });
-            this.isBlacklistTopics = true;
+            this.isTopicsBlacklist = true;
         } else {
             // whitelist mode
             topics.forEach((e) -> {
@@ -43,7 +46,7 @@ public class TopicAware implements ITopicMutableAware {
                     result.add(topic);
                 }
             });
-            this.isBlacklistTopics = false;
+            this.isTopicsBlacklist = false;
         }
 
         this.topics = result;
@@ -54,7 +57,7 @@ public class TopicAware implements ITopicMutableAware {
         if (this.topics == null) {
             return true;
         }
-        if (this.isBlacklistTopics) {
+        if (this.isTopicsBlacklist) {
             return !this.topics.contains(topic);
         }
         return this.topics.contains(topic);

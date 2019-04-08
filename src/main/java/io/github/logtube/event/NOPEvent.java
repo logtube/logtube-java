@@ -4,20 +4,25 @@ import io.github.logtube.IMutableEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static io.github.logtube.event.Event.*;
 
+/**
+ * 无操作的 Event 事件，通常使用单例，用于静默事件
+ */
 public class NOPEvent implements IMutableEvent {
 
     private static final NOPEvent SINGLETON = new NOPEvent();
 
+    /**
+     * 获取单例
+     *
+     * @return 单例
+     */
     public static NOPEvent getSingleton() {
         return SINGLETON;
-    }
-
-    @Override
-    public void commit() {
     }
 
     @Override
@@ -26,42 +31,34 @@ public class NOPEvent implements IMutableEvent {
 
     @Override
     public void setHostname(@Nullable String hostname) {
-
     }
 
     @Override
     public void setEnv(@Nullable String env) {
-
     }
 
     @Override
     public void setProject(@Nullable String project) {
-
     }
 
     @Override
     public void setTopic(@Nullable String topic) {
-
     }
 
     @Override
     public void setCrid(@Nullable String crid) {
-
     }
 
     @Override
     public void setMessage(@Nullable String message) {
-
     }
 
     @Override
     public void setKeyword(@Nullable String keyword) {
-
     }
 
     @Override
     public void setExtra(@Nullable Map<String, Object> extra) {
-
     }
 
     @Override
@@ -96,17 +93,24 @@ public class NOPEvent implements IMutableEvent {
 
     @Override
     public @Nullable String getMessage() {
-        return null;
+        return "";
     }
 
     @Override
     public @Nullable String getKeyword() {
-        return null;
+        return "";
     }
 
     @Override
     public @Nullable Map<String, Object> getExtra() {
-        return null;
+        return new HashMap<>();
+    }
+
+    /**
+     * 提交事件，但是不会做任何事情
+     */
+    @Override
+    public void commit() {
     }
 
 }

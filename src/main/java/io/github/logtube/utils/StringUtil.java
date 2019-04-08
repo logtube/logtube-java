@@ -10,9 +10,10 @@ import java.util.Date;
 
 public class StringUtil {
 
-    @Nullable
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
+
     @Contract("_, !null -> !null")
-    public static String safeString(@Nullable String str, @Nullable String defaultValue) {
+    public static @Nullable String safeString(@Nullable String str, @Nullable String defaultValue) {
         if (str == null) {
             return defaultValue;
         }
@@ -25,18 +26,17 @@ public class StringUtil {
 
     private static final SimpleDateFormat LINE_TIMESTAMP_PREFIX_FORMAT = new SimpleDateFormat("[yyyy-MM-dd HH:mm:ss.SSS ZZZZZ]");
 
-    @NotNull
-    public static String formatLineTimestamp(long epoch) {
+    public static @NotNull String formatLineTimestamp(long epoch) {
         return LINE_TIMESTAMP_PREFIX_FORMAT.format(new Date(epoch));
     }
 
     private final static char[] HEX_ARRAY = "0123456789abcdef".toCharArray();
 
-    public static String randomHex(int bytesLen) {
+    public static @NotNull String randomHex(int bytesLen) {
         try {
             byte[] buf = new byte[bytesLen];
             char[] out = new char[bytesLen * 2];
-            new SecureRandom().nextBytes(buf);
+            SECURE_RANDOM.nextBytes(buf);
             for (int i = 0; i < buf.length; i++) {
                 int v = buf[i] & 0xFF;
                 out[i * 2] = HEX_ARRAY[v >>> 4];
@@ -46,6 +46,12 @@ public class StringUtil {
         } catch (Exception e) {
             return "";
         }
+    }
+
+    public static void randomBytes(@NotNull byte[] bytes, int offset, int length) {
+        byte[] rand = new byte[length];
+        SECURE_RANDOM.nextBytes(rand);
+        System.arraycopy(rand, 0, bytes, offset, length);
     }
 
 }

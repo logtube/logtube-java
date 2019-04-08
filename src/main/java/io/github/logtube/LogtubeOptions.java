@@ -14,7 +14,7 @@ import java.util.Set;
 
 public class LogtubeOptions {
 
-    public static String getHostname() {
+    public static @NotNull String getHostname() {
         String hostname = null;
         try {
             hostname = InetAddress.getLocalHost().getHostName();
@@ -26,11 +26,11 @@ public class LogtubeOptions {
         return hostname;
     }
 
-    private static Set<String> quickStringSet(@NotNull String... values) {
+    private static @NotNull Set<String> quickStringSet(@NotNull String... values) {
         return new HashSet<>(Arrays.asList(values));
     }
 
-    public static LogtubeOptions fromClasspath() {
+    public static @NotNull LogtubeOptions fromClasspath() {
         Properties properties = new Properties();
         try (InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("logtube.properties")) {
             if (stream != null) {
@@ -79,9 +79,8 @@ public class LogtubeOptions {
         return defaultValue;
     }
 
-    @Nullable
     @Contract("_, !null -> !null")
-    private Set<String> stringSetValue(String field, @Nullable Set<String> defaultValue) {
+    private @Nullable Set<String> stringSetValue(String field, @Nullable Set<String> defaultValue) {
         String value = properties.getProperty(field);
         if (value == null) {
             return defaultValue;
