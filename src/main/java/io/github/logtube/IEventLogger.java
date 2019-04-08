@@ -13,14 +13,19 @@ import java.io.StringWriter;
 public interface IEventLogger extends ITopicAware, Logger {
 
     @NotNull
-    IEventLogger derive(@NotNull String name, @Nullable IEventFilter filter);
+    IEventLogger derive(@Nullable String name, @Nullable IEventFilter filter);
 
     @NotNull
     IMutableEvent topic(@NotNull String topic);
 
     @NotNull
     default IEventLogger derive(@Nullable IEventFilter filter) {
-        return derive(getName(), filter);
+        return derive(null, filter);
+    }
+
+    @NotNull
+    default IEventLogger derive(@Nullable String name) {
+        return derive(name, null);
     }
 
     @NotNull

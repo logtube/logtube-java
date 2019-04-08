@@ -6,6 +6,7 @@ import io.github.logtube.outputs.EventJSONFileOutput;
 import io.github.logtube.outputs.EventPlainFileOutput;
 import io.github.logtube.outputs.EventRemoteOutput;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.Logger;
 
@@ -75,12 +76,15 @@ public class LogtubeLoggerFactory implements ILoggerFactory {
     }
 
     @NotNull
-    public IEventLogger getDerivedLogger(@NotNull String name) {
+    public IEventLogger getDerivedLogger(@Nullable String name) {
+        if (name == null) {
+            return getRootLogger();
+        }
         IEventLogger logger = this.derivedLoggers.get(name);
         if (logger != null) {
             return logger;
         } else {
-            IEventLogger newInstance = this.rootLogger.derive(name, null);
+            IEventLogger newInstance = getRootLogger().derive(name);
             IEventLogger oldInstance = this.derivedLoggers.putIfAbsent(name, newInstance);
             return oldInstance == null ? newInstance : oldInstance;
         }

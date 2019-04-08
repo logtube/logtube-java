@@ -96,7 +96,13 @@ public class RootLogger extends TopicAware implements IRootEventLogger {
 
     @Override
     @NotNull
-    public IEventLogger derive(@NotNull String name, @Nullable IEventFilter filter) {
+    public IEventLogger derive(@Nullable String name, @Nullable IEventFilter filter) {
+        if (name == null) {
+            if (filter == null) {
+                return this;
+            }
+            name = getName();
+        }
         return new DerivedLogger(this, name, filter);
     }
 

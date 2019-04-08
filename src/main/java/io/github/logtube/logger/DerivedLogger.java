@@ -31,13 +31,19 @@ public class DerivedLogger implements IEventLogger {
 
     @Override
     @NotNull
-    public IEventLogger derive(@NotNull String name, @NotNull IEventFilter filter) {
+    public IEventLogger derive(@Nullable String name, @Nullable IEventFilter filter) {
+        if (name == null) {
+            if (filter == null) {
+                return this;
+            }
+            name = getName();
+        }
         return new DerivedLogger(this, name, filter);
     }
 
     @Override
     public @NotNull IMutableEvent topic(@NotNull String topic) {
-        IMutableEvent event = parent.topic(topic);
+        IMutableEvent event = this.parent.topic(topic);
         if (this.filter != null) {
             event = filter.filter(event);
         }
@@ -46,7 +52,7 @@ public class DerivedLogger implements IEventLogger {
 
     @Override
     public boolean isTopicEnabled(@NotNull String topic) {
-        return parent.isTopicEnabled(topic);
+        return this.parent.isTopicEnabled(topic);
     }
 
 }
