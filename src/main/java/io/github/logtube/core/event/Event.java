@@ -1,7 +1,7 @@
 package io.github.logtube.core.event;
 
 import io.github.logtube.core.IMutableEvent;
-import io.github.logtube.core.utils.StringUtil;
+import io.github.logtube.utils.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -82,7 +82,7 @@ public class Event implements IMutableEvent {
 
     @Override
     public void setEnv(@Nullable String env) {
-        this.env = StringUtil.safeString(env, null);
+        this.env = Strings.safeString(env, null);
     }
 
     @NotNull
@@ -92,7 +92,7 @@ public class Event implements IMutableEvent {
 
     @Override
     public void setProject(@Nullable String project) {
-        this.project = StringUtil.safeString(project, null);
+        this.project = Strings.safeString(project, null);
     }
 
     @Override
@@ -102,7 +102,7 @@ public class Event implements IMutableEvent {
 
     @Override
     public void setTopic(@Nullable String topic) {
-        this.topic = StringUtil.safeString(topic, null);
+        this.topic = Strings.safeString(topic, null);
     }
 
     @Override
@@ -112,7 +112,7 @@ public class Event implements IMutableEvent {
 
     @Override
     public void setCrid(@Nullable String crid) {
-        this.crid = StringUtil.safeString(crid, null);
+        this.crid = Strings.safeString(crid, null);
     }
 
     @Override

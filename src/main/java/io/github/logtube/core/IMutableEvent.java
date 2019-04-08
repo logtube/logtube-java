@@ -96,11 +96,29 @@ public interface IMutableEvent extends IEvent {
         return this;
     }
 
-    @NotNull
+    @Contract("_, _ -> this")
+    default @NotNull IMutableEvent extra(@NotNull String k, @Nullable Object v) {
+        Map<String, Object> extra = getExtra();
+        if (extra == null) {
+            extra = new HashMap<>();
+        }
+        if (v == null) {
+            extra.remove(k);
+        } else {
+            if (v instanceof String || v instanceof Number || v instanceof Boolean) {
+                extra.put(k, v);
+            } else {
+                extra.put(k, v.toString());
+            }
+        }
+        setExtra(extra);
+        return this;
+    }
+
     @Contract("_ -> this")
-    default IMutableEvent extra(@NotNull Object... kvs) {
+    default @NotNull IMutableEvent extras(@NotNull Object... kvs) {
         if (kvs.length == 0 || kvs.length % 2 != 0) {
-            throw new IllegalArgumentException("extra key value not match");
+            throw new IllegalArgumentException("extras key value not match");
         }
         Map<String, Object> extra = getExtra();
         if (extra == null) {

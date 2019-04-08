@@ -1,6 +1,6 @@
 package io.github.logtube;
 
-import io.github.logtube.core.utils.StringUtil;
+import io.github.logtube.utils.Strings;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -55,7 +55,7 @@ public class LogtubeOptions {
     @Nullable
     @Contract("_, !null -> !null")
     private String safeStringValue(@NotNull String field, @Nullable String defaultValue) {
-        return StringUtil.safeString(properties.getProperty(field), defaultValue);
+        return Strings.safeString(properties.getProperty(field), defaultValue);
     }
 
     @Nullable

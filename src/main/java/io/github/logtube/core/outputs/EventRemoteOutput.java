@@ -5,7 +5,7 @@ import io.github.logtube.core.IEventOutput;
 import io.github.logtube.core.IEventSerializer;
 import io.github.logtube.core.serializers.EventJSONSerializer;
 import io.github.logtube.core.topic.TopicAware;
-import io.github.logtube.core.utils.SPTPClient;
+import io.github.logtube.utils.SPTPClient;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;

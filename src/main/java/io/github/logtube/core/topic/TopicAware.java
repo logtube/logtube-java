@@ -1,7 +1,7 @@
 package io.github.logtube.core.topic;
 
 import io.github.logtube.core.ITopicMutableAware;
-import io.github.logtube.core.utils.StringUtil;
+import io.github.logtube.utils.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,7 +31,7 @@ public class TopicAware implements ITopicMutableAware {
             topics.remove("*");
             topics.forEach((e) -> {
                 if (e.startsWith("-")) {
-                    String topic = StringUtil.safeString(e.substring(1), null);
+                    String topic = Strings.safeString(e.substring(1), null);
                     if (topic != null) {
                         result.add(topic);
                     }
@@ -41,7 +41,7 @@ public class TopicAware implements ITopicMutableAware {
         } else {
             // whitelist mode
             topics.forEach((e) -> {
-                String topic = StringUtil.safeString(e, null);
+                String topic = Strings.safeString(e, null);
                 if (topic != null) {
                     result.add(topic);
                 }

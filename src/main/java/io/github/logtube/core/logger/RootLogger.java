@@ -4,7 +4,8 @@ import io.github.logtube.core.*;
 import io.github.logtube.core.event.Event;
 import io.github.logtube.core.event.NOPEvent;
 import io.github.logtube.core.topic.TopicAware;
-import io.github.logtube.core.utils.StringUtil;
+import io.github.logtube.utils.Hex;
+import io.github.logtube.utils.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -68,6 +69,10 @@ public class RootLogger extends TopicAware implements IRootEventLogger {
 
     private final CridThreadLocal cridThreadLocal = new CridThreadLocal();
 
+    private final PathThreadLocal pathThreadLocal = new PathThreadLocal();
+
+    private final PathDigestThreadLocal pathDigestThreadLocal = new PathDigestThreadLocal();
+
     @Override
     public void clearCrid() {
         this.cridThreadLocal.remove();
@@ -78,13 +83,47 @@ public class RootLogger extends TopicAware implements IRootEventLogger {
         if (crid != null) {
             this.cridThreadLocal.set(crid);
         } else {
-            this.cridThreadLocal.set(StringUtil.randomHex(8));
+            this.cridThreadLocal.set(Hex.randomHex16());
         }
     }
 
     @Override
     public @NotNull String getCrid() {
         return this.cridThreadLocal.get();
+    }
+
+    @Override
+    public void clearPath() {
+        this.pathDigestThreadLocal.remove();
+        this.pathThreadLocal.remove();
+    }
+
+    @Override
+    public void setPath(@Nullable String path) {
+        path = Strings.normalize(path);
+        if (path != null) {
+            /*
+             * /api/v1/goods/detail/3656081/1/68/4403
+             * /api/v1/goods/detail/3656082/1/68/4404
+             * /api/v1/goods/detail/3656082/1/68/4405
+             *
+             *  以上请求判定为同类请求
+             */
+            this.pathDigestThreadLocal.set(Hex.md5(path.replaceAll("(\\b/)\\d+", "/:num")));
+            this.pathThreadLocal.set(path);
+        } else {
+            clearPath();
+        }
+    }
+
+    @Override
+    public @NotNull String getPath() {
+        return this.pathThreadLocal.get();
+    }
+
+    @Override
+    public @NotNull String getPathDigest() {
+        return this.pathDigestThreadLocal.get();
     }
 
     @Override
@@ -108,13 +147,16 @@ public class RootLogger extends TopicAware implements IRootEventLogger {
         if (!isTopicEnabled(topic)) {
             return NOPEvent.getSingleton();
         }
-        return new LoggerEvent()
-                .timestamp(System.currentTimeMillis())
+        return new LoggerEvent().timestamp(System.currentTimeMillis()).topic(topic);
+    }
+
+    private IEvent decorate(@NotNull IMutableEvent e) {
+        return e
                 .hostname(getHostname())
                 .env(getEnv())
-                .topic(topic)
+                .project(getProject())
                 .crid(getCrid())
-                .project(getProject());
+                .extras("path", getPath(), "path_digest", getPathDigest());
     }
 
     /**
@@ -125,13 +167,31 @@ public class RootLogger extends TopicAware implements IRootEventLogger {
         @Override
         public void commit() {
             if (isTopicEnabled(getTopic())) {
-                getOutputs().forEach(o -> o.appendEvent(this));
+                getOutputs().forEach(o -> o.appendEvent(decorate(this)));
             }
         }
 
     }
 
     private class CridThreadLocal extends ThreadLocal<String> {
+
+        @Override
+        protected String initialValue() {
+            return "-";
+        }
+
+    }
+
+    private class PathThreadLocal extends ThreadLocal<String> {
+
+        @Override
+        protected String initialValue() {
+            return "-";
+        }
+
+    }
+
+    private class PathDigestThreadLocal extends ThreadLocal<String> {
 
         @Override
         protected String initialValue() {

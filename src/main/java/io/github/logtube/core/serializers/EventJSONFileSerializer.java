@@ -1,7 +1,7 @@
 package io.github.logtube.core.serializers;
 
 import io.github.logtube.core.IEvent;
-import io.github.logtube.core.utils.JSONWriter;
+import io.github.logtube.utils.JSONWriter;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;

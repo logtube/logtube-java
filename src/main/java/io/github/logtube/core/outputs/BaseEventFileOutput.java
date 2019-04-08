@@ -3,8 +3,8 @@ package io.github.logtube.core.outputs;
 import io.github.logtube.core.IEvent;
 import io.github.logtube.core.IEventOutput;
 import io.github.logtube.core.topic.TopicAware;
-import io.github.logtube.core.utils.IntervalChecker;
-import io.github.logtube.core.utils.SignalChecker;
+import io.github.logtube.utils.IntervalChecker;
+import io.github.logtube.utils.SignalChecker;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Closeable;
