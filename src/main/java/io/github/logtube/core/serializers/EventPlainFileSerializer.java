@@ -24,13 +24,14 @@ public class EventPlainFileSerializer extends BaseEventFileSerializer {
         if (e.getMessage() != null) {
             w.write(e.getMessage());
         }
-        if (e.getExtra() != null) {
+        Map<String, Object> extra = e.getExtra();
+        if (extra != null && !extra.isEmpty()) {
             w.write(" {");
-            for (Map.Entry<String, Object> entry : e.getExtra().entrySet()) {
+            for (Map.Entry<String, Object> entry : extra.entrySet()) {
                 w.write(entry.getKey());
                 w.write('=');
                 w.write(entry.getValue().toString());
-                w.write(' ');
+                w.write(',');
             }
             w.write('}');
         }

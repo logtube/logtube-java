@@ -69,9 +69,9 @@ public class RootLogger extends TopicAware implements IRootEventLogger {
 
     private final CridThreadLocal cridThreadLocal = new CridThreadLocal();
 
-    private final PathThreadLocal pathThreadLocal = new PathThreadLocal();
+    private final ThreadLocal<String> pathThreadLocal = new ThreadLocal<>();
 
-    private final PathDigestThreadLocal pathDigestThreadLocal = new PathDigestThreadLocal();
+    private final ThreadLocal<String> pathDigestThreadLocal = new ThreadLocal<>();
 
     @Override
     public void clearCrid() {
@@ -117,12 +117,12 @@ public class RootLogger extends TopicAware implements IRootEventLogger {
     }
 
     @Override
-    public @NotNull String getPath() {
+    public @Nullable String getPath() {
         return this.pathThreadLocal.get();
     }
 
     @Override
-    public @NotNull String getPathDigest() {
+    public @Nullable String getPathDigest() {
         return this.pathDigestThreadLocal.get();
     }
 
@@ -174,24 +174,6 @@ public class RootLogger extends TopicAware implements IRootEventLogger {
     }
 
     private class CridThreadLocal extends ThreadLocal<String> {
-
-        @Override
-        protected String initialValue() {
-            return "-";
-        }
-
-    }
-
-    private class PathThreadLocal extends ThreadLocal<String> {
-
-        @Override
-        protected String initialValue() {
-            return "-";
-        }
-
-    }
-
-    private class PathDigestThreadLocal extends ThreadLocal<String> {
 
         @Override
         protected String initialValue() {

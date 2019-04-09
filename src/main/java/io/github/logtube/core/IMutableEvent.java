@@ -100,6 +100,9 @@ public interface IMutableEvent extends IEvent {
     default @NotNull IMutableEvent extra(@NotNull String k, @Nullable Object v) {
         Map<String, Object> extra = getExtra();
         if (extra == null) {
+            if (v == null) {
+                return this;
+            }
             extra = new HashMap<>();
         }
         if (v == null) {
@@ -116,8 +119,8 @@ public interface IMutableEvent extends IEvent {
     }
 
     @Contract("_ -> this")
-    default @NotNull IMutableEvent extras(@NotNull Object... kvs) {
-        if (kvs.length == 0 || kvs.length % 2 != 0) {
+    default @NotNull IMutableEvent extras(@Nullable Object... kvs) {
+        if (kvs == null || kvs.length == 0 || kvs.length % 2 != 0) {
             throw new IllegalArgumentException("extras key value not match");
         }
         Map<String, Object> extra = getExtra();
@@ -125,12 +128,15 @@ public interface IMutableEvent extends IEvent {
             extra = new HashMap<>();
         }
         for (int i = 0; i < kvs.length; i += 2) {
-            String k = kvs[i].toString();
+            Object k = kvs[i];
             Object v = kvs[i + 1];
+            if (k == null || v == null) {
+                continue;
+            }
             if (v instanceof String || v instanceof Number || v instanceof Boolean) {
-                extra.put(k, v);
+                extra.put(k.toString(), v);
             } else {
-                extra.put(k, v.toString());
+                extra.put(k.toString(), v.toString());
             }
         }
         setExtra(extra);

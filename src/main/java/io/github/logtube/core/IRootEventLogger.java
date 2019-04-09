@@ -20,9 +20,9 @@ public interface IRootEventLogger extends IEventLogger, ITopicMutableAware {
 
     void setPath(@Nullable String path);
 
-    @NotNull String getPath();
+    @Nullable String getPath();
 
-    @NotNull String getPathDigest();
+    @Nullable String getPathDigest();
 
     void setHostname(@Nullable String hostname);
 
