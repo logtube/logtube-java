@@ -1,7 +1,7 @@
 package io.github.logtube.core.serializers;
 
 import io.github.logtube.core.IEvent;
-import io.github.logtube.utils.JSONWriter;
+import io.github.logtube.utils.ExtraJsonWriter;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -14,7 +14,7 @@ public class EventJSONFileSerializer extends BaseEventFileSerializer {
     public void serialize(@NotNull IEvent e, @NotNull Writer w) throws IOException {
         super.serialize(e, w);
 
-        JSONWriter j = new JSONWriter(w);
+        ExtraJsonWriter j = new ExtraJsonWriter(w);
 
         j.beginObject();
         j.name("c").value(e.getCrid());
@@ -27,7 +27,8 @@ public class EventJSONFileSerializer extends BaseEventFileSerializer {
         if (e.getExtra() != null) {
             j.name("x").beginObject();
             for (Map.Entry<String, Object> entry : e.getExtra().entrySet()) {
-                j.name(entry.getKey()).value(entry.getValue());
+                j.name(entry.getKey());
+                j.value(entry.getValue());
             }
             j.endObject();
         }
