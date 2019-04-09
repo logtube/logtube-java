@@ -35,7 +35,7 @@ public class SPTPClient {
     @NotNull
     private final String[] hosts;
 
-    private final InetAddressAndPort[] resolvedHosts;
+    private final InetEndpoint[] endpoints;
 
     private final AtomicInteger count = new AtomicInteger();
 
@@ -43,14 +43,14 @@ public class SPTPClient {
 
     public SPTPClient(String[] hosts) {
         this.hosts = hosts;
-        this.resolvedHosts = new InetAddressAndPort[hosts.length];
+        this.endpoints = new InetEndpoint[hosts.length];
         this.buffer[0] = MAGIC;
         resolveHosts();
     }
 
     private void resolveHosts() {
         for (int i = 0; i < hosts.length; i++) {
-            resolvedHosts[i] = InetAddressAndPort.fromString(hosts[i], DEFAULT_PORT);
+            endpoints[i] = InetEndpoint.fromString(hosts[i], DEFAULT_PORT);
         }
     }
 
@@ -97,11 +97,11 @@ public class SPTPClient {
         if (socket == null) {
             this.socket = new DatagramSocket();
         }
-        InetAddressAndPort anp = resolvedHosts[hostIndex];
-        if (anp == null) {
+        InetEndpoint endpoint = endpoints[hostIndex];
+        if (endpoint == null) {
             return;
         }
-        this.socket.send(new DatagramPacket(buffer, 0, length, anp.getAddress(), anp.getPort()));
+        this.socket.send(new DatagramPacket(buffer, 0, length, endpoint.getAddress(), endpoint.getPort()));
     }
 
 }

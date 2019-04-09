@@ -9,14 +9,14 @@ import java.net.UnknownHostException;
 /**
  * 简单的类，同时存储 IP 地址 和 端口号
  */
-public class InetAddressAndPort {
+public class InetEndpoint {
 
     @NotNull
     private final InetAddress address;
 
     private final int port;
 
-    public InetAddressAndPort(@NotNull InetAddress address, int port) {
+    public InetEndpoint(@NotNull InetAddress address, int port) {
         this.address = address;
         this.port = port;
     }
@@ -36,7 +36,7 @@ public class InetAddressAndPort {
      * @param defaultPort 默认端口号
      * @return IP地址和端口号
      */
-    public static @Nullable InetAddressAndPort fromString(@NotNull String str, int defaultPort) {
+    public static @Nullable InetEndpoint fromString(@NotNull String str, int defaultPort) {
         String host = null;
         int port = 0;
         if (str.contains(":")) {
@@ -53,7 +53,7 @@ public class InetAddressAndPort {
         }
         try {
             InetAddress address = InetAddress.getByName(host);
-            return new InetAddressAndPort(address, port);
+            return new InetEndpoint(address, port);
         } catch (UnknownHostException e) {
             return null;
         }
