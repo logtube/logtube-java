@@ -13,6 +13,8 @@ public class LogtubeTest {
         Logtube.getRootLogger().setCrid(null);
         Logger logger = LoggerFactory.getLogger(LogtubeTest.class);
         logger.info("hello world");
+        logger.warn("warn test");
+        logger.trace("hello world {}", "222");
     }
 
 }

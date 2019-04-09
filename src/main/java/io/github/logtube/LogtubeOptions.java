@@ -7,10 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.InputStream;
 import java.net.InetAddress;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
 public class LogtubeOptions {
 
@@ -80,7 +77,7 @@ public class LogtubeOptions {
     }
 
     @Contract("_, !null -> !null")
-    private @Nullable Set<String> stringSetValue(String field, @Nullable Set<String> defaultValue) {
+    private @Nullable Set<String> setValue(String field, @Nullable Set<String> defaultValue) {
         String value = properties.getProperty(field);
         if (value == null) {
             return defaultValue;
@@ -97,12 +94,44 @@ public class LogtubeOptions {
             }
             result.add(component);
         }
-        if (result.size() == 0) {
+        if (result.isEmpty()) {
             return defaultValue;
         }
         return result;
     }
 
+    @Contract("_, !null -> !null")
+    private @Nullable Map<String, String> mapValue(String field, @Nullable Map<String, String> defaultValue) {
+        String value = properties.getProperty(field);
+        if (value == null) {
+            return defaultValue;
+        }
+        String[] components = value.split(",");
+        if (components.length == 0) {
+            return defaultValue;
+        }
+        HashMap<String, String> result = new HashMap<>();
+        for (String component : components) {
+            component = component.trim();
+            if (component.length() == 0) {
+                continue;
+            }
+            String[] kvs = component.split("=");
+            if (kvs.length != 2) {
+                continue;
+            }
+            String k = Strings.normalize(kvs[0]);
+            String v = Strings.normalize(kvs[1]);
+            if (k == null || v == null) {
+                continue;
+            }
+            result.put(k, v);
+        }
+        if (result.isEmpty()) {
+            return defaultValue;
+        }
+        return result;
+    }
 
     @NotNull
     public String getProject() {
@@ -114,9 +143,14 @@ public class LogtubeOptions {
         return safeStringValue("logtube.env", "unknown-env");
     }
 
-    @Nullable
+    @NotNull
     public Set<String> getTopics() {
-        return stringSetValue("logtube.topics", quickStringSet("*", "-trace", "-debug"));
+        return setValue("logtube.topics", quickStringSet("*", "-trace", "-debug"));
+    }
+
+    @NotNull
+    public Map<String, String> getTopicMappings() {
+        return mapValue("logtube.topic-mappings", new HashMap<>());
     }
 
     public boolean getConsoleEnabled() {
@@ -125,7 +159,7 @@ public class LogtubeOptions {
 
     @Nullable
     public Set<String> getConsoleTopics() {
-        return stringSetValue("logtube.console.topics", null);
+        return setValue("logtube.console.topics", null);
     }
 
     public boolean getFilePlainEnabled() {
@@ -134,7 +168,7 @@ public class LogtubeOptions {
 
     @Nullable
     public Set<String> getFilePlainTopics() {
-        return stringSetValue("logtube.file-plain.topics", quickStringSet("trace", "debug", "info", "warn", "error"));
+        return setValue("logtube.file-plain.topics", quickStringSet("trace", "debug", "info", "warn", "error"));
     }
 
     @NotNull
@@ -153,7 +187,7 @@ public class LogtubeOptions {
 
     @Nullable
     public Set<String> getFileJSONTopics() {
-        return stringSetValue("logtube.file-json.topics", quickStringSet("*", "-trace", "-debug", "-info", "-warn", "-error"));
+        return setValue("logtube.file-json.topics", quickStringSet("*", "-trace", "-debug", "-info", "-warn", "-error"));
     }
 
     @NotNull
@@ -172,12 +206,12 @@ public class LogtubeOptions {
 
     @Nullable
     public Set<String> getRemoteTopics() {
-        return stringSetValue("logtube.remote.topics", quickStringSet("*", "-trace", "-debug"));
+        return setValue("logtube.remote.topics", quickStringSet("*", "-trace", "-debug"));
     }
 
     @NotNull
     public String[] getRemoteHosts() {
-        Set<String> set = stringSetValue("logtube.remote.hosts", null);
+        Set<String> set = setValue("logtube.remote.hosts", null);
         if (set == null) {
             return new String[]{"127.0.0.1:9921"};
         }

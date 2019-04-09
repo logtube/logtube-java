@@ -36,6 +36,7 @@ public class LogtubeLoggerFactory implements ILoggerFactory {
         rootLogger.setProject(options.getProject());
         rootLogger.setEnv(options.getEnv());
         rootLogger.setTopics(options.getTopics());
+        rootLogger.setTopicMappings(options.getTopicMappings());
 
         if (options.getConsoleEnabled()) {
             EventConsoleOutput output = new EventConsoleOutput();

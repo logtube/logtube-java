@@ -11,7 +11,9 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 根日志器，通常一个项目只有一个根日志器，存储 主机名、项目名 和 环境名，包含多个日志输出，并且存储线程级 CRID
@@ -24,32 +26,26 @@ public class RootLogger extends TopicAware implements IRootEventLogger {
 
     private @Nullable String env = null;
 
-    @Override
     public @Nullable String getHostname() {
         return hostname;
     }
 
-    @Override
     public void setHostname(@Nullable String hostname) {
         this.hostname = hostname;
     }
 
-    @Override
     public @Nullable String getProject() {
         return project;
     }
 
-    @Override
     public void setProject(@Nullable String project) {
         this.project = project;
     }
 
-    @Override
     public @Nullable String getEnv() {
         return env;
     }
 
-    @Override
     public void setEnv(@Nullable String env) {
         this.env = env;
     }
@@ -57,14 +53,31 @@ public class RootLogger extends TopicAware implements IRootEventLogger {
     @NotNull
     private List<IEventOutput> outputs = new ArrayList<>();
 
-    @Override
     public void setOutputs(@NotNull List<IEventOutput> outputs) {
         this.outputs = outputs;
     }
 
-    @Override
     public @NotNull List<IEventOutput> getOutputs() {
         return this.outputs;
+    }
+
+    public void addOutput(@NotNull IEventOutput output) {
+        this.outputs.add(output);
+    }
+
+    @NotNull
+    private Map<String, String> topicMappings = new HashMap<>();
+
+    public void setTopicMappings(@Nullable Map<String, String> topicMappings) {
+        if (topicMappings == null) {
+            this.topicMappings = new HashMap<>();
+        } else {
+            this.topicMappings = topicMappings;
+        }
+    }
+
+    private @NotNull String resolveTopic(@NotNull String topic) {
+        return this.topicMappings.getOrDefault(topic, topic);
     }
 
     private final CridThreadLocal cridThreadLocal = new CridThreadLocal();
@@ -147,7 +160,7 @@ public class RootLogger extends TopicAware implements IRootEventLogger {
         if (!isTopicEnabled(topic)) {
             return NOPEvent.getSingleton();
         }
-        return new LoggerEvent().timestamp(System.currentTimeMillis()).topic(topic);
+        return new LoggerEvent().timestamp(System.currentTimeMillis()).topic(resolveTopic(topic));
     }
 
     private IEvent decorate(@NotNull IMutableEvent e) {

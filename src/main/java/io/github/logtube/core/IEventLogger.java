@@ -87,6 +87,8 @@ public interface IEventLogger extends ITopicAware, Logger {
         StringWriter buf = new StringWriter();
         buf.append('[');
         buf.append(Thread.currentThread().getName());
+        buf.append("] [");
+        buf.append(topic.toUpperCase());
         buf.append("] ");
         buf.append(String.valueOf(getName())).append(" - ");
         buf.append(msg);

@@ -102,6 +102,10 @@ public class Event implements IMutableEvent {
 
     @Override
     public void setTopic(@Nullable String topic) {
+        // never set topic twice
+        if (this.topic != null) {
+            return;
+        }
         this.topic = Strings.safeString(topic, null);
     }
 
