@@ -31,7 +31,7 @@ public class TopicAware implements ITopicMutableAware {
             topics.remove("*");
             topics.forEach((e) -> {
                 if (e.startsWith("-")) {
-                    String topic = Strings.safeString(e.substring(1), null);
+                    String topic = Strings.sanitize(e.substring(1), null);
                     if (topic != null) {
                         result.add(topic);
                     }
@@ -41,7 +41,7 @@ public class TopicAware implements ITopicMutableAware {
         } else {
             // whitelist mode
             topics.forEach((e) -> {
-                String topic = Strings.safeString(e, null);
+                String topic = Strings.sanitize(e, null);
                 if (topic != null) {
                     result.add(topic);
                 }

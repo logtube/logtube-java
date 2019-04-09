@@ -10,9 +10,9 @@ public class StringsTest {
 
     @Test
     public void safeString() {
-        assertEquals("a_b_c", Strings.safeString("a,b.c", "ab"));
-        assertEquals("ab", Strings.safeString(null, "ab"));
-        assertEquals("a_b_c", Strings.safeString("a,B.c", "ab"));
+        assertEquals("a_b_c", Strings.sanitize("a,b.c", "ab"));
+        assertEquals("ab", Strings.sanitize(null, "ab"));
+        assertEquals("a_b_c", Strings.sanitize("a,B.c", "ab"));
     }
 
     @Test
@@ -42,8 +42,8 @@ public class StringsTest {
 
     @Test
     public void normalizeKeyword() {
-        assertEquals(io.github.logtube.utils.Strings.normalizeKeyword(",]]]  "), "_");
-        assertEquals(Strings.normalizeKeyword("a,b,c,]]dd "), "a_b_c_dd");
+        assertEquals(io.github.logtube.utils.Strings.safeNormalizeKeyword(",]]]  "), "_");
+        assertEquals(Strings.safeNormalizeKeyword("a,b,c,]]dd "), "a_b_c_dd");
     }
 
 }

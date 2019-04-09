@@ -1,6 +1,5 @@
 package io.github.logtube.perf;
 
-import io.github.logtube.utils.CallerInfo;
 import io.github.logtube.utils.Reflections;
 
 public class XPerf {
@@ -15,8 +14,14 @@ public class XPerf {
      * @return a new performance tracker
      */
     public static XPerfCommitter create(String action, Object... arguments) {
-        CallerInfo info = Reflections.getCallerInfo();
-        return new XPerfCommitter(info.getClassName(), info.getMethodName()).setCommand(action, arguments);
+        String className = "MISSING";
+        String methodName = "MISSING";
+        StackTraceElement element = Reflections.getStackTraceElement(XPerf.class);
+        if (element != null) {
+            className = element.getClassName();
+            methodName = element.getMethodName();
+        }
+        return new XPerfCommitter(className, methodName).setCommand(action, arguments);
     }
 
 }

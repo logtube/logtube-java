@@ -1,5 +1,6 @@
 package io.github.logtube.core;
 
+import io.github.logtube.utils.Reflections;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -90,7 +91,10 @@ public interface IEventLogger extends ITopicAware, Logger {
         buf.append("] [");
         buf.append(topic.toUpperCase());
         buf.append("] ");
-        buf.append(String.valueOf(getName())).append(" - ");
+        buf.append(String.valueOf(getName()));
+        buf.append(':');
+        buf.append(String.valueOf(Reflections.getLineNumber(IEventLogger.class)));
+        buf.append(" - ");
         buf.append(msg);
         if (t != null) {
             buf.append("\r\n");

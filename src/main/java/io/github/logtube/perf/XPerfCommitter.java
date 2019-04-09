@@ -5,6 +5,7 @@ import io.github.logtube.core.IMutableEvent;
 import io.github.logtube.utils.Strings;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -15,7 +16,7 @@ public class XPerfCommitter {
 
     private final long startTime = System.currentTimeMillis();
 
-    public XPerfCommitter(String className, String methodName) {
+    public XPerfCommitter(@Nullable String className, @Nullable String methodName) {
         this.event.extra("class_name", className);
         this.event.extra("method_name", methodName);
     }

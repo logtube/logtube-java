@@ -52,7 +52,7 @@ public class LogtubeOptions {
     @Nullable
     @Contract("_, !null -> !null")
     private String safeStringValue(@NotNull String field, @Nullable String defaultValue) {
-        return Strings.safeString(properties.getProperty(field), defaultValue);
+        return Strings.sanitize(properties.getProperty(field), defaultValue);
     }
 
     @Nullable

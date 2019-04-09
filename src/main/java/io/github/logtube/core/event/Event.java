@@ -82,7 +82,7 @@ public class Event implements IMutableEvent {
 
     @Override
     public void setEnv(@Nullable String env) {
-        this.env = Strings.safeString(env, null);
+        this.env = Strings.sanitize(env, null);
     }
 
     @NotNull
@@ -92,7 +92,7 @@ public class Event implements IMutableEvent {
 
     @Override
     public void setProject(@Nullable String project) {
-        this.project = Strings.safeString(project, null);
+        this.project = Strings.sanitize(project, null);
     }
 
     @Override
@@ -106,7 +106,7 @@ public class Event implements IMutableEvent {
         if (this.topic != null) {
             return;
         }
-        this.topic = Strings.safeString(topic, null);
+        this.topic = Strings.sanitize(topic, null);
     }
 
     @Override
@@ -116,7 +116,7 @@ public class Event implements IMutableEvent {
 
     @Override
     public void setCrid(@Nullable String crid) {
-        this.crid = Strings.safeString(crid, null);
+        this.crid = Strings.sanitize(crid, null);
     }
 
     @Override
@@ -126,7 +126,7 @@ public class Event implements IMutableEvent {
 
     @Override
     public void setMessage(@Nullable String message) {
-        this.message = message;
+        this.message = Strings.normalize(message);
     }
 
     @Override
@@ -136,7 +136,7 @@ public class Event implements IMutableEvent {
 
     @Override
     public void setKeyword(@Nullable String keyword) {
-        this.keyword = keyword;
+        this.keyword = Strings.normalize(keyword);
     }
 
     @Override

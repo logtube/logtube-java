@@ -1,5 +1,6 @@
 package io.github.logtube.core;
 
+import io.github.logtube.utils.Strings;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -86,6 +87,9 @@ public interface IMutableEvent extends IEvent {
     default @NotNull IMutableEvent keyword(@NotNull String... keywords) {
         if (keywords.length == 0) {
             return this;
+        }
+        for (int i = 0; i < keywords.length; i++) {
+            keywords[i] = Strings.safeNormalizeKeyword(keywords[i]);
         }
         String current = getKeyword();
         if (current == null) {
