@@ -17,7 +17,7 @@
 
     <groupId>io.github.logtube</groupId>
     <artifactId>logtube</artifactId>
-    <version>0.5</version>
+    <version>0.6</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Logtube Java SDK</description>
