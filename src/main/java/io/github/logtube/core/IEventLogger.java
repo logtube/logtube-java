@@ -135,7 +135,7 @@ public interface IEventLogger extends ITopicAware, Logger {
 
     @Override
     default boolean isInfoEnabled() {
-        return isTopicEnabled("debug");
+        return isTopicEnabled("info");
     }
 
     @Override
