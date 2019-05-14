@@ -33,6 +33,8 @@ public interface IEventLogger extends ITopicAware, Logger {
      */
     @NotNull IMutableEvent topic(@NotNull String topic);
 
+    //////////////////////// default methods //////////////////////////////
+
     default @NotNull IEventLogger derive(@Nullable IEventMiddleware filter) {
         return derive(null, filter);
     }
@@ -43,6 +45,10 @@ public interface IEventLogger extends ITopicAware, Logger {
 
     default @NotNull IEventLogger keyword(@NotNull String... keywords) {
         return derive(e -> e.keyword(keywords));
+    }
+
+    default @NotNull IEventLogger withK(@NotNull String... keywords) {
+        return keyword(keywords);
     }
 
     //////////////////////// 与 slf4j 兼容的代码 /////////////////////////////
