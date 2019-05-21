@@ -2,12 +2,16 @@ package io.github.logtube.core.outputs;
 
 import io.github.logtube.core.IEvent;
 import io.github.logtube.core.IEventOutput;
+import io.github.logtube.core.IEventSerializer;
+import io.github.logtube.core.serializers.EventRedisSerializer;
 import io.github.logtube.core.topic.TopicAware;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.atomic.AtomicLong;
 
 public class EventRedisOutput extends TopicAware implements IEventOutput, Runnable {
+
+    private final IEventSerializer serializer = new EventRedisSerializer();
 
     private final String[] hosts;
 

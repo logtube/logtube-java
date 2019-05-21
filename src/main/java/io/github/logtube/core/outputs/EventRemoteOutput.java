@@ -14,7 +14,7 @@ import java.io.OutputStreamWriter;
 
 public class EventRemoteOutput extends TopicAware implements IEventOutput {
 
-    private static final IEventSerializer SERIALIZER = new EventJSONSerializer();
+    private final IEventSerializer serializer = new EventJSONSerializer();
 
     private final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
@@ -53,7 +53,7 @@ public class EventRemoteOutput extends TopicAware implements IEventOutput {
         synchronized (this) {
             buffer.reset();
             try {
-                SERIALIZER.serialize(e, bufferWriter);
+                serializer.serialize(e, bufferWriter);
                 bufferWriter.flush();
                 client.send(buffer.toByteArray());
             } catch (IOException ignored) {

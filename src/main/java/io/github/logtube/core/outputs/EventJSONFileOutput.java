@@ -10,7 +10,7 @@ import java.io.Writer;
 
 public class EventJSONFileOutput extends BaseEventFileOutput {
 
-    private static final IEventSerializer SERIALIZER = new EventJSONFileSerializer();
+    private final IEventSerializer serializer = new EventJSONFileSerializer();
 
     public EventJSONFileOutput(@NotNull String dir, @NotNull String signal) {
         super(dir, signal);
@@ -18,7 +18,7 @@ public class EventJSONFileOutput extends BaseEventFileOutput {
 
     @Override
     void serializeLine(@NotNull IEvent e, @NotNull Writer w) throws IOException {
-        SERIALIZER.serialize(e, w);
+        serializer.serialize(e, w);
     }
 
 }

@@ -15,7 +15,7 @@ public class EventConsoleOutput extends TopicAware implements IEventOutput {
 
     private static final char[] NEW_LINE = new char[]{'\r', '\n'};
 
-    private static final IEventSerializer SERIALIZER = new EventConsoleSerializer();
+    private final IEventSerializer serializer = new EventConsoleSerializer();
 
     private final Writer writer = new PrintWriter(System.out);
 
@@ -34,7 +34,7 @@ public class EventConsoleOutput extends TopicAware implements IEventOutput {
         }
         synchronized (this) {
             try {
-                SERIALIZER.serialize(e, writer);
+                serializer.serialize(e, writer);
                 writer.write(NEW_LINE);
                 writer.flush();
             } catch (IOException ignored) {
