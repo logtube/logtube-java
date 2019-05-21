@@ -1,7 +1,9 @@
 package io.github.logtube;
 
 import io.github.logtube.core.IEventLogger;
+import io.github.logtube.core.ILifeCycle;
 import io.github.logtube.core.IRootEventLogger;
+import io.github.logtube.core.logger.NOPLogger;
 import io.github.logtube.core.logger.RootLogger;
 import io.github.logtube.core.outputs.*;
 import org.jetbrains.annotations.NotNull;
@@ -12,9 +14,14 @@ import org.slf4j.Logger;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-public class LogtubeLoggerFactory implements ILoggerFactory {
+public class LogtubeLoggerFactory implements ILoggerFactory, ILifeCycle {
 
-    private static final LogtubeLoggerFactory SINGLETON = new LogtubeLoggerFactory();
+    private static final LogtubeLoggerFactory SINGLETON;
+
+    static {
+        SINGLETON = new LogtubeLoggerFactory();
+        SINGLETON.start();
+    }
 
     public static LogtubeLoggerFactory getSingleton() {
         return SINGLETON;
@@ -22,9 +29,39 @@ public class LogtubeLoggerFactory implements ILoggerFactory {
 
     private final ConcurrentMap<String, IEventLogger> derivedLoggers = new ConcurrentHashMap<>();
 
-    private final IRootEventLogger rootLogger;
+    @NotNull
+    private IRootEventLogger rootLogger = NOPLogger.getSingleton();
 
     private LogtubeLoggerFactory() {
+    }
+
+    @NotNull
+    public IRootEventLogger getRootLogger() {
+        return this.rootLogger;
+    }
+
+    @NotNull
+    public IEventLogger getDerivedLogger(@Nullable String name) {
+        if (name == null) {
+            return getRootLogger();
+        }
+        IEventLogger logger = this.derivedLoggers.get(name);
+        if (logger != null) {
+            return logger;
+        } else {
+            IEventLogger newInstance = getRootLogger().derive(name);
+            IEventLogger oldInstance = this.derivedLoggers.putIfAbsent(name, newInstance);
+            return oldInstance == null ? newInstance : oldInstance;
+        }
+    }
+
+    @Override
+    public Logger getLogger(String name) {
+        return getDerivedLogger(name);
+    }
+
+    @Override
+    public void start() {
         LogtubeOptions options = LogtubeOptions.fromClasspath();
 
         RootLogger rootLogger = new RootLogger();
@@ -76,31 +113,13 @@ public class LogtubeLoggerFactory implements ILoggerFactory {
         }
 
         this.rootLogger = rootLogger;
-    }
-
-    @NotNull
-    public IRootEventLogger getRootLogger() {
-        return this.rootLogger;
-    }
-
-    @NotNull
-    public IEventLogger getDerivedLogger(@Nullable String name) {
-        if (name == null) {
-            return getRootLogger();
-        }
-        IEventLogger logger = this.derivedLoggers.get(name);
-        if (logger != null) {
-            return logger;
-        } else {
-            IEventLogger newInstance = getRootLogger().derive(name);
-            IEventLogger oldInstance = this.derivedLoggers.putIfAbsent(name, newInstance);
-            return oldInstance == null ? newInstance : oldInstance;
-        }
+        this.rootLogger.start();
     }
 
     @Override
-    public Logger getLogger(String name) {
-        return getDerivedLogger(name);
+    public void stop() {
+        this.rootLogger.stop();
+        this.rootLogger = NOPLogger.getSingleton();
     }
 
 }

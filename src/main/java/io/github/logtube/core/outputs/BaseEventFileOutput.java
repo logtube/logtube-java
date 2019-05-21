@@ -7,7 +7,6 @@ import io.github.logtube.utils.IntervalChecker;
 import io.github.logtube.utils.SignalChecker;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.Closeable;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -16,7 +15,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class BaseEventFileOutput extends TopicAware implements IEventOutput, Closeable {
+public abstract class BaseEventFileOutput extends TopicAware implements IEventOutput {
 
     private static final char[] NEW_LINE = new char[]{'\r', '\n'};
 
@@ -88,11 +87,19 @@ public abstract class BaseEventFileOutput extends TopicAware implements IEventOu
         }
     }
 
-    abstract void serializeLine(@NotNull IEvent e, @NotNull Writer w) throws IOException;
 
     @Override
-    public synchronized void close() throws IOException {
-        closeWriters();
+    public void start() {
     }
+
+    @Override
+    public synchronized void stop() {
+        try {
+            closeWriters();
+        } catch (IOException ignored) {
+        }
+    }
+
+    abstract void serializeLine(@NotNull IEvent e, @NotNull Writer w) throws IOException;
 
 }

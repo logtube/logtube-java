@@ -14,7 +14,7 @@ import java.io.StringWriter;
 /**
  * Logtube 暴露的主要接口，同时实现 slf4j 的 Logger 接口，包含大量糖方法
  */
-public interface IEventLogger extends ITopicAware, Logger {
+public interface IEventLogger extends ITopicAware, ILifeCycle, Logger {
 
     /**
      * 派生子日志器，一般用于 根日志器，也可以由 子日志器派生，用于添加默认的关键词等

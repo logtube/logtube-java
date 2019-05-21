@@ -20,6 +20,14 @@ public class EventConsoleOutput extends TopicAware implements IEventOutput {
     private final Writer writer = new PrintWriter(System.out);
 
     @Override
+    public void start() {
+    }
+
+    @Override
+    public void stop() {
+    }
+
+    @Override
     public synchronized void appendEvent(@NotNull IEvent e) {
         if (!isTopicEnabled(e.getTopic())) {
             return;

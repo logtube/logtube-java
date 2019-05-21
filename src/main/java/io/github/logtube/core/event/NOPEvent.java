@@ -16,6 +16,9 @@ public class NOPEvent implements IMutableEvent {
 
     private static final NOPEvent SINGLETON = new NOPEvent();
 
+    private NOPEvent() {
+    }
+
     /**
      * 获取单例
      *

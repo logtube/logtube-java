@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * 日志输出
  */
-public interface IEventOutput {
+public interface IEventOutput extends ILifeCycle {
 
     /**
      * 输出一个日志事件

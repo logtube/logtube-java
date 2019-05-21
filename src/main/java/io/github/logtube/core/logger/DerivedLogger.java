@@ -65,4 +65,13 @@ public class DerivedLogger implements IEventLogger {
         return this.parent.isTopicEnabled(topic);
     }
 
+
+    @Override
+    public void start() {
+    }
+
+    @Override
+    public void stop() {
+    }
+
 }

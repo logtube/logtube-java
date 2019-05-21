@@ -20,17 +20,36 @@ public class EventRemoteOutput extends TopicAware implements IEventOutput {
 
     private final OutputStreamWriter bufferWriter = new OutputStreamWriter(buffer);
 
-    private final SPTPClient client;
+    private final String[] hosts;
+
+    private SPTPClient client;
 
     public EventRemoteOutput(String[] hosts) {
-        this.client = new SPTPClient(hosts);
+        this.hosts = hosts;
+    }
+
+    @Override
+    public void start() {
+        this.client = new SPTPClient(this.hosts);
+    }
+
+    @Override
+    public void stop() {
+        this.client = null;
     }
 
     @Override
     public void appendEvent(@NotNull IEvent e) {
+        // check topic enabled
         if (!isTopicEnabled(e.getTopic())) {
             return;
         }
+        // local ref of client
+        SPTPClient client = this.client;
+        if (client == null) {
+            return;
+        }
+        // write the payload
         synchronized (this) {
             buffer.reset();
             try {

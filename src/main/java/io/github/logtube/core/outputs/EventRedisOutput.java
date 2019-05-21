@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-public class EventRedisOutput extends TopicAware implements IEventOutput {
+public class EventRedisOutput extends TopicAware implements IEventOutput, Runnable {
 
     private final String[] hosts;
 
@@ -21,8 +21,23 @@ public class EventRedisOutput extends TopicAware implements IEventOutput {
     }
 
     @Override
+    public void start() {
+    }
+
+    @Override
+    public void stop() {
+    }
+
+    @Override
     public void appendEvent(@NotNull IEvent e) {
         throw new RuntimeException("not implemented");
     }
 
+    @Override
+    public void run() {
+        // check interrupted
+        if (Thread.interrupted()) {
+            return;
+        }
+    }
 }

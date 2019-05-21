@@ -172,6 +172,16 @@ public class RootLogger extends TopicAware implements IRootEventLogger {
                 .extras("path", getPath(), "path_digest", getPathDigest());
     }
 
+    @Override
+    public void start() {
+        this.outputs.forEach(ILifeCycle::start);
+    }
+
+    @Override
+    public void stop() {
+        this.outputs.forEach(ILifeCycle::stop);
+    }
+
     /**
      * 从 Event 继承而来的子类，将 commit 方法交给 Logger 来执行
      */
