@@ -3,10 +3,7 @@ package io.github.logtube;
 import io.github.logtube.core.IEventLogger;
 import io.github.logtube.core.IRootEventLogger;
 import io.github.logtube.core.logger.RootLogger;
-import io.github.logtube.core.outputs.EventConsoleOutput;
-import io.github.logtube.core.outputs.EventJSONFileOutput;
-import io.github.logtube.core.outputs.EventPlainFileOutput;
-import io.github.logtube.core.outputs.EventRemoteOutput;
+import io.github.logtube.core.outputs.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.ILoggerFactory;
@@ -67,6 +64,14 @@ public class LogtubeLoggerFactory implements ILoggerFactory {
                     options.getRemoteHosts()
             );
             output.setTopics(options.getRemoteTopics());
+            rootLogger.addOutput(output);
+        }
+        if (options.getRedisEnabled()) {
+            EventRedisOutput output = new EventRedisOutput(
+                    options.getRedisHosts(),
+                    options.getRedisKey()
+            );
+            output.setTopics(options.getRedisTopics());
             rootLogger.addOutput(output);
         }
 
