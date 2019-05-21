@@ -218,4 +218,28 @@ public class LogtubeOptions {
         return (String[]) set.toArray();
     }
 
+    public boolean getRedisEnabled() {
+        return booleanValue("logtube.redis.enabled", false);
+    }
+
+    @NotNull
+    public Set<String> getRedisTopics() {
+        return setValue("logtube.redis.topics", quickStringSet("*", "-trace", "-debug"));
+    }
+
+
+    @NotNull
+    public String[] getRedisHosts() {
+        Set<String> set = setValue("logtube.redis.hosts", null);
+        if (set == null) {
+            return new String[]{"127.0.0.1:6379"};
+        }
+        return (String[]) set.toArray();
+    }
+
+    @NotNull
+    public String getRedisKey() {
+        return stringValue("logtube.redis.key", "logtube");
+    }
+
 }
