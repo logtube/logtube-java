@@ -28,6 +28,7 @@ public class LogtubeOptions {
     }
 
     public static @NotNull LogtubeOptions fromClasspath() {
+        // load logtube.properties
         Properties properties = new Properties();
         try (InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("logtube.properties")) {
             if (stream != null) {
@@ -38,6 +39,21 @@ public class LogtubeOptions {
         } catch (Exception e) {
             System.err.println(e.getMessage());
             System.err.println("failed to load logtube.properties, using default options.");
+        }
+        // load custom file
+        String filename = properties.getProperty("logtube.config-file");
+        if (filename != null) {
+            properties = new Properties();
+            try (InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(filename)) {
+                if (stream != null) {
+                    properties.load(stream);
+                } else {
+                    System.err.println(filename + " not found in class path, using default options");
+                }
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+                System.err.println("failed to load " + filename + ", using default options.");
+            }
         }
         return new LogtubeOptions(properties);
     }
