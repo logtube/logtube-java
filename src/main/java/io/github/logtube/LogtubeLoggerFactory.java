@@ -60,8 +60,12 @@ public class LogtubeLoggerFactory implements ILoggerFactory, ILifeCycle {
         return getDerivedLogger(name);
     }
 
-    @Override
-    public void start() {
+    private boolean isStarted = false;
+
+    public synchronized void start() {
+        if (this.isStarted) throw new RuntimeException("already started");
+        this.isStarted = true;
+
         LogtubeOptions options = LogtubeOptions.fromClasspath();
 
         RootLogger rootLogger = new RootLogger();
@@ -112,14 +116,21 @@ public class LogtubeLoggerFactory implements ILoggerFactory, ILifeCycle {
             rootLogger.addOutput(output);
         }
 
+        rootLogger.start();
+
         this.rootLogger = rootLogger;
-        this.rootLogger.start();
     }
 
     @Override
-    public void stop() {
-        this.rootLogger.stop();
+    public synchronized void stop() {
+        if (!this.isStarted) throw new RuntimeException("not started");
+        this.isStarted = false;
+
+        // switch root logger
+        IRootEventLogger rootLogger = this.rootLogger;
         this.rootLogger = NOPLogger.getSingleton();
+
+        rootLogger.stop();
     }
 
 }

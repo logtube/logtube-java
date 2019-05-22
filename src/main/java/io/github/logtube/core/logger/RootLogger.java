@@ -3,7 +3,7 @@ package io.github.logtube.core.logger;
 import io.github.logtube.core.*;
 import io.github.logtube.core.event.Event;
 import io.github.logtube.core.event.NOPEvent;
-import io.github.logtube.core.topic.TopicAware;
+import io.github.logtube.core.topic.TopicAwareLifeCycle;
 import io.github.logtube.utils.Hex;
 import io.github.logtube.utils.Strings;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +18,7 @@ import java.util.Map;
 /**
  * 根日志器，通常一个项目只有一个根日志器，存储 主机名、项目名 和 环境名，包含多个日志输出，并且存储线程级 CRID
  */
-public class RootLogger extends TopicAware implements IRootEventLogger {
+public class RootLogger extends TopicAwareLifeCycle implements IRootEventLogger {
 
     private @Nullable String hostname = null;
 
@@ -173,13 +173,15 @@ public class RootLogger extends TopicAware implements IRootEventLogger {
     }
 
     @Override
-    public void start() {
+    public void doStart() {
+        super.doStart();
         this.outputs.forEach(ILifeCycle::start);
     }
 
     @Override
-    public void stop() {
+    public void doStop() {
         this.outputs.forEach(ILifeCycle::stop);
+        super.doStop();
     }
 
     /**
