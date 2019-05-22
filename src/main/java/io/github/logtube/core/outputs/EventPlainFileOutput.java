@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.io.Writer;
 
-public class EventPlainFileOutput extends BaseEventFileOutput {
+public class EventPlainFileOutput extends BaseFileOutput {
 
     private final IEventSerializer serializer = new EventPlainFileSerializer();
 

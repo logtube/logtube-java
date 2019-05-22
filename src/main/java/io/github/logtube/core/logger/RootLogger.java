@@ -190,7 +190,12 @@ public class RootLogger extends TopicAware implements IRootEventLogger {
         @Override
         public void commit() {
             if (isTopicEnabled(getTopic())) {
-                getOutputs().forEach(o -> o.appendEvent(decorate(this)));
+                getOutputs().forEach(o -> {
+                    try {
+                        o.appendEvent(decorate(this));
+                    } catch (Exception ignored) {
+                    }
+                });
             }
         }
 

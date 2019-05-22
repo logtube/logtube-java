@@ -1,10 +1,8 @@
 package io.github.logtube.core.outputs;
 
 import io.github.logtube.core.IEvent;
-import io.github.logtube.core.IEventOutput;
 import io.github.logtube.core.IEventSerializer;
 import io.github.logtube.core.serializers.EventJSONSerializer;
-import io.github.logtube.core.topic.TopicAware;
 import io.github.logtube.utils.SPTPClient;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,7 +10,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
-public class EventRemoteOutput extends TopicAware implements IEventOutput {
+public class EventRemoteOutput extends BaseEventOutput {
 
     private final IEventSerializer serializer = new EventJSONSerializer();
 
@@ -29,21 +27,19 @@ public class EventRemoteOutput extends TopicAware implements IEventOutput {
     }
 
     @Override
-    public void start() {
+    public void doStart() {
+        super.doStart();
         this.client = new SPTPClient(this.hosts);
     }
 
     @Override
-    public void stop() {
+    public void doStop() {
         this.client = null;
+        super.doStop();
     }
 
     @Override
-    public void appendEvent(@NotNull IEvent e) {
-        // check topic enabled
-        if (!isTopicEnabled(e.getTopic())) {
-            return;
-        }
+    public void doAppendEvent(@NotNull IEvent e) {
         // local ref of client
         SPTPClient client = this.client;
         if (client == null) {

@@ -1,8 +1,6 @@
 package io.github.logtube.core.outputs;
 
 import io.github.logtube.core.IEvent;
-import io.github.logtube.core.IEventOutput;
-import io.github.logtube.core.topic.TopicAware;
 import io.github.logtube.utils.IntervalChecker;
 import io.github.logtube.utils.SignalChecker;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +13,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class BaseEventFileOutput extends TopicAware implements IEventOutput {
+public abstract class BaseFileOutput extends BaseEventOutput {
 
     private static final char[] NEW_LINE = new char[]{'\r', '\n'};
 
@@ -27,7 +25,7 @@ public abstract class BaseEventFileOutput extends TopicAware implements IEventOu
 
     private final HashMap<String, FileWriter> writers = new HashMap<>();
 
-    public BaseEventFileOutput(@NotNull String dir, @NotNull String signal) {
+    public BaseFileOutput(@NotNull String dir, @NotNull String signal) {
         this.dir = dir;
         this.signalChecker = new SignalChecker(signal);
     }
@@ -72,10 +70,7 @@ public abstract class BaseEventFileOutput extends TopicAware implements IEventOu
     }
 
     @Override
-    public void appendEvent(@NotNull IEvent e) {
-        if (!isTopicEnabled(e.getTopic())) {
-            return;
-        }
+    public void doAppendEvent(@NotNull IEvent e) {
         try {
             FileWriter w = getWriter(e);
             synchronized (w) {
@@ -89,15 +84,17 @@ public abstract class BaseEventFileOutput extends TopicAware implements IEventOu
 
 
     @Override
-    public void start() {
+    public void doStart() {
+        super.doStart();
     }
 
     @Override
-    public synchronized void stop() {
+    public void doStop() {
         try {
             closeWriters();
         } catch (IOException ignored) {
         }
+        super.doStop();
     }
 
     abstract void serializeLine(@NotNull IEvent e, @NotNull Writer w) throws IOException;
