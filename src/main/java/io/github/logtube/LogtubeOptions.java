@@ -41,7 +41,7 @@ public class LogtubeOptions {
             System.err.println("failed to load logtube.properties, using default options.");
         }
         // load custom file
-        String filename = properties.getProperty("logtube.config-file");
+        String filename = Strings.evaluateEnvironmentVariables(properties.getProperty("logtube.config-file"));
         if (filename != null) {
             properties = new Properties();
             try (InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(filename)) {
@@ -66,19 +66,25 @@ public class LogtubeOptions {
     }
 
     @Nullable
+    private String getProperty(@NotNull String field) {
+        return Strings.evaluateEnvironmentVariables(this.properties.getProperty(field));
+    }
+
+    @Nullable
     @Contract("_, !null -> !null")
     private String safeStringValue(@NotNull String field, @Nullable String defaultValue) {
-        return Strings.sanitize(properties.getProperty(field), defaultValue);
+        return Strings.sanitize(getProperty(field), defaultValue);
     }
 
     @Nullable
     @Contract("_, !null -> !null")
     private String stringValue(@NotNull String field, @Nullable String defaultValue) {
-        return properties.getProperty(field, defaultValue);
+        String ret = getProperty(field);
+        return ret == null ? defaultValue : ret;
     }
 
     private boolean booleanValue(String field, boolean defaultValue) {
-        String value = properties.getProperty(field);
+        String value = getProperty(field);
         if (value == null) {
             return defaultValue;
         }
@@ -94,7 +100,7 @@ public class LogtubeOptions {
 
     @Contract("_, !null -> !null")
     private @Nullable Set<String> setValue(String field, @Nullable Set<String> defaultValue) {
-        String value = properties.getProperty(field);
+        String value = getProperty(field);
         if (value == null) {
             return defaultValue;
         }
@@ -118,7 +124,7 @@ public class LogtubeOptions {
 
     @Contract("_, !null -> !null")
     private @Nullable Map<String, String> mapValue(String field, @Nullable Map<String, String> defaultValue) {
-        String value = properties.getProperty(field);
+        String value = getProperty(field);
         if (value == null) {
             return defaultValue;
         }

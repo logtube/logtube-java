@@ -46,4 +46,8 @@ public class StringsTest {
         assertEquals(Strings.safeNormalizeKeyword("a,b,c,]]dd "), "a_b_c_dd");
     }
 
+    @Test
+    public void evaluateEnvironmentVariables() {
+        assertEquals("__START__" + System.getenv("HOME") + "__END____START__" + System.getenv("HOME"), Strings.evaluateEnvironmentVariables("__START__${HOME}__END____START__${HOME}"));
+    }
 }

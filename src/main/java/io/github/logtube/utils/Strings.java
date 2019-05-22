@@ -4,7 +4,12 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class Strings {
+
+    private static final Pattern PATTERN_ENVIRONMENT_VARIABLE = Pattern.compile("\\$\\{([A-Za-z0-9_-]+)\\}");
 
     @Contract("_, !null -> !null")
     public static @Nullable String sanitize(@Nullable String str, @Nullable String defaultValue) {
@@ -60,6 +65,27 @@ public class Strings {
             return "null";
         }
         return s.replaceAll("[\\s,\\[\\]]+", "_");
+    }
+
+    @Contract("null -> null; !null -> !null")
+    @Nullable
+    public static String evaluateEnvironmentVariables(@Nullable String s) {
+        if (s == null) return null;
+        while (true) {
+            Matcher m = PATTERN_ENVIRONMENT_VARIABLE.matcher(s);
+            if (m.find()) {
+                String value = System.getenv(m.group(1));
+                if (value == null) {
+                    value = "";
+                }
+                String s1 = s.substring(0, m.start());
+                String s2 = s.substring(m.end());
+                s = s1 + value + s2;
+            } else {
+                break;
+            }
+        }
+        return s;
     }
 
 }
