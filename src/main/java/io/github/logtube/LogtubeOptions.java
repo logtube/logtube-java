@@ -185,7 +185,7 @@ public class LogtubeOptions {
 
     @NotNull
     public Set<String> getTopics() {
-        return setValue("logtube.topics", quickStringSet("*", "-trace", "-debug"));
+        return setValue("logtube.topics.root", quickStringSet("*", "-trace", "-debug"));
     }
 
     @NotNull
