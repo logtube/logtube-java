@@ -1,9 +1,11 @@
 package io.github.logtube;
 
+import io.github.logtube.utils.PropertiesUtils;
 import io.github.logtube.utils.Strings;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.yaml.snakeyaml.Yaml;
 
 import java.io.InputStream;
 import java.net.InetAddress;
@@ -30,34 +32,51 @@ public class LogtubeOptions {
     }
 
     public static @NotNull LogtubeOptions fromClasspath() {
-        // load logtube.properties
-        Properties properties = new Properties();
-        try (InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("logtube.properties")) {
+        Properties properties = propertiesFromFile("logtube.yml");
+
+        if (properties == null) {
+            properties = propertiesFromFile("logtube.properties");
+        }
+
+        if (properties == null) {
+            properties = new Properties();
+            System.err.println("logtube failed to load config file, using default configs");
+        }
+
+        return new LogtubeOptions(properties);
+    }
+
+    @Nullable
+    private static Properties propertiesFromFile(@NotNull String filename) {
+        try (InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(filename)) {
+
+            Properties properties = new Properties();
             if (stream != null) {
-                properties.load(stream);
+                if (filename.toLowerCase().endsWith(".properties")) {
+                    properties.load(stream);
+                } else if (filename.toLowerCase().endsWith(".yml")) {
+                    Yaml yml = new Yaml();
+                    Map<String, Object> map = yml.load(stream);
+                    PropertiesUtils.flattenMap(properties, map);
+                    return properties;
+                } else {
+                    System.err.println("unsupported file " + filename + ".");
+                    return null;
+                }
+                String configFile = Strings.evaluateEnvironmentVariables(properties.getProperty("logtube.config-file"));
+                if (configFile != null) {
+                    return propertiesFromFile(configFile);
+                } else {
+                    return properties;
+                }
             } else {
-                System.err.println("logtube.properties not found in class path, using default options");
+                return null;
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());
-            System.err.println("failed to load logtube.properties, using default options.");
+            System.err.println("failed to load " + filename + ".");
         }
-        // load custom file
-        String filename = Strings.evaluateEnvironmentVariables(properties.getProperty("logtube.config-file"));
-        if (filename != null) {
-            properties = new Properties();
-            try (InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(filename)) {
-                if (stream != null) {
-                    properties.load(stream);
-                } else {
-                    System.err.println(filename + " not found in class path, using default options");
-                }
-            } catch (Exception e) {
-                System.err.println(e.getMessage());
-                System.err.println("failed to load " + filename + ", using default options.");
-            }
-        }
-        return new LogtubeOptions(properties);
+        return null;
     }
 
     @NotNull
@@ -192,7 +211,7 @@ public class LogtubeOptions {
     public Map<String, Set<String>> getCustomTopics() {
         HashMap<String, Set<String>> result = new HashMap<>();
         // disable internal debug logging
-        result.put("io.github.logtube", quickStringSet("*", "-trace", "-debug"));
+        result.put("io.github.logtube", quickStringSet("ALL", "-trace", "-debug"));
         this.properties.keySet().forEach(k -> {
             String key = k.toString();
             if (key.startsWith(CUSTOM_TOPICS_PREFIX)) {

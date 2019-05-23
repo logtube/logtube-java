@@ -25,17 +25,16 @@ public class TopicAware implements ITopicMutableAware {
             this.isTopicsBlacklist = false;
             return;
         }
-        HashSet<String> result = new HashSet<>();
-        if (topics.contains("*")) {
-            // if only a "*"
-            if (topics.size() == 1) {
-                this.topics = null;
-                this.isTopicsBlacklist = false;
-                return;
-            }
+        if (topics.size() == 0) {
+            this.topics = null;
+            this.isTopicsBlacklist = true;
+            return;
+        }
+        if (topics.contains("ALL") || topics.contains("*")) {
             // blacklist mode
+            HashSet<String> result = new HashSet<>();
             topics.forEach((e) -> {
-                if (e.equals("*")) {
+                if (e.equals("ALL") || e.equals("*")) {
                     return;
                 }
                 if (e.startsWith("-")) {
@@ -45,25 +44,40 @@ public class TopicAware implements ITopicMutableAware {
                     }
                 }
             });
+            if (result.size() == 0) {
+                this.topics = null;
+                this.isTopicsBlacklist = false;
+            } else {
+                this.topics = result;
+                this.isTopicsBlacklist = true;
+            }
+        } else if (topics.contains("NONE")) {
+            // NONE mode
+            this.topics = null;
             this.isTopicsBlacklist = true;
         } else {
             // whitelist mode
+            HashSet<String> result = new HashSet<>();
             topics.forEach((e) -> {
                 String topic = Strings.sanitize(e, null);
                 if (topic != null) {
                     result.add(topic);
                 }
             });
-            this.isTopicsBlacklist = false;
+            if (result.size() == 0) {
+                this.topics = null;
+                this.isTopicsBlacklist = true;
+            } else {
+                this.topics = result;
+                this.isTopicsBlacklist = false;
+            }
         }
-
-        this.topics = result;
     }
 
     @Override
     public boolean isTopicEnabled(@NotNull String topic) {
         if (this.topics == null) {
-            return true;
+            return !this.isTopicsBlacklist;
         }
         if (this.isTopicsBlacklist) {
             return !this.topics.contains(topic);
