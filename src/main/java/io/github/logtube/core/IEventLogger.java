@@ -100,26 +100,6 @@ public interface IEventLogger extends ITopicAware, Logger {
         topic(topic).message(buf.toString()).commit();
     }
 
-    default IMutableEvent trace() {
-        return topic("trace");
-    }
-
-    default IMutableEvent debug() {
-        return topic("debug");
-    }
-
-    default IMutableEvent info() {
-        return topic("info");
-    }
-
-    default IMutableEvent warn() {
-        return topic("warn");
-    }
-
-    default IMutableEvent error() {
-        return topic("error");
-    }
-
     @Override
     default boolean isTraceEnabled() {
         return isTopicEnabled("trace");

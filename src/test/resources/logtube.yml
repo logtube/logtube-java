@@ -5,7 +5,7 @@ logtube:
   env: test
   # 主题过滤器
   topics:
-    root: ALL, -trace, -debug
+    root: ALL
     com.some.third.party.package: error
   # 主题映射（以下为常用映射）
   topic-mappings: trace=debug, error=err, warn=info
@@ -37,7 +37,7 @@ logtube:
 
   # Redis 远程输出
   redis:
-    enabled: false
+    enabled: true
     topics: ALL
     hosts:
       - 127.0.0.1

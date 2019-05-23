@@ -2,6 +2,7 @@ package io.github.logtube;
 
 import io.github.logtube.core.IEventLogger;
 import io.github.logtube.core.IEventProcessor;
+import io.github.logtube.core.IMutableEvent;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.Marker;
@@ -26,6 +27,10 @@ public class Logtube {
     @NotNull
     public static IEventLogger getLogger() {
         return getLogger(Logger.ROOT_LOGGER_NAME);
+    }
+
+    @NotNull IMutableEvent topic(@NotNull String topic) {
+        return getLogger().topic(topic);
     }
 
     ////////////////////////// GENERATED CODES /////////////////////////////

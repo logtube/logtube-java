@@ -1,6 +1,6 @@
 package io.github.logtube;
 
-import io.github.logtube.utils.PropertiesUtils;
+import io.github.logtube.utils.Maps;
 import io.github.logtube.utils.Strings;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -57,7 +57,7 @@ public class LogtubeOptions {
                 } else if (filename.toLowerCase().endsWith(".yml")) {
                     Yaml yml = new Yaml();
                     Map<String, Object> map = yml.load(stream);
-                    PropertiesUtils.flattenMap(properties, map);
+                    Maps.flattenProperties(properties, map);
                     return properties;
                 } else {
                     System.err.println("unsupported file " + filename + ".");
@@ -210,8 +210,6 @@ public class LogtubeOptions {
     @NotNull
     public Map<String, Set<String>> getCustomTopics() {
         HashMap<String, Set<String>> result = new HashMap<>();
-        // disable internal debug logging
-        result.put("io.github.logtube", quickStringSet("ALL", "-trace", "-debug"));
         this.properties.keySet().forEach(k -> {
             String key = k.toString();
             if (key.startsWith(CUSTOM_TOPICS_PREFIX)) {
