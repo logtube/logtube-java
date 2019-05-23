@@ -191,6 +191,8 @@ public class LogtubeOptions {
     @NotNull
     public Map<String, Set<String>> getCustomTopics() {
         HashMap<String, Set<String>> result = new HashMap<>();
+        // disable internal debug logging
+        result.put("io.github.logtube", quickStringSet("*", "-trace", "-debug"));
         this.properties.keySet().forEach(k -> {
             String key = k.toString();
             if (key.startsWith(CUSTOM_TOPICS_PREFIX)) {

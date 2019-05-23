@@ -112,7 +112,6 @@ public class LogtubeLoggerFactory implements ILoggerFactory, ILifeCycle {
             topicAware.setTopics(v);
             this.customTopics.put(k, topicAware);
         });
-        this.customTopics.put("io.github.logtube", new TopicAware());
 
         EventProcessor processor = new EventProcessor();
 
