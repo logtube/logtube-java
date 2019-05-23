@@ -21,8 +21,10 @@ public class Maps {
         return ret;
     }
 
-    private static void flattenProperties(@NotNull Properties properties, @NotNull Map map, @NotNull String prefix) {
-        map.forEach((Object k, Object v) -> {
+    private static void flattenProperties(@NotNull Properties properties, @NotNull Map<?, ?> map, @NotNull String prefix) {
+        for (Map.Entry entry : map.entrySet()) {
+            Object k = entry.getKey();
+            Object v = entry.getValue();
             if (v instanceof Map) {
                 flattenProperties(properties, (Map) v, prefix + k.toString() + ".");
             } else if (v instanceof List) {
@@ -30,7 +32,7 @@ public class Maps {
             } else {
                 properties.setProperty(prefix + k.toString(), v.toString());
             }
-        });
+        }
     }
 
 }
