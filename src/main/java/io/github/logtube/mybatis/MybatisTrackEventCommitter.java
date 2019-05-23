@@ -33,7 +33,7 @@ public class MybatisTrackEventCommitter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MybatisTrackEventCommitter.class);
 
-    private IMutableEvent event = Logtube.getLogger().topic("x-mybatis-track");
+    private IMutableEvent event = Logtube.getLogger(MybatisTrackEventCommitter.class).topic("x-mybatis-track");
 
     private long startTime = System.currentTimeMillis();
 

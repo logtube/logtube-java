@@ -1,3 +1,7 @@
+# macOS
+.DS_Store
+._*
+
 # Compiled class file
 *.class
 
@@ -23,8 +27,11 @@
 hs_err_pid*
 
 # Idea
-/.idea
+.idea
 *.iml
+
+# Logs
+logs/
 
 # Maven
 target/

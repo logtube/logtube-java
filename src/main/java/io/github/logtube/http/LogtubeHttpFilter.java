@@ -2,7 +2,7 @@ package io.github.logtube.http;
 
 import io.github.logtube.Logtube;
 import io.github.logtube.LogtubeConstants;
-import io.github.logtube.core.IRootEventLogger;
+import io.github.logtube.core.IEventProcessor;
 import io.github.logtube.utils.Requests;
 import io.github.logtube.utils.Strings;
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +24,7 @@ import java.util.Set;
  */
 public class LogtubeHttpFilter implements Filter {
 
-    private static final IRootEventLogger ROOT_LOGGER = Logtube.getRootLogger();
+    private static final IEventProcessor ROOT_LOGGER = Logtube.getProcessor();
 
     /**
      * -例外名单。此名单中的请求将不记录xlog

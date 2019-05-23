@@ -6,7 +6,9 @@ import org.jetbrains.annotations.Nullable;
 /**
  * 根日志器暴露的接口，跟日志器负责存储 主机名，项目名，环境名 和 当前线程的 CRID，并可以设置输出
  */
-public interface IRootEventLogger extends IEventLogger, ITopicMutableAware, ILifeCycle {
+public interface IEventProcessor extends ILifeCycle {
+
+    @NotNull IMutableEvent event();
 
     void clearCrid();
 

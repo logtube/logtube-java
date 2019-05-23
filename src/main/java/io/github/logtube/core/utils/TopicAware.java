@@ -1,4 +1,4 @@
-package io.github.logtube.core.topic;
+package io.github.logtube.core.utils;
 
 import io.github.logtube.core.ITopicMutableAware;
 import io.github.logtube.utils.Strings;
@@ -27,6 +27,12 @@ public class TopicAware implements ITopicMutableAware {
         }
         HashSet<String> result = new HashSet<>();
         if (topics.contains("*")) {
+            // if only a "*"
+            if (topics.size() == 1) {
+                this.topics = null;
+                this.isTopicsBlacklist = false;
+                return;
+            }
             // blacklist mode
             topics.forEach((e) -> {
                 if (e.equals("*")) {

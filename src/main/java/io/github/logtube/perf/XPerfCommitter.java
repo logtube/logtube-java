@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 public class XPerfCommitter {
 
-    private final IMutableEvent event = Logtube.getLogger().topic("x-perf");
+    private final IMutableEvent event = Logtube.getLogger(XPerfCommitter.class).topic("x-perf");
 
     private final long startTime = System.currentTimeMillis();
 

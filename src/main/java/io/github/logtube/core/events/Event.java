@@ -1,4 +1,4 @@
-package io.github.logtube.core.event;
+package io.github.logtube.core.events;
 
 import io.github.logtube.core.IMutableEvent;
 import io.github.logtube.utils.Strings;
@@ -102,10 +102,6 @@ public class Event implements IMutableEvent {
 
     @Override
     public void setTopic(@Nullable String topic) {
-        // never set topic twice
-        if (this.topic != null) {
-            return;
-        }
         this.topic = Strings.sanitize(topic, null);
     }
 

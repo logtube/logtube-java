@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 public class DruidTrackEventCommitter {
 
-    private IMutableEvent event = Logtube.getLogger().topic("x-druid-track");
+    private IMutableEvent event = Logtube.getLogger(DruidTrackEventCommitter.class).topic("x-druid-track");
 
     private long startTime = System.currentTimeMillis();
 

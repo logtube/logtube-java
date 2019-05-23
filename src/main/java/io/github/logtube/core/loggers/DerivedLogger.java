@@ -1,4 +1,4 @@
-package io.github.logtube.core.logger;
+package io.github.logtube.core.loggers;
 
 import io.github.logtube.core.IEventLogger;
 import io.github.logtube.core.IEventMiddleware;

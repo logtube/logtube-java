@@ -1,14 +1,12 @@
-package io.github.logtube.core.logger;
+package io.github.logtube.core.processors;
 
 import io.github.logtube.core.*;
-import io.github.logtube.core.event.Event;
-import io.github.logtube.core.event.NOPEvent;
-import io.github.logtube.core.topic.TopicAwareLifeCycle;
+import io.github.logtube.core.events.Event;
+import io.github.logtube.core.utils.LifeCycle;
 import io.github.logtube.utils.Hex;
 import io.github.logtube.utils.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,7 +16,7 @@ import java.util.Map;
 /**
  * 根日志器，通常一个项目只有一个根日志器，存储 主机名、项目名 和 环境名，包含多个日志输出，并且存储线程级 CRID
  */
-public class RootLogger extends TopicAwareLifeCycle implements IRootEventLogger {
+public class EventProcessor extends LifeCycle implements IEventProcessor {
 
     private @Nullable String hostname = null;
 
@@ -140,25 +138,14 @@ public class RootLogger extends TopicAwareLifeCycle implements IRootEventLogger 
     }
 
     @Override
-    public String getName() {
-        return Logger.ROOT_LOGGER_NAME;
-    }
-
-    @Override
-    public @NotNull IEventLogger derive(@NotNull IEventMiddleware middleware) {
-        return new DerivedLogger(this, middleware);
-    }
-
-    @Override
-    public @NotNull IMutableEvent topic(@NotNull String topic) {
-        if (!isTopicEnabled(topic)) {
-            return NOPEvent.getSingleton();
-        }
-        return new LoggerEvent().timestamp(System.currentTimeMillis()).topic(resolveTopic(topic));
+    @NotNull
+    public IMutableEvent event() {
+        return new LoggerEvent().timestamp(System.currentTimeMillis());
     }
 
     private IEvent decorate(@NotNull IMutableEvent e) {
         return e
+                .topic(resolveTopic(e.getTopic()))
                 .hostname(getHostname())
                 .env(getEnv())
                 .project(getProject())
@@ -185,14 +172,12 @@ public class RootLogger extends TopicAwareLifeCycle implements IRootEventLogger 
 
         @Override
         public void commit() {
-            if (isTopicEnabled(getTopic())) {
-                getOutputs().forEach(o -> {
-                    try {
-                        o.appendEvent(decorate(this));
-                    } catch (Exception ignored) {
-                    }
-                });
-            }
+            getOutputs().forEach(o -> {
+                try {
+                    o.appendEvent(decorate(this));
+                } catch (Exception ignored) {
+                }
+            });
         }
 
     }

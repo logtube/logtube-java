@@ -10,7 +10,7 @@ import java.util.StringJoiner;
 
 public class RedisTrackEventCommitter {
 
-    private IMutableEvent event = Logtube.getLogger().topic("x-redis-track");
+    private IMutableEvent event = Logtube.getLogger(RedisTrackEventCommitter.class).topic("x-redis-track");
 
     private long startTime = System.currentTimeMillis();
 

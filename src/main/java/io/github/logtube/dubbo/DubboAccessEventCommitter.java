@@ -5,7 +5,7 @@ import io.github.logtube.core.IMutableEvent;
 
 public class DubboAccessEventCommitter {
 
-    private final IMutableEvent event = Logtube.getLogger().topic("x-access");
+    private final IMutableEvent event = Logtube.getLogger(DubboAccessEventCommitter.class).topic("x-access");
 
     private long startAt = System.currentTimeMillis();
 

@@ -1,4 +1,4 @@
-package io.github.logtube.core.event;
+package io.github.logtube.core.events;
 
 import io.github.logtube.core.IMutableEvent;
 import org.jetbrains.annotations.NotNull;
@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.github.logtube.core.event.Event.*;
+import static io.github.logtube.core.events.Event.*;
 
 /**
  * 无操作的 Event 事件，通常使用单例，用于静默事件

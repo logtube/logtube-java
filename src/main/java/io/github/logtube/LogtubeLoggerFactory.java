@@ -1,12 +1,11 @@
 package io.github.logtube;
 
-import io.github.logtube.core.IEventLogger;
-import io.github.logtube.core.ILifeCycle;
-import io.github.logtube.core.IRootEventLogger;
-import io.github.logtube.core.logger.ChildLogger;
-import io.github.logtube.core.logger.NOPLogger;
-import io.github.logtube.core.logger.RootLogger;
+import io.github.logtube.core.*;
+import io.github.logtube.core.loggers.EventLogger;
 import io.github.logtube.core.outputs.*;
+import io.github.logtube.core.processors.EventProcessor;
+import io.github.logtube.core.processors.NOPProcessor;
+import io.github.logtube.core.utils.TopicAware;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.ILoggerFactory;
@@ -14,7 +13,6 @@ import org.slf4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -36,22 +34,30 @@ public class LogtubeLoggerFactory implements ILoggerFactory, ILifeCycle {
     ///////////////////////  LOGGERS ////////////////////////
 
     @NotNull
-    private IRootEventLogger rootLogger = NOPLogger.getSingleton();
+    private IEventProcessor processor = NOPProcessor.getSingleton();
 
-    private final ConcurrentMap<String, IEventLogger> childLoggers = new ConcurrentHashMap<>();
+    @NotNull
+    private ITopicMutableAware rootTopics = new TopicAware();
 
-    private Map<String, Set<String>> customTopics = new HashMap<>();
+    private Map<String, ITopicAware> customTopics = new HashMap<>();
+
+    private final ConcurrentMap<String, IEventLogger> loggers = new ConcurrentHashMap<>();
+
+    private boolean isStarted = false;
 
     private LogtubeLoggerFactory() {
     }
 
-    @Nullable
-    private Set<String> findTopics(@NotNull String name) {
+    @NotNull
+    private ITopicAware findTopicAware(@NotNull String name) {
+        if (name.equals(Logger.ROOT_LOGGER_NAME)) {
+            return this.rootTopics;
+        }
         String found = null;
-        Set<String> topics = null;
-        for (Map.Entry<String, Set<String>> entry : this.customTopics.entrySet()) {
+        ITopicAware topics = null;
+        for (Map.Entry<String, ITopicAware> entry : this.customTopics.entrySet()) {
             String prefix = entry.getKey();
-            Set<String> value = entry.getValue();
+            ITopicAware value = entry.getValue();
             if (name.toLowerCase().startsWith(prefix)) {
                 if (found == null) {
                     found = prefix;
@@ -62,56 +68,62 @@ public class LogtubeLoggerFactory implements ILoggerFactory, ILifeCycle {
                 }
             }
         }
+        if (topics == null) {
+            return this.rootTopics;
+        }
         return topics;
     }
 
     @NotNull
-    public IRootEventLogger getRootLogger() {
-        return this.rootLogger;
+    public IEventProcessor getProcessor() {
+        return this.processor;
     }
 
     @NotNull
-    public IEventLogger getChildLogger(@Nullable String name) {
+    public IEventLogger getEventLogger(@Nullable String name) {
         if (name == null) {
-            return getRootLogger();
+            name = Logger.ROOT_LOGGER_NAME;
         }
-        IEventLogger logger = this.childLoggers.get(name);
+        IEventLogger logger = this.loggers.get(name);
         if (logger != null) {
             return logger;
         } else {
-            IEventLogger newInstance = new ChildLogger(getRootLogger(), name, findTopics(name));
-            IEventLogger oldInstance = this.childLoggers.putIfAbsent(name, newInstance);
+            IEventLogger newInstance = new EventLogger(getProcessor(), name, findTopicAware(name));
+            IEventLogger oldInstance = this.loggers.putIfAbsent(name, newInstance);
             return oldInstance == null ? newInstance : oldInstance;
         }
     }
 
     @Override
     public Logger getLogger(String name) {
-        return getChildLogger(name);
+        return getEventLogger(name);
     }
 
-    private boolean isStarted = false;
 
     public synchronized void start() {
         if (this.isStarted) throw new RuntimeException("already started");
-        this.isStarted = true;
 
         LogtubeOptions options = LogtubeOptions.fromClasspath();
 
-        this.customTopics = options.getCustomTopics();
+        this.rootTopics.setTopics(options.getTopics());
 
-        RootLogger rootLogger = new RootLogger();
+        options.getCustomTopics().forEach((k, v) -> {
+            TopicAware topicAware = new TopicAware();
+            topicAware.setTopics(v);
+            this.customTopics.put(k, topicAware);
+        });
 
-        rootLogger.setHostname(LogtubeOptions.getHostname());
-        rootLogger.setProject(options.getProject());
-        rootLogger.setEnv(options.getEnv());
-        rootLogger.setTopics(options.getTopics());
-        rootLogger.setTopicMappings(options.getTopicMappings());
+        EventProcessor processor = new EventProcessor();
+
+        processor.setHostname(LogtubeOptions.getHostname());
+        processor.setProject(options.getProject());
+        processor.setEnv(options.getEnv());
+        processor.setTopicMappings(options.getTopicMappings());
 
         if (options.getConsoleEnabled()) {
             EventConsoleOutput output = new EventConsoleOutput();
             output.setTopics(options.getConsoleTopics());
-            rootLogger.addOutput(output);
+            processor.addOutput(output);
         }
 
         if (options.getFilePlainEnabled()) {
@@ -120,7 +132,7 @@ public class LogtubeLoggerFactory implements ILoggerFactory, ILifeCycle {
                     options.getFilePlainSignal()
             );
             output.setTopics(options.getFilePlainTopics());
-            rootLogger.addOutput(output);
+            processor.addOutput(output);
         }
 
         if (options.getFileJSONEnabled()) {
@@ -129,7 +141,7 @@ public class LogtubeLoggerFactory implements ILoggerFactory, ILifeCycle {
                     options.getFileJSONSignal()
             );
             output.setTopics(options.getFileJSONTopics());
-            rootLogger.addOutput(output);
+            processor.addOutput(output);
         }
 
         if (options.getRemoteEnabled()) {
@@ -137,7 +149,7 @@ public class LogtubeLoggerFactory implements ILoggerFactory, ILifeCycle {
                     options.getRemoteHosts()
             );
             output.setTopics(options.getRemoteTopics());
-            rootLogger.addOutput(output);
+            processor.addOutput(output);
         }
         if (options.getRedisEnabled()) {
             EventRedisOutput output = new EventRedisOutput(
@@ -145,12 +157,13 @@ public class LogtubeLoggerFactory implements ILoggerFactory, ILifeCycle {
                     options.getRedisKey()
             );
             output.setTopics(options.getRedisTopics());
-            rootLogger.addOutput(output);
+            processor.addOutput(output);
         }
 
-        rootLogger.start();
+        processor.start();
 
-        this.rootLogger = rootLogger;
+        this.processor = processor;
+        this.isStarted = true;
     }
 
     @Override
@@ -158,11 +171,15 @@ public class LogtubeLoggerFactory implements ILoggerFactory, ILifeCycle {
         if (!this.isStarted) throw new RuntimeException("not started");
         this.isStarted = false;
 
-        // switch root logger
-        IRootEventLogger rootLogger = this.rootLogger;
-        this.rootLogger = NOPLogger.getSingleton();
+        // clear topics
+        this.rootTopics = new TopicAware();
+        this.customTopics = new HashMap<>();
 
-        rootLogger.stop();
+        // switch root logger
+        IEventProcessor processor = this.processor;
+        this.processor = NOPProcessor.getSingleton();
+
+        processor.stop();
     }
 
 }

@@ -12,7 +12,7 @@ public class LogtubeTest {
 
     @Test
     public void binding() throws InterruptedException {
-        Logtube.getRootLogger().setCrid(null);
+        Logtube.getProcessor().setCrid(null);
         Logger logger = LoggerFactory.getLogger(LogtubeTest.class);
         logger.info("hello world");
         logger.warn("warn test");

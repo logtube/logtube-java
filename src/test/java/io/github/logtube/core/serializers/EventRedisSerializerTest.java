@@ -1,6 +1,6 @@
 package io.github.logtube.core.serializers;
 
-import io.github.logtube.core.event.Event;
+import io.github.logtube.core.events.Event;
 import org.junit.Test;
 
 public class EventRedisSerializerTest {

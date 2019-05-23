@@ -1,4 +1,4 @@
-package io.github.logtube.core.topic;
+package io.github.logtube.core.utils;
 
 import io.github.logtube.core.ILifeCycle;
 

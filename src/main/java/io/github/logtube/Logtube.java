@@ -1,24 +1,19 @@
 package io.github.logtube;
 
 import io.github.logtube.core.IEventLogger;
-import io.github.logtube.core.IRootEventLogger;
+import io.github.logtube.core.IEventProcessor;
 import org.jetbrains.annotations.NotNull;
 
 public class Logtube {
 
     @NotNull
-    public static IRootEventLogger getRootLogger() {
-        return LogtubeLoggerFactory.getSingleton().getRootLogger();
-    }
-
-    @NotNull
-    public static IEventLogger getLogger() {
-        return getRootLogger();
+    public static IEventProcessor getProcessor() {
+        return LogtubeLoggerFactory.getSingleton().getProcessor();
     }
 
     @NotNull
     public static IEventLogger getLogger(@NotNull String name) {
-        return LogtubeLoggerFactory.getSingleton().getChildLogger(name);
+        return LogtubeLoggerFactory.getSingleton().getEventLogger(name);
     }
 
     @NotNull

@@ -157,6 +157,22 @@ public class LogtubeOptions {
         return result;
     }
 
+    @Contract("_, !null -> !null")
+    private @Nullable String[] arrayValue(@NotNull String field, String[] defaultValue) {
+        String value = getProperty(field);
+        if (value == null) {
+            return defaultValue;
+        }
+        String[] components = value.split(",");
+        if (components.length == 0) {
+            return defaultValue;
+        }
+        for (int i = 0; i < components.length; i++) {
+            components[i] = components[i].trim();
+        }
+        return components;
+    }
+
     @NotNull
     public String getProject() {
         return safeStringValue("logtube.project", "unknown-project");
@@ -247,11 +263,7 @@ public class LogtubeOptions {
 
     @NotNull
     public String[] getRemoteHosts() {
-        Set<String> set = setValue("logtube.remote.hosts", null);
-        if (set == null) {
-            return new String[]{"127.0.0.1:9921"};
-        }
-        return (String[]) set.toArray();
+        return arrayValue("logtube.remote.hosts", new String[]{"127.0.0.1:9921"});
     }
 
     public boolean getRedisEnabled() {
@@ -266,11 +278,7 @@ public class LogtubeOptions {
 
     @NotNull
     public String[] getRedisHosts() {
-        Set<String> set = setValue("logtube.redis.hosts", null);
-        if (set == null) {
-            return new String[]{"127.0.0.1:6379"};
-        }
-        return (String[]) set.toArray();
+        return arrayValue("logtube.redis.hosts", new String[]{"127.0.0.1"});
     }
 
     @NotNull
