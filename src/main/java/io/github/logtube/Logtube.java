@@ -18,7 +18,7 @@ public class Logtube {
 
     @NotNull
     public static IEventLogger getLogger(@NotNull String name) {
-        return getRootLogger().derive(name);
+        return LogtubeLoggerFactory.getSingleton().getChildLogger(name);
     }
 
     @NotNull

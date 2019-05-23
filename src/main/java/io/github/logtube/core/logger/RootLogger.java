@@ -145,14 +145,8 @@ public class RootLogger extends TopicAwareLifeCycle implements IRootEventLogger 
     }
 
     @Override
-    public @NotNull IEventLogger derive(@Nullable String name, @Nullable IEventMiddleware middleware) {
-        if (name == null) {
-            if (middleware == null) {
-                return this;
-            }
-            name = getName();
-        }
-        return new DerivedLogger(this, name, middleware);
+    public @NotNull IEventLogger derive(@NotNull IEventMiddleware middleware) {
+        return new DerivedLogger(this, middleware);
     }
 
     @Override

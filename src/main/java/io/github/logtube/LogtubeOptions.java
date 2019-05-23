@@ -11,6 +11,8 @@ import java.util.*;
 
 public class LogtubeOptions {
 
+    private static final String CUSTOM_TOPICS_PREFIX = "logtube.topics.";
+
     public static @NotNull String getHostname() {
         String hostname = null;
         try {
@@ -168,6 +170,18 @@ public class LogtubeOptions {
     @NotNull
     public Set<String> getTopics() {
         return setValue("logtube.topics", quickStringSet("*", "-trace", "-debug"));
+    }
+
+    @NotNull
+    public Map<String, Set<String>> getCustomTopics() {
+        HashMap<String, Set<String>> result = new HashMap<>();
+        this.properties.keySet().forEach(k -> {
+            String key = k.toString();
+            if (key.startsWith(CUSTOM_TOPICS_PREFIX)) {
+                result.put(key.substring(CUSTOM_TOPICS_PREFIX.length()).toLowerCase(), setValue(key, new HashSet<>()));
+            }
+        });
+        return result;
     }
 
     @NotNull

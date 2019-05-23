@@ -53,7 +53,7 @@ public class NOPLogger implements IRootEventLogger {
     }
 
     @Override
-    public @NotNull IEventLogger derive(@Nullable String name, @Nullable IEventMiddleware middleware) {
+    public @NotNull IEventLogger derive(@NotNull IEventMiddleware middleware) {
         return this;
     }
 

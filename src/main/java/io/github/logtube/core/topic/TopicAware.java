@@ -28,8 +28,10 @@ public class TopicAware implements ITopicMutableAware {
         HashSet<String> result = new HashSet<>();
         if (topics.contains("*")) {
             // blacklist mode
-            topics.remove("*");
             topics.forEach((e) -> {
+                if (e.equals("*")) {
+                    return;
+                }
                 if (e.startsWith("-")) {
                     String topic = Strings.sanitize(e.substring(1), null);
                     if (topic != null) {

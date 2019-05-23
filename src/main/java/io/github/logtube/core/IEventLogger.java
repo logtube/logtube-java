@@ -14,16 +14,15 @@ import java.io.StringWriter;
 /**
  * Logtube 暴露的主要接口，同时实现 slf4j 的 Logger 接口，包含大量糖方法
  */
-public interface IEventLogger extends ITopicAware, ILifeCycle, Logger {
+public interface IEventLogger extends ITopicAware, Logger {
 
     /**
-     * 派生子日志器，一般用于 根日志器，也可以由 子日志器派生，用于添加默认的关键词等
+     * 派生日志器，用于添加默认的关键词等
      *
-     * @param name       新日志器的名称，默认和 父日志器一致
      * @param middleware 中间件
      * @return 新的日志器，或者自己
      */
-    @NotNull IEventLogger derive(@Nullable String name, @Nullable IEventMiddleware middleware);
+    @NotNull IEventLogger derive(@NotNull IEventMiddleware middleware);
 
     /**
      * 创建一个事件，使用该主题，因为一个事件必须有主题，因此，此方法为创建事件的唯一方法
@@ -34,14 +33,6 @@ public interface IEventLogger extends ITopicAware, ILifeCycle, Logger {
     @NotNull IMutableEvent topic(@NotNull String topic);
 
     //////////////////////// default methods //////////////////////////////
-
-    default @NotNull IEventLogger derive(@Nullable IEventMiddleware filter) {
-        return derive(null, filter);
-    }
-
-    default @NotNull IEventLogger derive(@Nullable String name) {
-        return derive(name, null);
-    }
 
     default @NotNull IEventLogger keyword(@NotNull String... keywords) {
         return derive(e -> e.keyword(keywords));
