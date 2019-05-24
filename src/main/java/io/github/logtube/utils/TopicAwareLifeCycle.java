@@ -1,6 +1,4 @@
-package io.github.logtube.core.utils;
-
-import io.github.logtube.core.ILifeCycle;
+package io.github.logtube.utils;
 
 public abstract class TopicAwareLifeCycle extends TopicAware implements ILifeCycle {
 

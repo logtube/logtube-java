@@ -1,9 +1,13 @@
 package io.github.logtube.core.processors;
 
-import io.github.logtube.core.*;
+import io.github.logtube.core.IEvent;
+import io.github.logtube.core.IEventOutput;
+import io.github.logtube.core.IEventProcessor;
+import io.github.logtube.core.IMutableEvent;
 import io.github.logtube.core.events.Event;
-import io.github.logtube.core.utils.LifeCycle;
 import io.github.logtube.utils.Hex;
+import io.github.logtube.utils.ILifeCycle;
+import io.github.logtube.utils.LifeCycle;
 import io.github.logtube.utils.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

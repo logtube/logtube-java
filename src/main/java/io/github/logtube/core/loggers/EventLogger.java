@@ -1,7 +1,11 @@
 package io.github.logtube.core.loggers;
 
-import io.github.logtube.core.*;
+import io.github.logtube.core.IEventLogger;
+import io.github.logtube.core.IEventMiddleware;
+import io.github.logtube.core.IEventProcessor;
+import io.github.logtube.core.IMutableEvent;
 import io.github.logtube.core.events.NOPEvent;
+import io.github.logtube.utils.ITopicAware;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

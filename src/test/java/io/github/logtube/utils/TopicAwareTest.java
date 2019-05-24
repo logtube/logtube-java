@@ -1,4 +1,4 @@
-package io.github.logtube.core.utils;
+package io.github.logtube.utils;
 
 import org.junit.Test;
 

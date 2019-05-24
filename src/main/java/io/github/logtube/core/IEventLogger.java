@@ -1,5 +1,6 @@
 package io.github.logtube.core;
 
+import io.github.logtube.utils.ITopicAware;
 import io.github.logtube.utils.Reflections;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

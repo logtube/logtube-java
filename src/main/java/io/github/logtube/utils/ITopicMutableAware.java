@@ -1,4 +1,4 @@
-package io.github.logtube.core;
+package io.github.logtube.utils;
 
 import org.jetbrains.annotations.Nullable;
 

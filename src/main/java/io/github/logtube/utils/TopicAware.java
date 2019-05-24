@@ -1,7 +1,5 @@
-package io.github.logtube.core.utils;
+package io.github.logtube.utils;
 
-import io.github.logtube.core.ITopicMutableAware;
-import io.github.logtube.utils.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

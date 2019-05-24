@@ -3,6 +3,8 @@ package io.github.logtube.core.serializers;
 import io.github.logtube.core.events.Event;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+
 public class EventRedisSerializerTest {
 
     @Test
@@ -19,6 +21,6 @@ public class EventRedisSerializerTest {
         event.setMessage("hello world");
         event.extra("hello", "world");
 
-        System.out.println(serializer.toString(event));
+        assertEquals("{\"beat\":{\"hostname\":\"test.localhost\"},\"message\":\"[1970-01-01 08:00:01.000 +0800] {\\\"c\\\":\\\"123456\\\",\\\"m\\\":\\\"hello world\\\",\\\"k\\\":\\\"world\\\",\\\"x\\\":{\\\"hello\\\":\\\"world\\\"}}\",\"source\":\"/var/log/test/debug/hello.log\"}", serializer.toString(event));
     }
 }
