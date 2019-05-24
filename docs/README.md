@@ -8,7 +8,7 @@ Guo Y.K. 2019年04月23日
 <dependency>
     <groupId>io.github.logtube</groupId>
     <artifactId>logtube</artifactId>
-    <version>0.14</version>
+    <version>0.15</version>
 </dependency>
 ```
 
@@ -44,19 +44,22 @@ Guo Y.K. 2019年04月23日
 
 和 Logback 类似，Logtube Java SDK 会从 `classpath` 载入名为 `logtube.properties` 或者 `logtube.yml` 的配置文件。
 
+`yml` 文件会映射为 `Properties` 对象，**数组** 等价于 **逗号分隔的字符串**
+
 参见：https://github.com/logtube/logtube-java/blob/master/src/test/resources/logtube.properties
+
 参见：https://github.com/logtube/logtube-java/blob/master/src/test/resources/logtube.yml
 
 下载到 `main/resources`，或者对应环境的子文件夹，注意修改 **项目名**，**项目环境名** 和 **全局主题过滤器**，并按照需要打开或关闭 一些输出。
 
 运行于 Kubernetes 集群的项目建议关闭所有 file 输出，只使用 remote 输出。对于生产环境和预生产环境，建议关闭 console 和 remote 输出。
 
-**配置文件更新**
+**配置文件格式**
 
-配置文件定义经过一次修改
+配置文件格式在 0.8 版本之后经过一次修改
 
 * 星号 `*` 关键字，改为大写 `ALL` 关键字
-* `logtube.topics` ，重命名为 `logtube.topics.root`
+* `logtube.topics` 字段，重命名为 `logtube.topics.root`
 
 **多配置文件**
 
