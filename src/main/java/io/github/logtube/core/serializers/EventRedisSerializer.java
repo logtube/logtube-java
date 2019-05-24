@@ -10,7 +10,7 @@ import java.io.Writer;
 
 public class EventRedisSerializer implements IEventSerializer {
 
-    IEventSerializer JSON_FILE_SERIALIZER = new EventJSONFileSerializer();
+    private final IEventSerializer jsonFileSerializer = new EventJSONFileSerializer();
 
     @Override
     public void serialize(@NotNull IEvent e, @NotNull Writer w) throws IOException {
@@ -19,7 +19,7 @@ public class EventRedisSerializer implements IEventSerializer {
         j.name("beat").beginObject();
         j.name("hostname").value(e.getHostname());
         j.endObject();
-        j.name("message").value(JSON_FILE_SERIALIZER.toString(e));
+        j.name("message").value(jsonFileSerializer.toString(e));
         j.name("source").value("/var/log/" + e.getEnv() + "/" + e.getTopic() + "/" + e.getProject() + ".log");
         j.endObject();
     }
