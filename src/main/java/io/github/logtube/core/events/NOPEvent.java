@@ -10,7 +10,7 @@ import java.util.Map;
 import static io.github.logtube.core.events.Event.*;
 
 /**
- * 无操作的 Event 事件，通常使用单例，用于静默事件
+ * 无操作的日志事件，通常使用单例，用于静默事件
  */
 public class NOPEvent implements IMutableEvent {
 

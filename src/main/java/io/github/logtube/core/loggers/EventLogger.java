@@ -5,6 +5,9 @@ import io.github.logtube.core.events.NOPEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * 普通日志器，具有一个 名字和一套主题规则，使用 共有的处理器生成日志事件，并交给用户
+ */
 public class EventLogger implements IEventLogger {
 
     @NotNull
@@ -19,8 +22,9 @@ public class EventLogger implements IEventLogger {
     /**
      * 创建一个新的子日志器
      *
-     * @param processor 父
-     * @param name      名字
+     * @param processor  父
+     * @param name       名字
+     * @param topicAware 主题过滤逻辑
      */
     public EventLogger(@NotNull IEventProcessor processor, @NotNull String name, @Nullable ITopicAware topicAware) {
         this.processor = processor;

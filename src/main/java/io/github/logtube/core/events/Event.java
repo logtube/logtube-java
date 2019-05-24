@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 
 /**
- * Logtube 事件
+ * 日志事件，commit 方法留空，需要让日志器复写该方法
  */
 public class Event implements IMutableEvent {
 
@@ -82,7 +82,7 @@ public class Event implements IMutableEvent {
 
     @Override
     public void setEnv(@Nullable String env) {
-        this.env = Strings.sanitize(env, null);
+        this.env = env;
     }
 
     @NotNull
@@ -92,7 +92,7 @@ public class Event implements IMutableEvent {
 
     @Override
     public void setProject(@Nullable String project) {
-        this.project = Strings.sanitize(project, null);
+        this.project = project;
     }
 
     @Override
@@ -102,7 +102,7 @@ public class Event implements IMutableEvent {
 
     @Override
     public void setTopic(@Nullable String topic) {
-        this.topic = Strings.sanitize(topic, null);
+        this.topic = topic;
     }
 
     @Override
@@ -112,7 +112,7 @@ public class Event implements IMutableEvent {
 
     @Override
     public void setCrid(@Nullable String crid) {
-        this.crid = Strings.sanitize(crid, null);
+        this.crid = crid;
     }
 
     @Override

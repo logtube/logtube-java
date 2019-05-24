@@ -6,7 +6,7 @@ import io.github.logtube.core.IMutableEvent;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * 从 根日志器 派生出来的 日志器
+ * 从普通日志器派生出来的日志器，用于附加过滤器，比如统一增加 keyword 等
  */
 public class DerivedLogger implements IEventLogger {
 
@@ -20,7 +20,7 @@ public class DerivedLogger implements IEventLogger {
      * 派生日志器
      *
      * @param parent     父日志器
-     * @param middleware 可选的过滤器
+     * @param middleware 过滤器
      */
     public DerivedLogger(@NotNull IEventLogger parent, @NotNull IEventMiddleware middleware) {
         this.middleware = middleware;

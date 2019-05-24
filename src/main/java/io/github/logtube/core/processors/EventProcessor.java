@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 根日志器，通常一个项目只有一个根日志器，存储 主机名、项目名 和 环境名，包含多个日志输出，并且存储线程级 CRID
+ * 处理器，通常一个项目只有一个处理器，存储 主机名、项目名 和 环境名，包含多个日志输出，并且存储线程级 CRID，产生具备有效 commit 方法的日志事件
  */
 public class EventProcessor extends LifeCycle implements IEventProcessor {
 

@@ -92,7 +92,7 @@ public class LogtubeOptions {
 
     @Nullable
     @Contract("_, !null -> !null")
-    private String safeStringValue(@NotNull String field, @Nullable String defaultValue) {
+    private String sanitizedStringValue(@NotNull String field, @Nullable String defaultValue) {
         return Strings.sanitize(getProperty(field), defaultValue);
     }
 
@@ -193,12 +193,12 @@ public class LogtubeOptions {
 
     @NotNull
     public String getProject() {
-        return safeStringValue("logtube.project", "unknown-project");
+        return sanitizedStringValue("logtube.project", "unknown-project");
     }
 
     @NotNull
     public String getEnv() {
-        return safeStringValue("logtube.env", "unknown-env");
+        return sanitizedStringValue("logtube.env", "unknown-env");
     }
 
     @NotNull

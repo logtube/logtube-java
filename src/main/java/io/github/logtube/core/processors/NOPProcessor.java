@@ -6,6 +6,9 @@ import io.github.logtube.core.events.NOPEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * 无操作的日志处理器，用于在系统未初始化的时候，保持逻辑正常
+ */
 public class NOPProcessor implements IEventProcessor {
 
     private static final NOPProcessor SINGLETON = new NOPProcessor();
