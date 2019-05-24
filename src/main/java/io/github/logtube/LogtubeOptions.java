@@ -58,7 +58,6 @@ public class LogtubeOptions {
                     Yaml yml = new Yaml();
                     Map<String, Object> map = yml.load(stream);
                     Maps.flattenProperties(properties, map);
-                    return properties;
                 } else {
                     System.err.println("unsupported file " + filename + ".");
                     return null;
