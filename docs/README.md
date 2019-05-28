@@ -107,9 +107,9 @@ IEventLogger logger = Logtube.getLogger(LogtubeTest.class);
 // 传统纯文本日志
 logger.info("hello world");
 
-// 传统纯文本日志（带关键字）
-logger.keyword("WelcomeController", "SOMETHING").info("hello world");
-logger.withK("WelcomeController", "SOMETHING").info("hello world"); // 等价写法
+// 传统纯文本日志（带关键字，生产环境要求 INFO 必须有关键字）
+logger.keyword("关键字1", "关键字2").info("hello world");
+logger.withK("关键字1", "关键字2").info("hello world"); // 等价写法
 
 // 使用 extra 字段的结构化日志，需要用 commit() 做结束
 logger.topic("custom-topic").extras("key1", "val1", "key2", "val2").message("hello world").commit();
