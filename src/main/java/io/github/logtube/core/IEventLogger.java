@@ -35,11 +35,17 @@ public interface IEventLogger extends ITopicAware, Logger {
 
     //////////////////////// default methods //////////////////////////////
 
-    default @NotNull IEventLogger keyword(@NotNull String... keywords) {
+    default @NotNull IEventLogger keyword(@Nullable Object... keywords) {
         return derive(e -> e.keyword(keywords));
     }
 
-    default @NotNull IEventLogger withK(@NotNull String... keywords) {
+    /**
+     * @param keywords 关键字
+     * @return 带关键字的 Logger
+     * @see IEventLogger#keyword(Object...)
+     */
+    @Deprecated
+    default @NotNull IEventLogger withK(@Nullable Object... keywords) {
         return keyword(keywords);
     }
 
@@ -89,10 +95,13 @@ public interface IEventLogger extends ITopicAware, Logger {
         buf.append("] [");
         buf.append(topic.toUpperCase());
         buf.append("] ");
-        buf.append(String.valueOf(getName()));
-        buf.append(':');
-        buf.append(String.valueOf(Reflections.getLineNumber(IEventLogger.class)));
-        buf.append(" - ");
+        if (getName() != null && !getName().equalsIgnoreCase(Logger.ROOT_LOGGER_NAME)) {
+            buf.append(getName());
+            buf.append(':');
+            buf.append(String.valueOf(Reflections.getLineNumber(IEventLogger.class)));
+            buf.append(' ');
+        }
+        buf.append("- ");
         buf.append(msg);
         if (t != null) {
             buf.append("\r\n");

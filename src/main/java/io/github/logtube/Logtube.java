@@ -3,7 +3,9 @@ package io.github.logtube;
 import io.github.logtube.core.IEventLogger;
 import io.github.logtube.core.IEventProcessor;
 import io.github.logtube.core.IMutableEvent;
+import io.github.logtube.utils.Strings;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.Marker;
 
@@ -29,8 +31,39 @@ public class Logtube {
         return getLogger(Logger.ROOT_LOGGER_NAME);
     }
 
-    @NotNull IMutableEvent topic(@NotNull String topic) {
+    @NotNull
+    public static IMutableEvent topic(@NotNull String topic) {
         return getLogger().topic(topic);
+    }
+
+    @NotNull
+    public static IEventLogger keyword(@Nullable Object... keywords) {
+        return getLogger().keyword(keywords);
+    }
+
+    /**
+     * @param keywords 关键字
+     * @return 一个 Logger 带关键词
+     * @see Logtube#keyword(Object...)
+     */
+    @Deprecated
+    @NotNull
+    public static IEventLogger withK(@Nullable Object... keywords) {
+        return keyword(keywords);
+    }
+
+    /**
+     * 生成 K[] 字符串，用以添加到消息内容
+     *
+     * @param keywords 关键字
+     * @return 格式化的关键字
+     * @see Logtube#keyword(Object...)
+     * @deprecated 使用 Logtube.keyword().info() 这样的写法
+     */
+    @Deprecated
+    @NotNull
+    public static String K(@Nullable Object... keywords) {
+        return Strings.keyword(keywords);
     }
 
     ////////////////////////// GENERATED CODES /////////////////////////////
@@ -280,13 +313,5 @@ public class Logtube {
         return getLogger().isErrorEnabled();
     }
 
-
-    public static IEventLogger keyword(@NotNull String... keywords) {
-        return getLogger().keyword(keywords);
-    }
-
-    public static IEventLogger withK(@NotNull String... keywords) {
-        return keyword(keywords);
-    }
 
 }

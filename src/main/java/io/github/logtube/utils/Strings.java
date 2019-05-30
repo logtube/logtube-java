@@ -4,8 +4,10 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class Strings {
 
@@ -86,6 +88,21 @@ public class Strings {
             }
         }
         return s;
+    }
+
+    @NotNull
+    public static String keyword(@Nullable Object... os) {
+        // deny if keywords is too large
+        if (os == null || os.length == 0 || os.length > 100) return "";
+        return " K[" + Arrays
+                .stream(os)
+                // toString
+                .map(String::valueOf)
+                // normalize
+                .map(Strings::safeNormalizeKeyword)
+                // join with ','
+                .collect(Collectors.joining(","))
+                + "]";
     }
 
 }

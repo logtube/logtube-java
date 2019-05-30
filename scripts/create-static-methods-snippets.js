@@ -56,13 +56,3 @@ for (let level of levels) {
         `)
 }
 
-
-console.log(`
-        public static IEventLogger keyword(@NotNull String... keywords) {
-            return getLogger().keyword(keywords);
-        }
-
-        public static IEventLogger withK(@NotNull String... keywords) {
-            return keyword(keywords);
-        }
-    `)

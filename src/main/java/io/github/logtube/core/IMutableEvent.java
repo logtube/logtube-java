@@ -84,18 +84,17 @@ public interface IMutableEvent extends IEvent {
     }
 
     @Contract("_ -> this")
-    default @NotNull IMutableEvent keyword(@NotNull String... keywords) {
-        if (keywords.length == 0) {
-            return this;
-        }
-        for (int i = 0; i < keywords.length; i++) {
-            keywords[i] = Strings.safeNormalizeKeyword(keywords[i]);
+    default @NotNull IMutableEvent keyword(@Nullable Object... ks) {
+        if (ks == null || ks.length == 0 || ks.length > 100) return this;
+        String[] kws = new String[ks.length];
+        for (int i = 0; i < ks.length; i++) {
+            kws[i] = Strings.safeNormalizeKeyword(String.valueOf(ks[i]));
         }
         String current = getKeyword();
         if (current == null) {
-            setKeyword(String.join(",", keywords));
+            setKeyword(String.join(",", kws));
         } else {
-            setKeyword(current + "," + String.join(",", keywords));
+            setKeyword(current + "," + String.join(",", kws));
         }
         return this;
     }
