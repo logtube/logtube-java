@@ -135,3 +135,11 @@ io.github.logtube.redis.LogtubeJedisPool
 io.github.logtube.redis.LogtubeJedisCluster
 io.github.logtube.Logtube
 ```
+
+# 获取 CRID
+
+旧的 `XLog.crid()` 改为 `Logtube.getProcessor().getCrid()`
+
+# HTTP Header 常量
+
+旧的 `Constants.HTTP_CRID_HEADER` 改为 `LogtubeConstants.HTTP_CRID_HEADER`
