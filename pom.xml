@@ -53,6 +53,13 @@
     </scm>
 
     <dependencies>
+        <!-- Apollo -->
+        <dependency>
+            <groupId>com.ctrip.framework.apollo</groupId>
+            <artifactId>apollo-client</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+
         <!-- Gson -->
         <dependency>
             <groupId>com.google.code.gson</groupId>

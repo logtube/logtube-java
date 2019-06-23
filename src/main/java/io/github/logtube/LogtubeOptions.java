@@ -1,5 +1,8 @@
 package io.github.logtube;
 
+import com.ctrip.framework.apollo.ConfigFile;
+import com.ctrip.framework.apollo.ConfigService;
+import com.ctrip.framework.apollo.core.enums.ConfigFileFormat;
 import io.github.logtube.utils.Maps;
 import io.github.logtube.utils.Strings;
 import org.jetbrains.annotations.Contract;
@@ -7,7 +10,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.yaml.snakeyaml.Yaml;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.net.InetAddress;
 import java.util.*;
 
@@ -64,6 +69,9 @@ public class LogtubeOptions {
                 }
                 String configFile = Strings.evaluateEnvironmentVariables(properties.getProperty("logtube.config-file"));
                 if (configFile != null) {
+                    if (configFile.equalsIgnoreCase("APOLLO")) {
+                        return propertiesFromApollo();
+                    }
                     return propertiesFromFile(configFile);
                 } else {
                     return properties;
@@ -76,6 +84,22 @@ public class LogtubeOptions {
             System.err.println("failed to load " + filename + ".");
         }
         return null;
+    }
+
+    @Nullable
+    private static Properties propertiesFromApollo() {
+        ConfigFile configFile = ConfigService.getConfigFile("logtube", ConfigFileFormat.Properties);
+        String content = configFile.getContent();
+        if (content == null) {
+            return null;
+        }
+        Properties properties = new Properties();
+        try {
+            properties.load(new StringReader(content));
+        } catch (IOException e) {
+            return null;
+        }
+        return properties;
     }
 
     @NotNull

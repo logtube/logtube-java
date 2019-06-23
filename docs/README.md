@@ -80,6 +80,15 @@ logtube.config-file=logtube-dev.properties # 此处可以通过类似 '@packagin
 # ...
 ```
 
+**使用 Apollo**
+
+如果想要使用 Apollo，需要在 Apollo 上配置一个叫 `logtube` 的命名空间，内部填写 Properties 格式的配置项。同时项目内保存如下配置文件：
+
+```properties
+# 文件：logtube.properties
+logtube.config-file=APOLLO
+```
+
 **使用环境变量**
 
 `logtube.properties` 中，允许使用 `${KEY}` 语法访问环境变量 
