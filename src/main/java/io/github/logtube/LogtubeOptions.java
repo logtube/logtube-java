@@ -145,6 +145,14 @@ public class LogtubeOptions {
         }
         return defaultValue;
     }
+    
+    private int intValue(String field, int defaultValue) {
+    	 String value = getProperty(field);
+    	 if (value == null || value.length() == 0) {
+             return defaultValue;
+         }
+    	 return Integer.valueOf(value.trim());
+    }
 
     @Contract("_, !null -> !null")
     private @Nullable Set<String> setValue(String field, @Nullable Set<String> defaultValue) {
@@ -331,5 +339,13 @@ public class LogtubeOptions {
     public String getRedisKey() {
         return stringValue("logtube.redis.key", "logtube");
     }
+    
+	public long getRedisMinDurationTime() {
+		return intValue("logtube.filter.redis-min-duration-time", 100);
+	}
+
+	public int getRedisMinResultSize() {
+		return intValue("logtube.filter.redis-min-result-size", 1000);
+	}
 
 }
