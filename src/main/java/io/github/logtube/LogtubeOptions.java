@@ -51,6 +51,10 @@ public class LogtubeOptions {
         return new LogtubeOptions(properties);
     }
 
+    public static @NotNull LogtubeOptions getDefault() {
+        return new LogtubeOptions(new Properties());
+    }
+
     @Nullable
     private static Properties propertiesFromFile(@NotNull String filename) {
         try (InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(filename)) {

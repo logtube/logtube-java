@@ -41,6 +41,9 @@ public class LogtubeLoggerFactory implements ILoggerFactory, ILifeCycle {
     private IEventProcessor processor = NOPProcessor.getSingleton();
 
     @NotNull
+    private LogtubeOptions options = LogtubeOptions.getDefault();
+
+    @NotNull
     private ITopicMutableAware rootTopics = new TopicAware();
 
     private Map<String, ITopicAware> customTopics = new HashMap<>();
@@ -81,6 +84,11 @@ public class LogtubeLoggerFactory implements ILoggerFactory, ILifeCycle {
     @NotNull
     public IEventProcessor getProcessor() {
         return this.processor;
+    }
+
+    @NotNull
+    public LogtubeOptions getOptions() {
+        return options;
     }
 
     @NotNull
@@ -167,6 +175,7 @@ public class LogtubeLoggerFactory implements ILoggerFactory, ILifeCycle {
         processor.start();
 
         this.processor = processor;
+        this.options = options;
         this.isStarted = true;
     }
 
@@ -182,6 +191,9 @@ public class LogtubeLoggerFactory implements ILoggerFactory, ILifeCycle {
         // switch root logger
         IEventProcessor processor = this.processor;
         this.processor = NOPProcessor.getSingleton();
+
+        // switch options
+        this.options = LogtubeOptions.getDefault();
 
         processor.stop();
     }
