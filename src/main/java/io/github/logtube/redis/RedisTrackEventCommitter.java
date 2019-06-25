@@ -1,7 +1,6 @@
 package io.github.logtube.redis;
 
 import io.github.logtube.Logtube;
-import io.github.logtube.LogtubeLoggerFactory;
 import io.github.logtube.core.IMutableEvent;
 import io.github.logtube.utils.Flatten;
 import org.jetbrains.annotations.NotNull;
@@ -11,25 +10,35 @@ import java.util.StringJoiner;
 
 public class RedisTrackEventCommitter {
 
+    static private int minDuration = 0;
+
+    static private int minResultSize = 0;
+
+    public static void setMinDuration(int minDuration) {
+        RedisTrackEventCommitter.minDuration = minDuration;
+    }
+
+    public static void setMinResultSize(int minResultSize) {
+        RedisTrackEventCommitter.minResultSize = minResultSize;
+    }
+
     private IMutableEvent event = Logtube.getLogger(RedisTrackEventCommitter.class).topic("x-redis-track");
 
     private long startTime = System.currentTimeMillis();
 
     public void commit(Object res) {
-    	long minDuration = LogtubeLoggerFactory.getSingleton().getOptions().getRedisMinDurationTime();
-    	int minResultSize = LogtubeLoggerFactory.getSingleton().getOptions().getRedisMinResultSize();
         final long duration = System.currentTimeMillis() - this.startTime;
         final int resultSize = Flatten.objectToByteArray(res).length;
-        
+
         /*
          *  只输出
          *  耗时大于等于logtube.filter.redis-min-duration-time的redis日志
          *  返回值大于等于logtube.filter.redis-min-result-size的redis日志
          */
         if (duration >= minDuration || resultSize >= minResultSize) {
-        	event.extra("duration", duration);
-        	event.extra("result_size", resultSize);
-        	this.event.commit();
+            event.extra("duration", duration);
+            event.extra("result_size", resultSize);
+            this.event.commit();
         }
     }
 

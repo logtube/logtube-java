@@ -6,6 +6,7 @@ import io.github.logtube.core.loggers.EventLogger;
 import io.github.logtube.core.outputs.*;
 import io.github.logtube.core.processors.EventProcessor;
 import io.github.logtube.core.processors.NOPProcessor;
+import io.github.logtube.redis.RedisTrackEventCommitter;
 import io.github.logtube.utils.ILifeCycle;
 import io.github.logtube.utils.ITopicAware;
 import io.github.logtube.utils.ITopicMutableAware;
@@ -117,6 +118,7 @@ public class LogtubeLoggerFactory implements ILoggerFactory, ILifeCycle {
 
         LogtubeOptions options = LogtubeOptions.fromClasspath();
 
+        // setup topics
         this.rootTopics.setTopics(options.getTopics());
 
         options.getCustomTopics().forEach((k, v) -> {
@@ -125,6 +127,7 @@ public class LogtubeLoggerFactory implements ILoggerFactory, ILifeCycle {
             this.customTopics.put(k, topicAware);
         });
 
+        // setup processor
         EventProcessor processor = new EventProcessor();
 
         processor.setHostname(LogtubeOptions.getHostname());
@@ -173,6 +176,10 @@ public class LogtubeLoggerFactory implements ILoggerFactory, ILifeCycle {
         }
 
         processor.start();
+
+        // configure component
+        RedisTrackEventCommitter.setMinDuration(options.getRedisMinDuration());
+        RedisTrackEventCommitter.setMinResultSize(options.getRedisMinResultSize());
 
         this.processor = processor;
         this.options = options;
