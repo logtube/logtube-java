@@ -37,7 +37,7 @@ logtube:
 
   # Redis 远程输出
   redis:
-    enabled: true
+    enabled: false
     topics: ALL
     hosts:
       - localhost:6379
