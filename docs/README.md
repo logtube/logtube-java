@@ -145,6 +145,15 @@ io.github.logtube.redis.LogtubeJedisCluster
 io.github.logtube.Logtube
 ```
 
+**Dubbo**
+
+在 `resources` 目录下创建纯文本文件 `META-INF/dubbo/com.alibaba.dubbo.rpc.Filter`
+
+```
+LogtubeConsumerFilter=io.github.logtube.dubbo.LogtubeDubboConsumerFilter
+LogtubeProviderFilter=io.github.logtube.dubbo.LogtubeDubboProviderFilter
+```
+
 # 获取 CRID
 
 旧的 `XLog.crid()` 改为 `Logtube.getProcessor().getCrid()`
