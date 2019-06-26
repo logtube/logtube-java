@@ -40,6 +40,10 @@ public class LogtubeOptions {
         Properties properties = propertiesFromFile("logtube.yml");
 
         if (properties == null) {
+            properties = propertiesFromFile("logtube.yaml");
+        }
+
+        if (properties == null) {
             properties = propertiesFromFile("logtube.properties");
         }
 
@@ -63,7 +67,7 @@ public class LogtubeOptions {
             if (stream != null) {
                 if (filename.toLowerCase().endsWith(".properties")) {
                     properties.load(stream);
-                } else if (filename.toLowerCase().endsWith(".yml")) {
+                } else if (filename.toLowerCase().endsWith(".yml") || filename.toLowerCase().endsWith(".yaml")) {
                     Yaml yml = new Yaml();
                     Map<String, Object> map = yml.load(stream);
                     Maps.flattenProperties(properties, map);

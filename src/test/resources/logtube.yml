@@ -40,8 +40,7 @@ logtube:
     enabled: true
     topics: ALL
     hosts:
-      - 127.0.0.1
-      - 127.0.0.1
+      - localhost:6379
     key: xlog
 
   # 过滤器组件配置

@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class EventRedisOutput extends BaseEventOutput {
 
-    public static final int QUEUE_CAPACITY = 1024;
+    private static final int QUEUE_CAPACITY = 1024;
 
     private final IEventSerializer serializer = new EventRedisSerializer();
 
@@ -26,6 +26,16 @@ public class EventRedisOutput extends BaseEventOutput {
     private final ArrayBlockingQueue<String> queue = new ArrayBlockingQueue<>(QUEUE_CAPACITY);
 
     private Thread worker = null;
+
+    @NotNull
+    private JedisPool createJedisPool(@NotNull String host) {
+        String[] split = host.split(":");
+        // fix for HOST:PORT format
+        if (split.length == 2) {
+            return new JedisPool(split[0], Integer.valueOf(split[1]));
+        }
+        return new JedisPool(host);
+    }
 
     public EventRedisOutput(String[] hosts, String key) {
         this.hosts = hosts;
@@ -64,8 +74,8 @@ public class EventRedisOutput extends BaseEventOutput {
         private final AtomicLong cursor = new AtomicLong();
 
         EventRedisOutputWorker(String[] hosts, String key) {
-            for (String url : hosts) {
-                this.pools.add(new JedisPool(url));
+            for (String host : hosts) {
+                this.pools.add(createJedisPool(host));
             }
             this.key = key;
         }
