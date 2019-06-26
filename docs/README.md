@@ -145,7 +145,21 @@ io.github.logtube.redis.LogtubeJedisCluster
 io.github.logtube.Logtube
 ```
 
-**Spring Boot**
+**Spring (web.xml)**
+
+```
+<filter>
+    <filter-name>LogtubeFilter</filter-name>
+    <filter-class>io.github.logtube.http.LogtubeHttpFilter</filter-class>
+</filter>
+
+<filter-mapping>
+    <filter-name>LogtubeFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+</filter-mapping>
+```
+
+**Spring (spring-boot)**
 
 ```java
 @SpringBootApplication
