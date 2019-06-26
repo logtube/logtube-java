@@ -177,6 +177,8 @@ LogtubeConsumerFilter=io.github.logtube.dubbo.LogtubeDubboConsumerFilter
 LogtubeProviderFilter=io.github.logtube.dubbo.LogtubeDubboProviderFilter
 ```
 
+*key 可以是任意以 `Filter` 结尾的字符串*
+
 # 获取 CRID
 
 旧的 `XLog.crid()` 改为 `Logtube.getProcessor().getCrid()`
