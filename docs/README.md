@@ -145,6 +145,29 @@ io.github.logtube.redis.LogtubeJedisCluster
 io.github.logtube.Logtube
 ```
 
+**Spring Boot**
+
+```java
+@SpringBootApplication
+public class DemoApplication {
+
+    @Bean
+    public FilterRegistrationBean<LogtubeHttpFilter> someFilterRegistration() {
+        FilterRegistrationBean<LogtubeHttpFilter> registration = new FilterRegistrationBean<>();
+        registration.setFilter(new LogtubeHttpFilter());
+        registration.addUrlPatterns("*");
+        registration.setName("logtube-http");
+        registration.setOrder(1);
+        return registration;
+    }
+
+    public static void main(String[] args) {
+        SpringApplication.run(DemoApplication.class, args);
+    }
+
+}
+```
+
 **Dubbo**
 
 在 `resources` 目录下创建纯文本文件 `META-INF/dubbo/com.alibaba.dubbo.rpc.Filter`
