@@ -22,4 +22,14 @@ public class LogtubeTest {
         committer.commit();
     }
 
+
+    @Test
+    public void multiThread() throws InterruptedException {
+        Logtube.getProcessor().setCrid(null);
+        Logger logger = LoggerFactory.getLogger(LogtubeTest.class);
+        logger.info("hello world");
+        Thread thread = new Thread(() -> logger.info("hello world from child thread"));
+        thread.start();
+    }
+
 }

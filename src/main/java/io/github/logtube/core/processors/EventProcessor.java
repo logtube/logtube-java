@@ -84,9 +84,9 @@ public class EventProcessor extends LifeCycle implements IEventProcessor {
 
     private final CridThreadLocal cridThreadLocal = new CridThreadLocal();
 
-    private final ThreadLocal<String> pathThreadLocal = new ThreadLocal<>();
+    private final ThreadLocal<String> pathThreadLocal = new InheritableThreadLocal<>();
 
-    private final ThreadLocal<String> pathDigestThreadLocal = new ThreadLocal<>();
+    private final ThreadLocal<String> pathDigestThreadLocal = new InheritableThreadLocal<>();
 
     @Override
     public void clearCrid() {
@@ -186,7 +186,7 @@ public class EventProcessor extends LifeCycle implements IEventProcessor {
 
     }
 
-    private class CridThreadLocal extends ThreadLocal<String> {
+    private class CridThreadLocal extends InheritableThreadLocal<String> {
 
         @Override
         protected String initialValue() {
