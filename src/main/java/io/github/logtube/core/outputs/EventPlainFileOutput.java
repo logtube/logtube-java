@@ -7,13 +7,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Map;
 
 public class EventPlainFileOutput extends BaseFileOutput {
 
     private final IEventSerializer serializer = new EventPlainFileSerializer();
 
-    public EventPlainFileOutput(@NotNull String dir, @NotNull String signal) {
-        super(dir, signal);
+    public EventPlainFileOutput(@NotNull String dir, Map<String, String> subdirMappings, @NotNull String signal) {
+        super(dir, subdirMappings, signal);
     }
 
     @Override

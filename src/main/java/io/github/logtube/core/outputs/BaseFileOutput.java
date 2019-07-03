@@ -11,6 +11,7 @@ import java.io.Writer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 public abstract class BaseFileOutput extends BaseEventOutput {
@@ -25,8 +26,11 @@ public abstract class BaseFileOutput extends BaseEventOutput {
 
     private final HashMap<String, FileWriter> writers = new HashMap<>();
 
-    public BaseFileOutput(@NotNull String dir, @NotNull String signal) {
+    private final Map<String, String> subdirMappings;
+
+    public BaseFileOutput(@NotNull String dir, Map<String, String> subdirMappings, @NotNull String signal) {
         this.dir = dir;
+        this.subdirMappings = subdirMappings;
         this.signalChecker = new SignalChecker(signal);
     }
 
@@ -56,11 +60,14 @@ public abstract class BaseFileOutput extends BaseEventOutput {
 
         FileWriter w = this.writers.get(e.getTopic());
         if (w == null) {
-            // make parent directories
-            //noinspection ResultOfMethodCallIgnored
-            Paths.get(this.dir, e.getEnv(), e.getTopic()).toFile().mkdirs();
             // calculate full file path
-            Path path = Paths.get(this.dir, e.getEnv(), e.getTopic(), e.getProject() + ".log");
+            String subdir = this.subdirMappings.get(e.getTopic());
+            Path path;
+            if (subdir == null) {
+                path = Paths.get(this.dir, e.getEnv() + "." + e.getTopic() + "." + e.getProject() + ".log");
+            } else {
+                path = Paths.get(this.dir, subdir, e.getEnv() + "." + e.getTopic() + "." + e.getProject() + ".log");
+            }
             // create file writer
             w = new FileWriter(path.toAbsolutePath().toString(), true);
             // cache file writer
@@ -86,6 +93,16 @@ public abstract class BaseFileOutput extends BaseEventOutput {
     @Override
     public void doStart() {
         super.doStart();
+
+        // make parent directories
+        //noinspection ResultOfMethodCallIgnored
+        Paths.get(this.dir).toFile().mkdirs();
+
+        // make subdirs
+        new HashSet<>(this.subdirMappings.values()).forEach(subdir -> {
+            //noinspection ResultOfMethodCallIgnored
+            Paths.get(this.dir, subdir).toFile().mkdirs();
+        });
     }
 
     @Override

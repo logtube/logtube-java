@@ -287,6 +287,11 @@ public class LogtubeOptions {
     }
 
     @NotNull
+    public Map<String, String> getFilePlainSubdirMappings() {
+        return mapValue("logtube.file-plain.subdir-mappings", new HashMap<>());
+    }
+
+    @NotNull
     public String getFilePlainSignal() {
         return stringValue("logtube.file-plain.signal", "/tmp/logtube.reopen.txt");
     }
@@ -303,6 +308,11 @@ public class LogtubeOptions {
     @NotNull
     public String getFileJSONDir() {
         return stringValue("logtube.file-json.dir", "logs");
+    }
+
+    @NotNull
+    public Map<String, String> getFileJSONSubdirMappings() {
+        return mapValue("logtube.file-json.subdir-mappings", new HashMap<>());
     }
 
     @NotNull

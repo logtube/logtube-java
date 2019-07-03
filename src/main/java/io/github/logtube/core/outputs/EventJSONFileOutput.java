@@ -7,13 +7,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Map;
 
 public class EventJSONFileOutput extends BaseFileOutput {
 
     private final IEventSerializer serializer = new EventJSONFileSerializer();
 
-    public EventJSONFileOutput(@NotNull String dir, @NotNull String signal) {
-        super(dir, signal);
+    public EventJSONFileOutput(@NotNull String dir, Map<String, String> subdirMappings, @NotNull String signal) {
+        super(dir, subdirMappings, signal);
     }
 
     @Override

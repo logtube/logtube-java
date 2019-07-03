@@ -20,6 +20,7 @@ logtube:
     enabled: true
     topics: app, debug, info, err
     dir: logs
+    subdir-mappings: info=xlog,err=xlog
     signal: /tmp/xlog.reopen.txt
 
   # JSON文本输出
@@ -27,6 +28,7 @@ logtube:
     enabled: true
     topics: ALL, -app, -debug, -info, -err
     dir: logs
+    subdir-mappings: x-redis-track=xlog,x-druid-track=xlog
     signal: /tmp/xlog.reopen.txt
 
   # SPTP 远程输出

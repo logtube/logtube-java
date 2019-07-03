@@ -17,6 +17,7 @@ public class LogtubeTest {
         logger.info("hello world");
         logger.warn("warn test");
         logger.trace("hello world {}", "222");
+        logger.error("err test {}", "333");
         XPerfCommitter committer = XPerf.create("test", 1, 2, 3, 4);
         Thread.sleep(1000);
         committer.commit();

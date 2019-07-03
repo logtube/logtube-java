@@ -144,6 +144,7 @@ public class LogtubeLoggerFactory implements ILoggerFactory, ILifeCycle {
         if (options.getFilePlainEnabled()) {
             EventPlainFileOutput output = new EventPlainFileOutput(
                     options.getFilePlainDir(),
+                    options.getFilePlainSubdirMappings(),
                     options.getFilePlainSignal()
             );
             output.setTopics(options.getFilePlainTopics());
@@ -153,6 +154,7 @@ public class LogtubeLoggerFactory implements ILoggerFactory, ILifeCycle {
         if (options.getFileJSONEnabled()) {
             EventJSONFileOutput output = new EventJSONFileOutput(
                     options.getFileJSONDir(),
+                    options.getFileJSONSubdirMappings(),
                     options.getFileJSONSignal()
             );
             output.setTopics(options.getFileJSONTopics());
