@@ -2,7 +2,6 @@ package io.github.logtube.http;
 
 import io.github.logtube.Logtube;
 import io.github.logtube.LogtubeConstants;
-import io.github.logtube.core.IEventProcessor;
 import io.github.logtube.utils.Requests;
 import io.github.logtube.utils.Strings;
 import org.jetbrains.annotations.NotNull;
@@ -23,8 +22,6 @@ import java.util.Set;
  * crid - correlation id
  */
 public class LogtubeHttpFilter implements Filter {
-
-    private static final IEventProcessor ROOT_LOGGER = Logtube.getProcessor();
 
     /**
      * -例外名单。此名单中的请求将不记录xlog
@@ -89,14 +86,14 @@ public class LogtubeHttpFilter implements Filter {
     }
 
     private void setupRootLogger(HttpServletRequest request, HttpServletResponse response) {
-        ROOT_LOGGER.setPath(request.getRequestURI());
-        ROOT_LOGGER.setCrid(request.getHeader(LogtubeConstants.HTTP_CRID_HEADER));
-        response.setHeader(LogtubeConstants.HTTP_CRID_HEADER, ROOT_LOGGER.getCrid());
+        Logtube.getProcessor().setPath(request.getRequestURI());
+        Logtube.getProcessor().setCrid(request.getHeader(LogtubeConstants.HTTP_CRID_HEADER));
+        response.setHeader(LogtubeConstants.HTTP_CRID_HEADER, Logtube.getProcessor().getCrid());
     }
 
     private void resetRootLogger() {
-        ROOT_LOGGER.clearCrid();
-        ROOT_LOGGER.clearPath();
+        Logtube.getProcessor().clearCrid();
+        Logtube.getProcessor().clearPath();
     }
 
     @Override
