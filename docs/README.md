@@ -193,6 +193,10 @@ LogtubeProviderFilter=io.github.logtube.dubbo.LogtubeDubboProviderFilter
 
 *key 可以是任意以 `Filter` 结尾的字符串*
 
+**XXL-JOB**
+
+使用 `LogtubeXxlJobSpringJobExecutor` 替换 `XxlJobSpringJobExecutor`，前者在 `JobHandler` 运行前后添加了对应的 `crid` 管理
+
 # 获取 CRID
 
 旧的 `XLog.crid()` 改为 `Logtube.getProcessor().getCrid()`
