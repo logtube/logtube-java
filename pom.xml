@@ -14,6 +14,13 @@
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
+    
+    <repositories>
+		<repository>
+			<id>nexus-public</id>
+			<url>http://maven.dev.pagoda.com.cn:10008/nexus/content/groups/public/</url>
+		</repository>
+	</repositories>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -155,6 +162,14 @@
             <version>16.0.3</version>
             <scope>provided</scope>
         </dependency>
+        
+        <!-- rocketmq -->
+        <dependency>
+			<groupId>com.pagoda.platform</groupId>
+			<artifactId>cloud-stream-rocketmq-starter</artifactId>
+			<version>1.1.1</version>
+			<scope>provided</scope>
+		</dependency>
 
         <!-- JUnit -->
         <dependency>
