@@ -64,7 +64,12 @@ public abstract class BaseFileOutput extends BaseEventOutput {
             String subdir = this.subdirMappings.get(e.getTopic());
             Path path;
             if (subdir == null) {
-                path = Paths.get(this.dir, e.getEnv() + "." + e.getTopic() + "." + e.getProject() + ".log");
+                String wildcard = this.subdirMappings.get("ALL");
+                if (wildcard != null) {
+                    path = Paths.get(this.dir, wildcard, e.getEnv() + "." + e.getTopic() + "." + e.getProject() + ".log");
+                } else {
+                    path = Paths.get(this.dir, e.getEnv() + "." + e.getTopic() + "." + e.getProject() + ".log");
+                }
             } else {
                 path = Paths.get(this.dir, subdir, e.getEnv() + "." + e.getTopic() + "." + e.getProject() + ".log");
             }
