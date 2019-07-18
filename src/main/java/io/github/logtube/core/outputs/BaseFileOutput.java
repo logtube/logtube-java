@@ -68,7 +68,7 @@ public abstract class BaseFileOutput extends BaseEventOutput {
                 if (wildcard != null) {
                     path = Paths.get(this.dir, wildcard, e.getEnv() + "." + e.getTopic() + "." + e.getProject() + ".log");
                 } else {
-                    path = Paths.get(this.dir, e.getEnv() + "." + e.getTopic() + "." + e.getProject() + ".log");
+                    path = Paths.get(this.dir, "others", e.getEnv() + "." + e.getTopic() + "." + e.getProject() + ".log");
                 }
             } else {
                 path = Paths.get(this.dir, subdir, e.getEnv() + "." + e.getTopic() + "." + e.getProject() + ".log");
