@@ -63,12 +63,12 @@ public class LogtubeHttpFilter implements Filter {
         HttpAccessEventCommitter event = new HttpAccessEventCommitter().setServletRequest(request);
         try {
             chain.doFilter(request, response);
-
            /* // 将Wrapper的内容回填到原生Response
             if (responseWrapper.useOutputStream()) {
                 response.getOutputStream().write(responseWrapper.getContent());
             }
-            event.setServletResponse(responseWrapper);*/
+            */
+            event.setServletResponse(response);
         } finally {
             event.commit();
             resetRootLogger();
