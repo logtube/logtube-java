@@ -58,17 +58,17 @@ public class LogtubeHttpFilter implements Filter {
     private void process(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
         request = wrapRequest(request);
-        LogtubeHttpServletResponseWrapper responseWrapper = new LogtubeHttpServletResponseWrapper(response);
+        //LogtubeHttpServletResponseWrapper responseWrapper = new LogtubeHttpServletResponseWrapper(response);
         setupRootLogger(request, response);
         HttpAccessEventCommitter event = new HttpAccessEventCommitter().setServletRequest(request);
         try {
-            chain.doFilter(request, responseWrapper);
+            chain.doFilter(request, response);
 
-            // 将Wrapper的内容回填到原生Response
+           /* // 将Wrapper的内容回填到原生Response
             if (responseWrapper.useOutputStream()) {
                 response.getOutputStream().write(responseWrapper.getContent());
             }
-            event.setServletResponse(responseWrapper);
+            event.setServletResponse(responseWrapper);*/
         } finally {
             event.commit();
             resetRootLogger();
