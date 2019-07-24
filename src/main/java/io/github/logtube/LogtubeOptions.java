@@ -1,8 +1,5 @@
 package io.github.logtube;
 
-import com.ctrip.framework.apollo.ConfigFile;
-import com.ctrip.framework.apollo.ConfigService;
-import com.ctrip.framework.apollo.core.enums.ConfigFileFormat;
 import io.github.logtube.utils.Maps;
 import io.github.logtube.utils.Strings;
 import org.jetbrains.annotations.Contract;
@@ -10,9 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringReader;
 import java.net.InetAddress;
 import java.util.*;
 
@@ -96,18 +91,17 @@ public class LogtubeOptions {
 
     @Nullable
     private static Properties propertiesFromApollo() {
-        ConfigFile configFile = ConfigService.getConfigFile("logtube", ConfigFileFormat.Properties);
-        String content = configFile.getContent();
-        if (content == null) {
-            return null;
-        }
-        Properties properties = new Properties();
         try {
-            properties.load(new StringReader(content));
-        } catch (IOException e) {
+            Class providerClass = Class.forName("io.github.logtube.apollo.LogtubeApolloOptionsProvider");
+            Object provider = providerClass.newInstance();
+            if (provider instanceof LogtubeOptionsProvider) {
+                return ((LogtubeOptionsProvider) provider).loadOptions();
+            }
+            return null;
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+            e.printStackTrace();
             return null;
         }
-        return properties;
     }
 
     @NotNull
