@@ -1,9 +1,11 @@
 package io.github.logtube.http;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.WriteListener;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.ServletResponse;
+import javax.servlet.WriteListener;
 
 /**
  * 仅供http包使用
@@ -13,9 +15,11 @@ import java.io.IOException;
 class LogtubeServletOutputStream extends ServletOutputStream {
 
     private ByteArrayOutputStream stream;
+    private ServletResponse response;
 
-    public LogtubeServletOutputStream(ByteArrayOutputStream outputStream) {
+    public LogtubeServletOutputStream(ByteArrayOutputStream outputStream, ServletResponse response) {
         this.stream = outputStream;
+        this.response = response;
     }
 
     @Override
@@ -31,5 +35,10 @@ class LogtubeServletOutputStream extends ServletOutputStream {
     @Override
     public void setWriteListener(WriteListener writeListener) {
     }
+
+    @Override
+    public void close() throws IOException {
+        this.response.flushBuffer();
+        }
 
 }

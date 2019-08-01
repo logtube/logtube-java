@@ -40,7 +40,7 @@ public class LogtubeHttpServletResponseWrapper extends HttpServletResponseWrappe
     @Override
     public ServletOutputStream getOutputStream() throws IOException {
 
-        return new LogtubeServletOutputStream(bytes);
+        return new LogtubeServletOutputStream(bytes, this.getResponse());
     }
 
     public boolean useOutputStream() {
