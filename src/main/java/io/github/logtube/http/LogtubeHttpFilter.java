@@ -58,16 +58,11 @@ public class LogtubeHttpFilter implements Filter {
     private void process(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
         request = wrapRequest(request);
-        //LogtubeHttpServletResponseWrapper responseWrapper = new LogtubeHttpServletResponseWrapper(response);
+        response = wrapResponse(response);
         setupRootLogger(request, response);
         HttpAccessEventCommitter event = new HttpAccessEventCommitter().setServletRequest(request);
         try {
             chain.doFilter(request, response);
-           /* // 将Wrapper的内容回填到原生Response
-            if (responseWrapper.useOutputStream()) {
-                response.getOutputStream().write(responseWrapper.getContent());
-            }
-            */
             event.setServletResponse(response);
         } finally {
             event.commit();
@@ -83,6 +78,11 @@ public class LogtubeHttpFilter implements Filter {
         }
 
         return request;
+    }
+
+    @NotNull
+    private HttpServletResponse wrapResponse(@NotNull HttpServletResponse response) {
+        return new LogtubeHttpServletResponseWrapper(response);
     }
 
     private void setupRootLogger(HttpServletRequest request, HttpServletResponse response) {

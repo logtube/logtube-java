@@ -3,12 +3,16 @@
  */
 package io.github.logtube.http;
 
+import org.jetbrains.annotations.NotNull;
+
 import javax.servlet.ServletOutputStream;
+import javax.servlet.WriteListener;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Writer;
+import java.util.concurrent.atomic.LongAdder;
 
 /**
  * Http Response封装类
@@ -17,37 +21,87 @@ import java.io.PrintWriter;
  */
 public class LogtubeHttpServletResponseWrapper extends HttpServletResponseWrapper {
 
-    private ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-
-    private boolean useOutputStream = true;
+    private LongAdder responseSize = new LongAdder();
 
     public LogtubeHttpServletResponseWrapper(HttpServletResponse response) {
         super(response);
     }
 
-    /* (non-Javadoc)
-     * @see javax.servlet.ServletResponseWrapper#getWriter()
-     */
+    public long getResponseSize() {
+        return this.responseSize.longValue();
+    }
+
     @Override
     public PrintWriter getWriter() throws IOException {
-        useOutputStream = false;
-        return super.getWriter();
+        return new WrappedPrintWrapper(super.getWriter());
     }
 
-    /* (non-Javadoc)
-     * @see javax.servlet.ServletResponseWrapper#getOutputStream()
-     */
     @Override
     public ServletOutputStream getOutputStream() throws IOException {
-
-        return new LogtubeServletOutputStream(bytes);
+        return new WrappedServletOutputStream(super.getOutputStream());
     }
 
-    public boolean useOutputStream() {
-        return useOutputStream;
+    private class WrappedServletOutputStream extends ServletOutputStream {
+
+        @NotNull
+        private final ServletOutputStream parent;
+
+        WrappedServletOutputStream(@NotNull ServletOutputStream parent) {
+            this.parent = parent;
+        }
+
+        @Override
+        public boolean isReady() {
+            return parent.isReady();
+        }
+
+        @Override
+        public void setWriteListener(WriteListener writeListener) {
+            parent.setWriteListener(writeListener);
+        }
+
+        @Override
+        public void write(int i) throws IOException {
+            parent.write(i);
+            responseSize.increment();
+        }
+
     }
 
-    public byte[] getContent() {
-        return bytes.toByteArray();
+    private class WrappedPrintWrapper extends PrintWriter {
+
+        WrappedPrintWrapper(@NotNull PrintWriter parent) {
+            super(new WrappedWriter(parent));
+        }
+
     }
+
+    private class WrappedWriter extends Writer {
+
+        @NotNull
+        private final Writer parent;
+
+        WrappedWriter(@NotNull Writer parent) {
+            super(parent);
+            this.parent = parent;
+        }
+
+        @Override
+        public void write(@NotNull char[] chars, int off, int len) throws IOException {
+            this.parent.write(chars, off, len);
+            responseSize.add(len);
+        }
+
+        @Override
+        public void flush() throws IOException {
+            this.parent.flush();
+        }
+
+        @Override
+        public void close() throws IOException {
+            this.parent.close();
+        }
+
+    }
+
 }

@@ -46,7 +46,7 @@ public class HttpAccessEventCommitter {
 
         // 设置返回值大小
         if (response instanceof LogtubeHttpServletResponseWrapper) {
-            this.event.extra("response_size", ((LogtubeHttpServletResponseWrapper) response).getContent().length);
+            this.event.extra("response_size", ((LogtubeHttpServletResponseWrapper) response).getResponseSize());
         }
         return this;
     }
