@@ -1,5 +1,6 @@
 package io.github.logtube;
 
+import io.github.logtube.core.IEventContext;
 import io.github.logtube.core.IEventLogger;
 import io.github.logtube.core.IEventProcessor;
 import io.github.logtube.core.IMutableEvent;
@@ -10,6 +11,11 @@ import org.slf4j.Logger;
 import org.slf4j.Marker;
 
 public class Logtube {
+
+    @NotNull
+    public static IEventContext captureContext() {
+        return getProcessor().captureContext();
+    }
 
     @NotNull
     public static IEventProcessor getProcessor() {

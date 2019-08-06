@@ -9,6 +9,14 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface IEventProcessor extends ILifeCycle {
 
+    @NotNull
+    IEventContext captureContext();
+
+    default void clearContext() {
+        clearCrid();
+        clearPath();
+    }
+
     @NotNull IMutableEvent event();
 
     void clearCrid();

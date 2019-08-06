@@ -1,9 +1,7 @@
 package io.github.logtube.core.processors;
 
-import io.github.logtube.core.IEvent;
-import io.github.logtube.core.IEventOutput;
-import io.github.logtube.core.IEventProcessor;
-import io.github.logtube.core.IMutableEvent;
+import io.github.logtube.core.*;
+import io.github.logtube.core.context.EventContext;
 import io.github.logtube.core.events.Event;
 import io.github.logtube.utils.Hex;
 import io.github.logtube.utils.ILifeCycle;
@@ -87,6 +85,12 @@ public class EventProcessor extends LifeCycle implements IEventProcessor {
     private final ThreadLocal<String> pathThreadLocal = new InheritableThreadLocal<>();
 
     private final ThreadLocal<String> pathDigestThreadLocal = new InheritableThreadLocal<>();
+
+    @Override
+    @NotNull
+    public IEventContext captureContext() {
+        return new EventContext(this.getCrid(), this.getPath());
+    }
 
     @Override
     public void clearCrid() {

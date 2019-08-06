@@ -1,7 +1,9 @@
 package io.github.logtube.core.processors;
 
+import io.github.logtube.core.IEventContext;
 import io.github.logtube.core.IEventProcessor;
 import io.github.logtube.core.IMutableEvent;
+import io.github.logtube.core.context.NOPEventContext;
 import io.github.logtube.core.events.NOPEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,6 +25,12 @@ public class NOPProcessor implements IEventProcessor {
     @Override
     public @NotNull IMutableEvent event() {
         return NOPEvent.getSingleton();
+    }
+
+    @Override
+    @NotNull
+    public IEventContext captureContext() {
+        return NOPEventContext.getSingleton();
     }
 
     @Override
