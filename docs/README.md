@@ -197,6 +197,10 @@ LogtubeProviderFilter=io.github.logtube.dubbo.LogtubeDubboProviderFilter
 
 使用 `LogtubeXxlJobSpringExecutor` 替换 `XxlJobSpringExecutor`，前者在 `JobHandler` 运行前后添加了对应的 `crid` 管理
 
+**LogtubeThreadPoolExecutor**
+
+在业务代码中使用 `ThreadPoolExecutor` 需要用 `LogtubeThreadPoolExecutor` 进行代替，才能够使得线程池中的线程能够正确地设置 CRID
+
 # 获取 CRID
 
 旧的 `XLog.crid()` 改为 `Logtube.getProcessor().getCrid()`
