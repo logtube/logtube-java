@@ -104,6 +104,7 @@ public abstract class BaseFileOutput extends BaseEventOutput {
         // make parent directories
         //noinspection ResultOfMethodCallIgnored
         Paths.get(this.dir).toFile().mkdirs();
+        //noinspection ResultOfMethodCallIgnored
         Paths.get(this.dir, SUBDIR_OTHERS).toFile().mkdirs();
 
         // make subdirs
