@@ -16,6 +16,8 @@ import java.util.Map;
 
 public abstract class BaseFileOutput extends BaseEventOutput {
 
+    private static final String SUBDIR_OTHERS = "others";
+
     private static final char[] NEW_LINE = new char[]{'\r', '\n'};
 
     private final String dir;
@@ -68,7 +70,7 @@ public abstract class BaseFileOutput extends BaseEventOutput {
                 if (wildcard != null) {
                     path = Paths.get(this.dir, wildcard, e.getEnv() + "." + e.getTopic() + "." + e.getProject() + ".log");
                 } else {
-                    path = Paths.get(this.dir, "others", e.getEnv() + "." + e.getTopic() + "." + e.getProject() + ".log");
+                    path = Paths.get(this.dir, SUBDIR_OTHERS, e.getEnv() + "." + e.getTopic() + "." + e.getProject() + ".log");
                 }
             } else {
                 path = Paths.get(this.dir, subdir, e.getEnv() + "." + e.getTopic() + "." + e.getProject() + ".log");
@@ -102,6 +104,7 @@ public abstract class BaseFileOutput extends BaseEventOutput {
         // make parent directories
         //noinspection ResultOfMethodCallIgnored
         Paths.get(this.dir).toFile().mkdirs();
+        Paths.get(this.dir, SUBDIR_OTHERS).toFile().mkdirs();
 
         // make subdirs
         new HashSet<>(this.subdirMappings.values()).forEach(subdir -> {
