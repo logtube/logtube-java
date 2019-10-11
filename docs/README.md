@@ -67,7 +67,7 @@ Guo Y.K. 2019年04月23日
 
 ```properties
 # 文件：logtube.properties
-logtube.config-file=logtube-dev.properties # 此处可以通过类似 '@packaging.environment@' 变量来修改配置文件名
+logtube.config-file=logtube-dev.properties # 此处可以通过启用 resources filtering 和 ${} 占位符来通过 pom.xml 中的 Profile properties 进行切换
 
 # 文件：logtube-dev.properties
 #
