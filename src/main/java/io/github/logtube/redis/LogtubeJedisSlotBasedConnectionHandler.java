@@ -35,6 +35,8 @@ public class LogtubeJedisSlotBasedConnectionHandler extends JedisSlotBasedConnec
     public LogtubeJedisSlotBasedConnectionHandler(Set<HostAndPort> nodes, GenericObjectPoolConfig poolConfig,
                                                   int connectionTimeout, int soTimeout, String password) {
         super(nodes, poolConfig, connectionTimeout, soTimeout, password);
+        
+        // 清空原先的cache
         cache.reset();
         jedisClusterInfoCache = new LogtubeJedisClusterInfoCache(poolConfig, connectionTimeout, soTimeout, password);
         initializeSlotsCache(nodes, poolConfig, password);
@@ -131,5 +133,29 @@ public class LogtubeJedisSlotBasedConnectionHandler extends JedisSlotBasedConnec
                 return getConnection();
             }
         }
+    }
+
+    /* (non-Javadoc)
+     * @see redis.clients.jedis.JedisClusterConnectionHandler#renewSlotCache()
+     */
+    @Override
+    public void renewSlotCache() {
+        jedisClusterInfoCache.renewClusterSlots(null);
+    }
+
+    /* (non-Javadoc)
+     * @see redis.clients.jedis.JedisClusterConnectionHandler#renewSlotCache(redis.clients.jedis.Jedis)
+     */
+    @Override
+    public void renewSlotCache(Jedis jedis) {
+        jedisClusterInfoCache.renewClusterSlots(jedis);
+    }
+
+    /* (non-Javadoc)
+     * @see redis.clients.jedis.JedisClusterConnectionHandler#close()
+     */
+    @Override
+    public void close() {
+        jedisClusterInfoCache.reset();
     }
 }
