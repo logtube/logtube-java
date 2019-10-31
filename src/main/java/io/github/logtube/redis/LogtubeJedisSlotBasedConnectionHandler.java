@@ -35,7 +35,7 @@ public class LogtubeJedisSlotBasedConnectionHandler extends JedisSlotBasedConnec
     public LogtubeJedisSlotBasedConnectionHandler(Set<HostAndPort> nodes, GenericObjectPoolConfig poolConfig,
                                                   int connectionTimeout, int soTimeout, String password) {
         super(nodes, poolConfig, connectionTimeout, soTimeout, password);
-        
+
         // 清空原先的cache
         cache.reset();
         jedisClusterInfoCache = new LogtubeJedisClusterInfoCache(poolConfig, connectionTimeout, soTimeout, password);
