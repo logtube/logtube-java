@@ -8,7 +8,7 @@ Guo Y.K. 2019年04月23日
 <dependency>
     <groupId>io.github.logtube</groupId>
     <artifactId>logtube</artifactId>
-    <version>0.21</version>
+    <version>0.28</version>
 </dependency>
 ```
 
@@ -67,7 +67,7 @@ Guo Y.K. 2019年04月23日
 
 ```properties
 # 文件：logtube.properties
-logtube.config-file=logtube-dev.properties # 此处可以通过类似 '@packaging.environment@' 变量来修改配置文件名
+logtube.config-file=logtube-dev.properties # 此处可以通过启用 resources filtering 和 ${} 占位符来通过 pom.xml 中的 Profile properties 进行切换
 
 # 文件：logtube-dev.properties
 #
@@ -196,6 +196,10 @@ LogtubeProviderFilter=io.github.logtube.dubbo.LogtubeDubboProviderFilter
 **XXL-JOB**
 
 使用 `LogtubeXxlJobSpringExecutor` 替换 `XxlJobSpringExecutor`，前者在 `JobHandler` 运行前后添加了对应的 `crid` 管理
+
+**LogtubeThreadPoolExecutor**
+
+在业务代码中使用 `ThreadPoolExecutor` 需要用 `LogtubeThreadPoolExecutor` 进行代替，才能够使得线程池中的线程能够正确地设置 CRID
 
 # 获取 CRID
 
