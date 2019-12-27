@@ -13,8 +13,11 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.concurrent.ArrayBlockingQueue;
 
 public abstract class BaseFileOutput extends BaseEventOutput {
+
+    private static final int QUEUE_CAPACITY = 1024;
 
     private static final String SUBDIR_OTHERS = "others";
 
@@ -29,6 +32,11 @@ public abstract class BaseFileOutput extends BaseEventOutput {
     private final HashMap<String, FileWriter> writers = new HashMap<>();
 
     private final Map<String, String> subdirMappings;
+
+    @NotNull
+    private final ArrayBlockingQueue<IEvent> queue = new ArrayBlockingQueue<>(QUEUE_CAPACITY);
+
+    private Thread worker = null;
 
     public BaseFileOutput(@NotNull String dir, Map<String, String> subdirMappings, @NotNull String signal) {
         this.dir = dir;
@@ -85,15 +93,7 @@ public abstract class BaseFileOutput extends BaseEventOutput {
 
     @Override
     public void doAppendEvent(@NotNull IEvent e) {
-        try {
-            FileWriter w = getWriter(e);
-            synchronized (w) {
-                serializeLine(e, w);
-                w.write(NEW_LINE);
-                w.flush();
-            }
-        } catch (IOException ignored) {
-        }
+        this.queue.offer(e);
     }
 
 
@@ -112,15 +112,50 @@ public abstract class BaseFileOutput extends BaseEventOutput {
             //noinspection ResultOfMethodCallIgnored
             Paths.get(this.dir, subdir).toFile().mkdirs();
         });
+
+        // start worker
+        this.worker = new Thread(new EventFileOutputWorker());
+        this.worker.start();
     }
 
     @Override
     public void doStop() {
+        // shutdown worker
+        this.worker.interrupt();
+        try {
+            this.worker.join();
+        } catch (InterruptedException ignored) {
+        }
+        this.worker = null;
+
+        // close all writers
         try {
             closeWriters();
         } catch (IOException ignored) {
         }
+
         super.doStop();
+    }
+
+    private class EventFileOutputWorker implements Runnable {
+        @Override
+        public void run() {
+            while (!Thread.interrupted()) {
+                IEvent e = null;
+                try {
+                    e = BaseFileOutput.this.queue.take();
+                } catch (Exception ignored) {
+                    continue;
+                }
+                try {
+                    FileWriter w = getWriter(e);
+                    serializeLine(e, w);
+                    w.write(NEW_LINE);
+                    w.flush();
+                } catch (IOException ignored) {
+                }
+            }
+        }
     }
 
     abstract void serializeLine(@NotNull IEvent e, @NotNull Writer w) throws IOException;
