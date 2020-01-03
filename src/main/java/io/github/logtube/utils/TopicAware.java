@@ -15,17 +15,25 @@ public class TopicAware implements ITopicMutableAware {
 
     private boolean isTopicsBlacklist = false;
 
+    private boolean traceEnabled = false;
+    private boolean debugEnabled = false;
+    private boolean infoEnabled = false;
+    private boolean warnEnabled = false;
+    private boolean errorEnabled = false;
+
     @Override
     public void setTopics(@Nullable Set<String> topics) {
         // null for "*"
         if (topics == null) {
             this.topics = null;
             this.isTopicsBlacklist = false;
+            this.updateKnownTopics();
             return;
         }
         if (topics.size() == 0) {
             this.topics = null;
             this.isTopicsBlacklist = true;
+            this.updateKnownTopics();
             return;
         }
         if (topics.contains("ALL") || topics.contains("*")) {
@@ -33,6 +41,7 @@ public class TopicAware implements ITopicMutableAware {
             HashSet<String> result = new HashSet<>();
             topics.forEach((e) -> {
                 if (e.equals("ALL") || e.equals("*")) {
+                    this.updateKnownTopics();
                     return;
                 }
                 if (e.startsWith("-")) {
@@ -70,6 +79,15 @@ public class TopicAware implements ITopicMutableAware {
                 this.isTopicsBlacklist = false;
             }
         }
+        this.updateKnownTopics();
+    }
+
+    private void updateKnownTopics() {
+        this.traceEnabled = this.isTopicEnabled("trace");
+        this.debugEnabled = this.isTopicEnabled("debug");
+        this.infoEnabled = this.isTopicEnabled("info");
+        this.warnEnabled = this.isTopicEnabled("warn");
+        this.errorEnabled = this.isTopicEnabled("error");
     }
 
     @Override
@@ -83,4 +101,28 @@ public class TopicAware implements ITopicMutableAware {
         return this.topics.contains(topic);
     }
 
+    @Override
+    public boolean isTraceEnabled() {
+        return this.traceEnabled;
+    }
+
+    @Override
+    public boolean isDebugEnabled() {
+        return this.debugEnabled;
+    }
+
+    @Override
+    public boolean isInfoEnabled() {
+        return this.infoEnabled;
+    }
+
+    @Override
+    public boolean isWarnEnabled() {
+        return this.warnEnabled;
+    }
+
+    @Override
+    public boolean isErrorEnabled() {
+        return this.errorEnabled;
+    }
 }

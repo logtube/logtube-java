@@ -22,14 +22,14 @@ logtube:
     enabled: true
     topics: app, debug, info, err
     dir: logs
-    signal: /tmp/xlog.reopen.txt
+    signal: logtubed.reopen.log
 
   # JSON文本输出
   file-json:
     enabled: true
     topics: ALL, -app, -debug, -info, -err
     dir: logs
-    signal: /tmp/xlog.reopen.txt
+    signal: logtubed.reopen.log
 
   # SPTP 远程输出
   remote:

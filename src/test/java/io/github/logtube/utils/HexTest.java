@@ -10,7 +10,7 @@ public class HexTest {
     public void toHex() {
         assertEquals(Hex.toHex((byte) 0x2d), "2d");
         assertEquals(Hex.toHex((byte) 0x0a), "0a");
-        assertEquals(Hex.toHex((long) 0x00000000000d0002), "00000000000d0002");
+        assertEquals(Hex.toHex(0x00000000000d0002), "00000000000d0002");
     }
 
     @Test

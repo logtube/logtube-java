@@ -111,31 +111,6 @@ public interface IEventLogger extends ITopicAware, Logger {
     }
 
     @Override
-    default boolean isTraceEnabled() {
-        return isTopicEnabled("trace");
-    }
-
-    @Override
-    default boolean isDebugEnabled() {
-        return isTopicEnabled("debug");
-    }
-
-    @Override
-    default boolean isInfoEnabled() {
-        return isTopicEnabled("info");
-    }
-
-    @Override
-    default boolean isWarnEnabled() {
-        return isTopicEnabled("warn");
-    }
-
-    @Override
-    default boolean isErrorEnabled() {
-        return isTopicEnabled("error");
-    }
-
-    @Override
     default boolean isTraceEnabled(Marker marker) {
         return isTraceEnabled();
     }

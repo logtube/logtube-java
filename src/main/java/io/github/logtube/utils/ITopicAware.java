@@ -6,4 +6,14 @@ public interface ITopicAware {
 
     boolean isTopicEnabled(@NotNull String topic);
 
+    boolean isTraceEnabled();
+
+    boolean isDebugEnabled();
+
+    boolean isInfoEnabled();
+
+    boolean isWarnEnabled();
+
+    boolean isErrorEnabled();
+
 }

@@ -58,6 +58,31 @@ public class EventLogger implements IEventLogger {
     }
 
     @Override
+    public boolean isTraceEnabled() {
+        return this.topicAware != null && this.topicAware.isTraceEnabled();
+    }
+
+    @Override
+    public boolean isDebugEnabled() {
+        return this.topicAware != null && this.topicAware.isDebugEnabled();
+    }
+
+    @Override
+    public boolean isInfoEnabled() {
+        return this.topicAware != null && this.topicAware.isInfoEnabled();
+    }
+
+    @Override
+    public boolean isWarnEnabled() {
+        return this.topicAware != null && this.topicAware.isWarnEnabled();
+    }
+
+    @Override
+    public boolean isErrorEnabled() {
+        return this.topicAware != null && this.topicAware.isErrorEnabled();
+    }
+
+    @Override
     @NotNull
     public String getName() {
         return this.name;

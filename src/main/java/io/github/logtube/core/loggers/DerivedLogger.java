@@ -49,4 +49,29 @@ public class DerivedLogger implements IEventLogger {
         return this.parent.isTopicEnabled(topic);
     }
 
+    @Override
+    public boolean isTraceEnabled() {
+        return this.parent.isTraceEnabled();
+    }
+
+    @Override
+    public boolean isDebugEnabled() {
+        return this.parent.isDebugEnabled();
+    }
+
+    @Override
+    public boolean isInfoEnabled() {
+        return this.parent.isInfoEnabled();
+    }
+
+    @Override
+    public boolean isWarnEnabled() {
+        return this.parent.isWarnEnabled();
+    }
+
+    @Override
+    public boolean isErrorEnabled() {
+        return this.parent.isErrorEnabled();
+    }
+
 }
