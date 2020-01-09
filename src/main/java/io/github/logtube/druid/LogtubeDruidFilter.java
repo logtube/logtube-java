@@ -12,6 +12,7 @@ import java.sql.SQLException;
 @Component
 public class LogtubeDruidFilter extends FilterEventAdapter {
 
+    
     @Override
     public ResultSetProxy statement_executeQuery(FilterChain chain, StatementProxy statement, String sql)
             throws SQLException {
@@ -190,4 +191,23 @@ public class LogtubeDruidFilter extends FilterEventAdapter {
         }
     }
 
+    @Override
+    public int[] statement_executeBatch(FilterChain chain, StatementProxy statement) throws SQLException {
+        DruidTrackEventCommitter event = new DruidTrackEventCommitter().setStatement(statement);
+        try {
+            int[] result = super.statement_executeBatch(chain, statement);
+            int affectedRows = 0;
+            for (int i : result)
+            {
+                affectedRows += i;
+            }
+            event.setAffectedRows(affectedRows);
+            return result;
+        } catch (SQLException e) {
+            event.setThrowable(e);
+            throw e;
+        } finally {
+            event.commit();
+        }
+    }
 }
