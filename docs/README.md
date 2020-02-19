@@ -38,9 +38,9 @@ Guo Y.K. 2019年04月23日
 
 # 配置项目
 
-1. 移除所有的 `logback.xml` 文件
+##### 1. 移除所有的 `logback.xml` 文件
 
-2. 添加 `logtube.properties` 或者 `logtube.yml` 文件
+##### 2. 添加 `logtube.properties` 或者 `logtube.yml` 文件
 
 和 Logback 类似，Logtube Java SDK 会从 `classpath` 载入名为 `logtube.properties` 或者 `logtube.yml` 的配置文件。
 
@@ -89,9 +89,128 @@ logtube.config-file=logtube-dev.properties # 此处可以通过启用 resources 
 logtube.config-file=APOLLO
 ```
 
+**【注意】 当前版本使用apollo，需要把app.id和apollo.meta配置放到META-INF/app.properties中。**
+
+
 **使用环境变量**
 
 `logtube.properties` 中，允许使用 `${KEY}` 语法访问环境变量 
+
+##### 3. HTTP访问日志配置
+
+###### 3.1 常规Web项目，修改 `web.xml`，添加 `LogtubeHttpFilter`
+
+```xml
+<filter>
+    <filter-name>xLogFilter</filter-name>
+    <filter-class>io.github.logtube.druid.LogtubeDruidFilter</filter-class>
+</filter>
+
+<filter-mapping>
+    <filter-name>xLogFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+</filter-mapping>
+```
+
+###### 3.2 Spring Boot 项目，使用 `FilterRegistrationBean` 注册过滤器，注意调整过滤器顺序
+
+```java
+@Bean
+public FilterRegistrationBean xlogFilter() {
+    FilterRegistrationBean<LogtubeDruidFilter> bean = new FilterRegistrationBean<>();
+    bean.setFilter(new LogtubeDruidFilter());
+    bean.addUrlPatterns("/*");
+    bean.setOrder(Ordered.HIGHEST_PRECEDENCE + 1);
+    return bean;
+}
+```
+
+##### 4. Dubbo访问日志配置
+在src/main/resources/META-INF/dubbo目录下添加文件com.alibaba.dubbo.rpc.Filter。文件内容：
+
+```properties
+dubboLogConsumerFilter=io.github.logtube.dubbo.LogtubeDubboConsumerFilter
+dubboLogProviderFilter=io.github.logtube.dubbo.LogtubeDubboProviderFilter
+```
+
+**【注意】 如果META-INF、dubbo目录不存在则需要手工创建，如果com.alibaba.dubbo.rpc.Filter已经存在则在文件中追加上面的内容。**
+
+##### 5. Redis访问日志监控
+Logtube重写了Client类，使用LogtubeJedisCluster继承JedisCluster，LogtubeJedisPool继承JedisPool，修改了内部对Client的使用。
+
+操作步骤：
+
+1. 在代码中搜索JedisCluster，使用LogtubeJedisCluster替换JedisCluster；
+2. 在代码中搜索JedisPool，使用LogtubeJedisPool替换JedisPool；
+3. 若代码中存在直接使用new Jedis()的地方，使用LogtubeJedis替换Jedis；
+4. 验证基本功能。
+
+
+##### 6. 数据库操作日志配置
+
+
+###### 6.1 添加druid过滤器配置
+
+在`src/main/resources/META-INF`目录下添加`druid-filter.properties`文件，文件内容：
+
+```properties
+druid.filters.xLogSql=io.github.logtube.druid.LogtubeDruidFilter
+```
+
+**【注意】 如果META-INF不存在则需要手工创建。**
+
+###### 6.2 在java或配置文件中引用过滤器
+
+设置`druid.filters`属性，可以通过java代码或配置文件
+
+```java
+DruidDataSource ds = new DruidDataSource();
+ds.setFilters("xLogSql");
+
+//也可以在启动类中添加
+System.setProperty("druid.filters", "xLogSql");
+```
+
+或
+
+```properties
+<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" 
+  init-method="init" destroy-method="close"> 
+  <property name="filters" value="xLogSql" /> 
+  <property name="proxyFilters"> 
+   <list> 
+    <ref bean="xLogSql" /> 
+   </list> 
+  </property> 
+ </bean>
+
+<bean id="xLogSql" class="io.github.logtube.druid.LogtubeDruidFilter"> 
+
+```
+
+##### 7. CRID配置
+
+如果是在代码中发起Http请求，则需要在创建连接时为HttpURLConnection添加Request Property，Key: LogtubeConstants.HTTP_CRID_HEADER，value：Logtube.getProcessor().getCrid()。
+
+```java
+  private HttpURLConnection openHttpURLConnection(URL url, ClientRequest clientRequest, String method) throws IOException {
+    HttpURLConnection.setFollowRedirects(true);
+    HttpURLConnection conn;
+    conn = (HttpURLConnection) url.openConnection();
+    conn.setRequestMethod(method);
+    conn.setRequestProperty("Content-Type", clientRequest.getContentType());
+    conn.setRequestProperty("User-Agent", clientRequest.getUserAgent());
+    conn.setRequestProperty(LogtubeConstants.HTTP_CRID_HEADER, Logtube.getProcessor().getCrid());
+    return conn;
+```
+
+##### 8. XXL-JOB配置
+
+使用 `LogtubeXxlJobSpringExecutor` 替换 `XxlJobSpringExecutor`，前者在 `JobHandler` 运行前后添加了对应的 `crid` 管理
+
+##### 9. 线程池配置
+
+在业务代码中使用 `ThreadPoolExecutor` 需要用 `LogtubeThreadPoolExecutor` 进行代替，才能够使得线程池中的线程能够正确地设置 CRID
 
 # 使用 Logger
 
@@ -99,7 +218,7 @@ Logtube 和传统 Logger 最大的区别在于，Logtube 使用 **主题** 这�
 
 比如，业务逻辑可以使用 `info` 主题来进行常规日志输出，Logtube 内置的 HTTP Filter 使用 `x-access` 主题来记录请求，二者为并列关系。
 
-1. 使用传统的 SLF4J Logger
+##### 1. 使用传统的 SLF4J Logger
 
 ```java
 Logger logger = LoggerFactory.getLogger(LogtubeTest.class);
@@ -108,7 +227,7 @@ logger.warn("warn test");
 logger.trace("hello world {}", "222");
 ```
 
-2. 使用 LogtubeLogger
+##### 2. 使用 LogtubeLogger
 
 ```java
 IEventLogger logger = Logtube.getLogger(LogtubeTest.class);
@@ -124,87 +243,34 @@ logger.withK("关键字1", "关键字2").info("hello world"); // 等价写法
 logger.topic("custom-topic").extras("key1", "val1", "key2", "val2").message("hello world").commit();
 ```
 
-3. 使用 Logtube 静态方法
+##### 3. 使用 Logtube 静态方法
 
 Logtube 类中包含所有以上提及的静态方法。
 
-# 使用内建过滤器
+# Logtube较xlog的变动
 
 Logtube 内置一些常用的过滤器和工具，先前使用 XLog 的用户需要更新类名和引用
 
-```plain
-io.github.logtube.druid.LogtubeDruidFilter
-io.github.logtube.dubbo.LogtubeDubboConsumerFilter
-io.github.logtube.dubbo.LogtubeDubboProviderFilter
-io.github.logtube.http.LogtubeHttpFilter
-io.github.logtube.mybatis.LogtubeMybatisFilter
-io.github.logtube.perf.XPerf
-io.github.logtube.redis.LogtubeJedis
-io.github.logtube.redis.LogtubeJedisPool
-io.github.logtube.redis.LogtubeJedisCluster
-io.github.logtube.Logtube
-```
+|XLog | Logtube |
+|:--|:--|
+| net.landzero.xlog.druid.XLogFilter |  io.github.logtube.druid.LogtubeDruidFilter|
+| net.landzero.xlog.dubbo.XLogConsumerFilter |  io.github.logtube.dubbo.LogtubeDubboConsumerFilter|
+| net.landzero.xlog.dubbo.XLogProviderFilter |  io.github.logtube.dubbo.LogtubeDubboProviderFilter|
+| net.landzero.xlog.http.XLogFilter |  io.github.logtube.http.LogtubeHttpFilter|
+| net.landzero.xlog.mybatis.XLogInterceptor |  io.github.logtube.mybatis.LogtubeMybatisFilter|
+| net.landzero.xlog.perf.XPerf |  io.github.logtube.perf.XPerf|
+|net.landzero.xlog.redis.XLogJedis  |  io.github.logtube.redis.LogtubeJedis|
+| net.landzero.xlog.redis.XLogJedisPool |  io.github.logtube.redis.LogtubeJedisPool|
+|net.landzero.xlog.redis.XLogJedisCluster  |  io.github.logtube.redis.LogtubeJedisCluster|
+| net.landzero.xlog.XLog |  io.github.logtube.Logtube|
 
-**Spring (web.xml)**
+获取 CRID
 
-```
-<filter>
-    <filter-name>LogtubeFilter</filter-name>
-    <filter-class>io.github.logtube.http.LogtubeHttpFilter</filter-class>
-</filter>
+|XLog | Logtube |
+|:--|:--|
+| XLog.crid() |  Logtube.getProcessor().getCrid()|
 
-<filter-mapping>
-    <filter-name>LogtubeFilter</filter-name>
-    <url-pattern>/*</url-pattern>
-</filter-mapping>
-```
-
-**Spring (spring-boot)**
-
-```java
-@SpringBootApplication
-public class DemoApplication {
-
-    @Bean
-    public FilterRegistrationBean<LogtubeHttpFilter> someFilterRegistration() {
-        FilterRegistrationBean<LogtubeHttpFilter> registration = new FilterRegistrationBean<>();
-        registration.setFilter(new LogtubeHttpFilter());
-        registration.addUrlPatterns("*");
-        registration.setName("logtube-http");
-        registration.setOrder(1);
-        return registration;
-    }
-
-    public static void main(String[] args) {
-        SpringApplication.run(DemoApplication.class, args);
-    }
-
-}
-```
-
-**Dubbo**
-
-在 `resources` 目录下创建纯文本文件 `META-INF/dubbo/com.alibaba.dubbo.rpc.Filter`
-
-```
-LogtubeConsumerFilter=io.github.logtube.dubbo.LogtubeDubboConsumerFilter
-LogtubeProviderFilter=io.github.logtube.dubbo.LogtubeDubboProviderFilter
-```
-
-*key 可以是任意以 `Filter` 结尾的字符串*
-
-**XXL-JOB**
-
-使用 `LogtubeXxlJobSpringExecutor` 替换 `XxlJobSpringExecutor`，前者在 `JobHandler` 运行前后添加了对应的 `crid` 管理
-
-**LogtubeThreadPoolExecutor**
-
-在业务代码中使用 `ThreadPoolExecutor` 需要用 `LogtubeThreadPoolExecutor` 进行代替，才能够使得线程池中的线程能够正确地设置 CRID
-
-# 获取 CRID
-
-旧的 `XLog.crid()` 改为 `Logtube.getProcessor().getCrid()`
-
-# HTTP Header 常量
-
-旧的 `Constants.HTTP_CRID_HEADER` 改为 `LogtubeConstants.HTTP_CRID_HEADER`
+HTTP Header 常量
+|XLog | Logtube |
+|:--|:--|
+|Constants.HTTP_CRID_HEADER|LogtubeConstants.HTTP_CRID_HEADER|
