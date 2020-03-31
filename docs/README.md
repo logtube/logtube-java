@@ -103,7 +103,7 @@ logtube.config-file=APOLLO
 ```xml
 <filter>
     <filter-name>xLogFilter</filter-name>
-    <filter-class>io.github.logtube.druid.LogtubeDruidFilter</filter-class>
+    <filter-class>io.github.logtube.http.LogtubeHttpFilter</filter-class>
 </filter>
 
 <filter-mapping>
@@ -117,7 +117,7 @@ logtube.config-file=APOLLO
 ```java
 @Bean
 public FilterRegistrationBean xlogFilter() {
-    FilterRegistrationBean<LogtubeDruidFilter> bean = new FilterRegistrationBean<>();
+    FilterRegistrationBean<LogtubeHttpFilter> bean = new FilterRegistrationBean<>();
     bean.setFilter(new LogtubeDruidFilter());
     bean.addUrlPatterns("/*");
     bean.setOrder(Ordered.HIGHEST_PRECEDENCE + 1);
