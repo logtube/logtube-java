@@ -118,7 +118,7 @@ logtube.config-file=APOLLO
 @Bean
 public FilterRegistrationBean xlogFilter() {
     FilterRegistrationBean<LogtubeHttpFilter> bean = new FilterRegistrationBean<>();
-    bean.setFilter(new LogtubeDruidFilter());
+    bean.setFilter(new LogtubeHttpFilter());
     bean.addUrlPatterns("/*");
     bean.setOrder(Ordered.HIGHEST_PRECEDENCE + 1);
     return bean;
