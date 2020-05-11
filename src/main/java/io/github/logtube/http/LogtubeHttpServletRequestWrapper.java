@@ -24,7 +24,7 @@ public class LogtubeHttpServletRequestWrapper extends HttpServletRequestWrapper 
 
     private final byte[] body;
 
-    private Map<String, String[]> paramsMap = new HashMap<>();
+    private final Map<String, String[]> paramsMap = new HashMap<>();
 
     private String characterEncoding = Charset.defaultCharset().toString();
 

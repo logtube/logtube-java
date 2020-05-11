@@ -83,6 +83,11 @@ public class EventLogger implements IEventLogger {
     }
 
     @Override
+    public boolean isFatalEnabled() {
+        return this.topicAware != null && this.topicAware.isFatalEnabled();
+    }
+
+    @Override
     @NotNull
     public String getName() {
         return this.name;

@@ -13,8 +13,8 @@ import java.io.IOException;
  */
 class LogtubeServletOutputStream extends ServletOutputStream {
 
-    private ByteArrayOutputStream stream;
-    private ServletResponse response;
+    private final ByteArrayOutputStream stream;
+    private final ServletResponse response;
 
     public LogtubeServletOutputStream(ByteArrayOutputStream outputStream, ServletResponse response) {
         this.stream = outputStream;

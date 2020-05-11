@@ -16,4 +16,6 @@ public interface ITopicAware {
 
     boolean isErrorEnabled();
 
+    boolean isFatalEnabled();
+
 }

@@ -1,5 +1,6 @@
 package io.github.logtube.core;
 
+import io.github.logtube.core.events.NOPEvent;
 import io.github.logtube.utils.ITopicAware;
 import io.github.logtube.utils.Reflections;
 import org.jetbrains.annotations.NotNull;
@@ -134,9 +135,6 @@ public interface IEventLogger extends ITopicAware, Logger {
     default boolean isErrorEnabled(Marker marker) {
         return isErrorEnabled();
     }
-
-
-    //////////////////////// 生成的代码 /////////////////////////////
 
 
     @Override
@@ -393,5 +391,87 @@ public interface IEventLogger extends ITopicAware, Logger {
         error(msg, t);
     }
 
+
+    default void fatal(String msg) {
+        message("fatal", msg);
+    }
+
+    default void fatal(String format, Object arg) {
+        message("fatal", format, arg);
+    }
+
+    default void fatal(String format, Object arg1, Object arg2) {
+        message("fatal", format, arg1, arg2);
+    }
+
+    default void fatal(String format, Object... arguments) {
+        message("fatal", format, arguments);
+    }
+
+    default void fatal(String msg, Throwable t) {
+        message("fatal", msg, t);
+    }
+
+    default void fatal(Marker marker, String msg) {
+        fatal(msg);
+    }
+
+    default void fatal(Marker marker, String format, Object arg) {
+        fatal(format, arg);
+    }
+
+    default void fatal(Marker marker, String format, Object arg1, Object arg2) {
+        fatal(format, arg1, arg2);
+    }
+
+    default void fatal(Marker marker, String format, Object... argArray) {
+        fatal(format, argArray);
+    }
+
+    default void fatal(Marker marker, String msg, Throwable t) {
+        fatal(msg, t);
+    }
+
+    default IEvent trace() {
+        if (isTraceEnabled()) {
+            return topic("trace");
+        }
+        return NOPEvent.getSingleton();
+    }
+
+    default IEvent debug() {
+        if (isDebugEnabled()) {
+            return topic("debug");
+        }
+        return NOPEvent.getSingleton();
+    }
+
+    default IEvent info() {
+        if (isInfoEnabled()) {
+            return topic("info");
+        }
+        return NOPEvent.getSingleton();
+    }
+
+    default IEvent warn() {
+        if (isWarnEnabled()) {
+            return topic("warn");
+        }
+        return NOPEvent.getSingleton();
+    }
+
+    default IEvent error() {
+        if (isErrorEnabled()) {
+            return topic("error");
+        }
+        return NOPEvent.getSingleton();
+    }
+
+    default IEvent fatal() {
+        if (isFatalEnabled()) {
+            return topic("fatal");
+        }
+        return NOPEvent.getSingleton();
+    }
 
 }

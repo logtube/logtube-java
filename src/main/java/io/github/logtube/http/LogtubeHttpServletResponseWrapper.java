@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.LongAdder;
  */
 public class LogtubeHttpServletResponseWrapper extends HttpServletResponseWrapper {
 
-    private LongAdder responseSize = new LongAdder();
+    private final LongAdder responseSize = new LongAdder();
 
     public LogtubeHttpServletResponseWrapper(HttpServletResponse response) {
         super(response);

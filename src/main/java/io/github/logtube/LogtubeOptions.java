@@ -266,6 +266,30 @@ public class LogtubeOptions {
         return setValue("logtube.console.topics", null);
     }
 
+    public boolean getFileEnabled() {
+        return booleanValue("logtube.file.enabled", false);
+    }
+
+    @Nullable
+    public Set<String> getFileTopics() {
+        return setValue("logtube.file.topics", quickStringSet("ALL"));
+    }
+
+    @NotNull
+    public String getFileDir() {
+        return stringValue("logtube.file.dir", "logs");
+    }
+
+    @NotNull
+    public Map<String, String> getFileSubdirMappings() {
+        return mapValue("logtube.file.subdir-mappings", new HashMap<>());
+    }
+
+    @NotNull
+    public String getFileSignal() {
+        return stringValue("logtube.file.signal", "/tmp/logtube.reopen.txt");
+    }
+
     public boolean getFilePlainEnabled() {
         return booleanValue("logtube.file-plain.enabled", true);
     }

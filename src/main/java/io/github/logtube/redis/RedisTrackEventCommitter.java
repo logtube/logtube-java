@@ -22,9 +22,9 @@ public class RedisTrackEventCommitter {
         RedisTrackEventCommitter.minResultSize = minResultSize;
     }
 
-    private IMutableEvent event = Logtube.getLogger(RedisTrackEventCommitter.class).topic("x-redis-track");
+    private final IMutableEvent event = Logtube.getLogger(RedisTrackEventCommitter.class).topic("x-redis-track");
 
-    private long startTime = System.currentTimeMillis();
+    private final long startTime = System.currentTimeMillis();
 
     public void commit(Object res) {
         final long duration = System.currentTimeMillis() - this.startTime;

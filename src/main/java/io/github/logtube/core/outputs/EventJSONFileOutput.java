@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
 
+@Deprecated
 public class EventJSONFileOutput extends BaseFileOutput {
 
     private final IEventSerializer serializer = new EventJSONFileSerializer();

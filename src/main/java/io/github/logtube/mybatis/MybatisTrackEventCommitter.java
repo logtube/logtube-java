@@ -33,9 +33,9 @@ public class MybatisTrackEventCommitter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MybatisTrackEventCommitter.class);
 
-    private IMutableEvent event = Logtube.getLogger(MybatisTrackEventCommitter.class).topic("x-mybatis-track");
+    private final IMutableEvent event = Logtube.getLogger(MybatisTrackEventCommitter.class).topic("x-mybatis-track");
 
-    private long startTime = System.currentTimeMillis();
+    private final long startTime = System.currentTimeMillis();
 
     @NotNull
     private static String compileParameterValue(@Nullable Object obj) {

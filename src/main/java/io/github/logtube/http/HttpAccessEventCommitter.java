@@ -14,9 +14,10 @@ import java.util.List;
 
 public class HttpAccessEventCommitter {
 
-    private @NotNull IMutableEvent event = Logtube.getLogger(HttpAccessEventCommitter.class).topic("x-access");
+    private @NotNull
+    final IMutableEvent event = Logtube.getLogger(HttpAccessEventCommitter.class).topic("x-access");
 
-    private long startAt = System.currentTimeMillis();
+    private final long startAt = System.currentTimeMillis();
 
     private HttpServletRequest httpRequest;
 

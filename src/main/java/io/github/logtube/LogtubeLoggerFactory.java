@@ -141,24 +141,34 @@ public class LogtubeLoggerFactory implements ILoggerFactory, ILifeCycle {
             processor.addOutput(output);
         }
 
-        if (options.getFilePlainEnabled()) {
-            EventPlainFileOutput output = new EventPlainFileOutput(
-                    options.getFilePlainDir(),
-                    options.getFilePlainSubdirMappings(),
-                    options.getFilePlainSignal()
+        if (options.getFileEnabled()) {
+            EventFileOutput output = new EventFileOutput(
+                    options.getFileDir(),
+                    options.getFileSubdirMappings(),
+                    options.getFileSignal()
             );
-            output.setTopics(options.getFilePlainTopics());
+            output.setTopics(options.getFileTopics());
             processor.addOutput(output);
-        }
+        } else {
+            if (options.getFilePlainEnabled()) {
+                EventPlainFileOutput output = new EventPlainFileOutput(
+                        options.getFilePlainDir(),
+                        options.getFilePlainSubdirMappings(),
+                        options.getFilePlainSignal()
+                );
+                output.setTopics(options.getFilePlainTopics());
+                processor.addOutput(output);
+            }
 
-        if (options.getFileJSONEnabled()) {
-            EventJSONFileOutput output = new EventJSONFileOutput(
-                    options.getFileJSONDir(),
-                    options.getFileJSONSubdirMappings(),
-                    options.getFileJSONSignal()
-            );
-            output.setTopics(options.getFileJSONTopics());
-            processor.addOutput(output);
+            if (options.getFileJSONEnabled()) {
+                EventJSONFileOutput output = new EventJSONFileOutput(
+                        options.getFileJSONDir(),
+                        options.getFileJSONSubdirMappings(),
+                        options.getFileJSONSignal()
+                );
+                output.setTopics(options.getFileJSONTopics());
+                processor.addOutput(output);
+            }
         }
 
         if (options.getRemoteEnabled()) {

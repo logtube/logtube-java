@@ -8,8 +8,15 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
 
-@Deprecated
-public class EventJSONFileSerializer extends BaseEventFileSerializer {
+/**
+ * 构造 Logtube v2.1 日志格式
+ * <p>
+ * [2018-09-10 17:24:22.120 +0800] [{"c":"xxxxxxx"}] this is a message
+ * <p>
+ * 同时支持纯文本 和 结构化日志
+ */
+
+public class EventFileSerializer extends BaseEventFileSerializer {
 
     @Override
     public void serialize(@NotNull IEvent e, @NotNull Writer w) throws IOException {
@@ -17,11 +24,9 @@ public class EventJSONFileSerializer extends BaseEventFileSerializer {
 
         ExtraJsonWriter j = new ExtraJsonWriter(w);
 
+        j.beginArray();
         j.beginObject();
         j.name("c").value(e.getCrid());
-        if (e.getMessage() != null) {
-            j.name("m").value(e.getMessage());
-        }
         if (e.getKeyword() != null) {
             j.name("k").value(e.getKeyword());
         }
@@ -34,6 +39,11 @@ public class EventJSONFileSerializer extends BaseEventFileSerializer {
             j.endObject();
         }
         j.endObject();
+        j.endArray();
+
+        if (e.getMessage() != null) {
+            w.write(e.getMessage());
+        }
     }
 
 }

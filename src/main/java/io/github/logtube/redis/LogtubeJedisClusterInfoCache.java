@@ -32,9 +32,9 @@ public class LogtubeJedisClusterInfoCache {
     private volatile boolean rediscovering;
     private final GenericObjectPoolConfig poolConfig;
 
-    private int connectionTimeout;
-    private int soTimeout;
-    private String password;
+    private final int connectionTimeout;
+    private final int soTimeout;
+    private final String password;
 
     private static final int MASTER_NODE_INDEX = 2;
 

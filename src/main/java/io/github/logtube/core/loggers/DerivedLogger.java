@@ -74,4 +74,9 @@ public class DerivedLogger implements IEventLogger {
         return this.parent.isErrorEnabled();
     }
 
+    @Override
+    public boolean isFatalEnabled() {
+        return this.parent.isFatalEnabled();
+    }
+
 }

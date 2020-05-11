@@ -20,6 +20,7 @@ public class TopicAware implements ITopicMutableAware {
     private boolean infoEnabled = false;
     private boolean warnEnabled = false;
     private boolean errorEnabled = false;
+    private boolean fatalEnabled = false;
 
     @Override
     public void setTopics(@Nullable Set<String> topics) {
@@ -88,6 +89,7 @@ public class TopicAware implements ITopicMutableAware {
         this.infoEnabled = this.isTopicEnabled("info");
         this.warnEnabled = this.isTopicEnabled("warn");
         this.errorEnabled = this.isTopicEnabled("error");
+        this.fatalEnabled = this.isTopicEnabled("fatal");
     }
 
     @Override
@@ -125,4 +127,10 @@ public class TopicAware implements ITopicMutableAware {
     public boolean isErrorEnabled() {
         return this.errorEnabled;
     }
+
+    @Override
+    public boolean isFatalEnabled() {
+        return this.fatalEnabled;
+    }
+
 }
