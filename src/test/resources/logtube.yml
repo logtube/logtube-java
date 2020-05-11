@@ -28,7 +28,7 @@ logtube:
     enabled: true
     topics: ALL, -app, -debug, -info, -err
     dir: logs
-    subdir-mappings: ALL=others,x-redis-track=xlog,x-druid-track=xlog
+    subdir-mappings: ALL=others,x-redis-track=xlog,x-druid-track=xlog,x-access=xlog
     signal: /tmp/xlog.reopen.txt
 
   # SPTP 远程输出
