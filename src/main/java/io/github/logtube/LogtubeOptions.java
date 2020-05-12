@@ -237,7 +237,7 @@ public class LogtubeOptions {
 
     @NotNull
     public Set<String> getTopics() {
-        return setValue("logtube.topics.root", quickStringSet("*", "-trace", "-debug"));
+        return setValue("logtube.topics.root", quickStringSet("ALL", "-trace", "-debug"));
     }
 
     @NotNull
@@ -320,7 +320,7 @@ public class LogtubeOptions {
 
     @Nullable
     public Set<String> getFileJSONTopics() {
-        return setValue("logtube.file-json.topics", quickStringSet("*", "-trace", "-debug", "-info", "-warn", "-error"));
+        return setValue("logtube.file-json.topics", quickStringSet("ALL", "-trace", "-debug", "-info", "-warn", "-error"));
     }
 
     @NotNull
@@ -344,7 +344,7 @@ public class LogtubeOptions {
 
     @Nullable
     public Set<String> getRemoteTopics() {
-        return setValue("logtube.remote.topics", quickStringSet("*", "-trace", "-debug"));
+        return setValue("logtube.remote.topics", quickStringSet("ALL", "-trace", "-debug"));
     }
 
     @NotNull
@@ -358,7 +358,7 @@ public class LogtubeOptions {
 
     @NotNull
     public Set<String> getRedisTopics() {
-        return setValue("logtube.redis.topics", quickStringSet("*", "-trace", "-debug"));
+        return setValue("logtube.redis.topics", quickStringSet("ALL", "-trace", "-debug"));
     }
 
 
