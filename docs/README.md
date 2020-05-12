@@ -46,13 +46,21 @@ Guo Y.K. 2019年04月23日
 
 `yml` 文件会映射为 `Properties` 对象，**数组** 等价于 **逗号分隔的字符串**
 
-参见：https://github.com/logtube/logtube-java/blob/master/src/test/resources/logtube.properties
+**`0.33` 以及之后版本参考以下文件**
 
-参见：https://github.com/logtube/logtube-java/blob/master/src/test/resources/logtube.yml
+https://github.com/logtube/logtube-java/blob/master/docs/after-unified-file-output/logtube.properties
+
+https://github.com/logtube/logtube-java/blob/master/after-unified-file-output/logtube.yml
+
+**`0.33` 之前版本参考以下文件**
+
+https://github.com/logtube/logtube-java/blob/master/docs/before-unified-file-output/logtube.properties
+
+https://github.com/logtube/logtube-java/blob/master/before-unified-file-output/logtube.yml
 
 下载到 `main/resources`，或者对应环境的子文件夹，注意修改 **项目名**，**项目环境名** 和 **全局主题过滤器**，并按照需要打开或关闭 一些输出。
 
-运行于 Kubernetes 集群的项目建议关闭所有 file 输出，只使用 remote 输出。对于生产环境和预生产环境，建议关闭 console 和 remote 输出。
+对于生产环境和预生产环境，建议关闭 console 和 remote 输出。
 
 **配置文件格式**
 

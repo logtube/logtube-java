@@ -1,0 +1,53 @@
+logtube:
+  # 项目名
+  project: test-project
+  # 环境名
+  env: test
+  # 主题过滤器
+  topics:
+    root: ALL
+    com.some.third.party.package: error
+  # 主题映射（以下为常用映射）
+  topic-mappings: trace=debug, error=err, warn=info
+
+  # 命令行输出
+  console:
+    enabled: true
+    topics: ALL
+
+  # 纯文本输出
+  file-plain:
+    enabled: true
+    topics: app, debug, info, err
+    dir: logs
+    subdir-mappings: ALL=others,info=xlog,err=xlog
+    signal: /tmp/xlog.reopen.txt
+
+  # JSON文本输出
+  file-json:
+    enabled: true
+    topics: ALL, -app, -debug, -info, -err
+    dir: logs
+    subdir-mappings: ALL=others,x-redis-track=xlog,x-druid-track=xlog,x-access=xlog
+    signal: /tmp/xlog.reopen.txt
+
+  # SPTP 远程输出
+  remote:
+    enabled: false
+    topics: ALL
+    hosts: 127.0.0.1:9921
+
+  # Redis 远程输出
+  redis:
+    enabled: false
+    topics: ALL
+    hosts:
+      - localhost:6379
+    key: xlog
+
+  # 过滤器组件配置
+  filter:
+    # 响应时间 > 100 ms 的 Redis 操作会被 LogtubeRedis 组件汇报
+    redis-min-duration: 100
+    # 结果集 > 1000 bytes 的 Redis 操作会被 LogtubeRedis 组件汇报
+    redis-min-result-size: 1000
