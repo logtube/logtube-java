@@ -24,7 +24,7 @@
 
     <groupId>io.github.logtube</groupId>
     <artifactId>logtube</artifactId>
-    <version>0.32</version>
+    <version>0.33.RC1</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Logtube Java SDK</description>
@@ -232,7 +232,7 @@
                             </execution>
                         </executions>
                         <configuration>
-                            <keyname>640D45D4EB5992B2CA43346DA502B898D0CB498D</keyname>
+                            <keyname>91BB3C323C6CAC7116ABA2492ED98D8A54781B01</keyname>
                         </configuration>
                     </plugin>
                     <plugin>
