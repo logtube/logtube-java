@@ -1,6 +1,7 @@
 package io.github.logtube.perf;
 
 import io.github.logtube.Logtube;
+import io.github.logtube.core.IEventLogger;
 import io.github.logtube.core.IMutableEvent;
 import io.github.logtube.utils.Strings;
 import org.jetbrains.annotations.Contract;
@@ -12,13 +13,25 @@ import java.util.stream.Collectors;
 
 public class XPerfCommitter {
 
-    private final IMutableEvent event = Logtube.getLogger(XPerfCommitter.class).topic("x-perf");
+    private final static IEventLogger defaultLogger = Logtube.getLogger(XPerfCommitter.class);
+
+    private final IMutableEvent event;
 
     private final long startTime = System.currentTimeMillis();
 
+    public XPerfCommitter(@Nullable IEventLogger logger, @Nullable String className, @Nullable String methodName) {
+        if (logger == null) {
+            logger = defaultLogger;
+        }
+        this.event = logger.topic("x-perf")
+                .extra("logger_name", logger.getName())
+                .extra("class_name", className)
+                .extra("method_name", methodName);
+    }
+
+    @Deprecated
     public XPerfCommitter(@Nullable String className, @Nullable String methodName) {
-        this.event.extra("class_name", className);
-        this.event.extra("method_name", methodName);
+        this(null, className, methodName);
     }
 
     @NotNull
