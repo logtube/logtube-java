@@ -40,6 +40,7 @@ public class EventFileSerializer extends BaseEventFileSerializer {
         }
         j.endObject();
         j.endArray();
+        w.write(' ');
 
         if (e.getMessage() != null) {
             w.write(e.getMessage());

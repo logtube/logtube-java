@@ -15,6 +15,14 @@ logtube:
     enabled: true
     topics: ALL
 
+  # 文件输出
+  file:
+    enabled: true
+    topics: ALL
+    dir: logs
+    subdir-mappings: ALL=xlog,trace=others,debug=others
+    signal: /tmp/xlog.reopen.txt
+
   # 纯文本输出
   file-plain:
     enabled: true
