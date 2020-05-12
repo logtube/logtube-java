@@ -50,13 +50,13 @@ Guo Y.K. 2019年04月23日
 
 https://github.com/logtube/logtube-java/blob/master/docs/after-unified-file-output/logtube.properties
 
-https://github.com/logtube/logtube-java/blob/master/after-unified-file-output/logtube.yml
+https://github.com/logtube/logtube-java/blob/master/docs/after-unified-file-output/logtube.yml
 
 **`0.33` 之前版本参考以下文件**
 
 https://github.com/logtube/logtube-java/blob/master/docs/before-unified-file-output/logtube.properties
 
-https://github.com/logtube/logtube-java/blob/master/before-unified-file-output/logtube.yml
+https://github.com/logtube/logtube-java/blob/master/docs/before-unified-file-output/logtube.yml
 
 下载到 `main/resources`，或者对应环境的子文件夹，注意修改 **项目名**，**项目环境名** 和 **全局主题过滤器**，并按照需要打开或关闭 一些输出。
 
