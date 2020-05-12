@@ -255,6 +255,40 @@ logger.topic("custom-topic").extras("key1", "val1", "key2", "val2").message("hel
 
 Logtube 类中包含所有以上提及的静态方法。
 
+##### 4. 使用 XPerf
+
+XPerf 可以用于对某个操作进行计时，便于性能分析
+
+```java
+// 首先，必须为当前类创建 IEventLogger，比如
+private static final IEventLogger logger = Logtube.getLogger(LogtubeTest.class);
+
+private void someMethod() {
+  // 然后创建 XPerfCommitter
+  XPerfCommitter committer = XPerf.create(logger, "my_action_id", "my_action_argument1", "my_action_argument2");
+  // 执行某个耗时操作
+  Thread.sleep(2000);
+  // 提交 XPerfCommitter
+  committer.commit()
+}
+```
+
+##### 5. 使用 XAudit
+
+```java
+// 首先，必须为当前类创建 IEventLogger，比如
+private static final IEventLogger logger = Logtube.getLogger(LogtubeTest.class);
+
+private void someMethod() {
+    XAudit.create(logger)
+        .setUserCode("2020020201")
+        .setUserName("刘德华")
+        .setIP("10.10.10.10")
+        .setAction("some_action")
+        // 等各种 Setter
+        .commit() // 最后记得调用 commit
+}
+```
 # Logtube较xlog的变动
 
 Logtube 内置一些常用的过滤器和工具，先前使用 XLog 的用户需要更新类名和引用
