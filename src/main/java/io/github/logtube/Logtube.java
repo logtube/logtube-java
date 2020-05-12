@@ -4,6 +4,8 @@ import io.github.logtube.core.IEventContext;
 import io.github.logtube.core.IEventLogger;
 import io.github.logtube.core.IEventProcessor;
 import io.github.logtube.core.IMutableEvent;
+import io.github.logtube.perf.XPerf;
+import io.github.logtube.utils.Reflections;
 import io.github.logtube.utils.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -34,7 +36,12 @@ public class Logtube {
 
     @NotNull
     public static IEventLogger getLogger() {
-        return getLogger(Logger.ROOT_LOGGER_NAME);
+        String className = Logger.ROOT_LOGGER_NAME;
+        StackTraceElement element = Reflections.getStackTraceElement(XPerf.class);
+        if (element != null) {
+            className = element.getClassName();
+        }
+        return getLogger(className);
     }
 
     @NotNull
@@ -319,5 +326,77 @@ public class Logtube {
         return getLogger().isErrorEnabled();
     }
 
+
+    public static void fatal(String msg) {
+        getLogger().fatal(msg);
+    }
+
+    public static void fatal(String format, Object arg) {
+        getLogger().fatal(format, arg);
+    }
+
+    public static void fatal(String format, Object arg1, Object arg2) {
+        getLogger().fatal(format, arg1, arg2);
+    }
+
+    public static void fatal(String format, Object... argArray) {
+        getLogger().fatal(format, argArray);
+    }
+
+    public static void fatal(String msg, Throwable t) {
+        getLogger().fatal(msg, t);
+    }
+
+    public static void fatal(Marker marker, String msg) {
+        getLogger().fatal(marker, msg);
+    }
+
+    public static void fatal(Marker marker, String format, Object arg) {
+        getLogger().fatal(marker, format, arg);
+    }
+
+    public static void fatal(Marker marker, String format, Object arg1, Object arg2) {
+        getLogger().fatal(marker, format, arg1, arg2);
+    }
+
+    public static void fatal(Marker marker, String format, Object... argArray) {
+        getLogger().fatal(marker, format, argArray);
+    }
+
+    public static void fatal(Marker marker, String msg, Throwable t) {
+        getLogger().fatal(marker, msg, t);
+    }
+
+    public static boolean isFatalEnabled() {
+        return getLogger().isFatalEnabled();
+    }
+
+    public static boolean isFatalEnabled(Marker marker) {
+        return getLogger().isFatalEnabled();
+    }
+
+    public static IMutableEvent trace() {
+        return getLogger().trace();
+    }
+
+    public static IMutableEvent debug() {
+        return getLogger().debug();
+    }
+
+    public static IMutableEvent info() {
+        return getLogger().info();
+    }
+
+    public static IMutableEvent warn() {
+        return getLogger().warn();
+    }
+
+    public static IMutableEvent error() {
+        return getLogger().error();
+    }
+
+    public static IMutableEvent fatal() {
+        return getLogger().fatal();
+    }
 
 }

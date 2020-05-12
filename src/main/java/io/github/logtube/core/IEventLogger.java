@@ -432,42 +432,42 @@ public interface IEventLogger extends ITopicAware, Logger {
         fatal(msg, t);
     }
 
-    default IEvent trace() {
+    default IMutableEvent trace() {
         if (isTraceEnabled()) {
             return topic("trace");
         }
         return NOPEvent.getSingleton();
     }
 
-    default IEvent debug() {
+    default IMutableEvent debug() {
         if (isDebugEnabled()) {
             return topic("debug");
         }
         return NOPEvent.getSingleton();
     }
 
-    default IEvent info() {
+    default IMutableEvent info() {
         if (isInfoEnabled()) {
             return topic("info");
         }
         return NOPEvent.getSingleton();
     }
 
-    default IEvent warn() {
+    default IMutableEvent warn() {
         if (isWarnEnabled()) {
             return topic("warn");
         }
         return NOPEvent.getSingleton();
     }
 
-    default IEvent error() {
+    default IMutableEvent error() {
         if (isErrorEnabled()) {
             return topic("error");
         }
         return NOPEvent.getSingleton();
     }
 
-    default IEvent fatal() {
+    default IMutableEvent fatal() {
         if (isFatalEnabled()) {
             return topic("fatal");
         }
