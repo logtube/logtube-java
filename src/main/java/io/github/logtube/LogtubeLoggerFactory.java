@@ -2,6 +2,7 @@ package io.github.logtube;
 
 import io.github.logtube.core.IEventLogger;
 import io.github.logtube.core.IEventProcessor;
+import io.github.logtube.core.IEventProcessorFactory;
 import io.github.logtube.core.loggers.EventLogger;
 import io.github.logtube.core.outputs.*;
 import io.github.logtube.core.processors.EventProcessor;
@@ -21,7 +22,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-public class LogtubeLoggerFactory implements ILoggerFactory, ILifeCycle {
+public class LogtubeLoggerFactory implements ILoggerFactory, IEventProcessorFactory, ILifeCycle {
 
     ///////////////////////  SINGLETON ////////////////////////////
 
@@ -82,6 +83,7 @@ public class LogtubeLoggerFactory implements ILoggerFactory, ILifeCycle {
         return topics;
     }
 
+    @Override
     @NotNull
     public IEventProcessor getProcessor() {
         return this.processor;
@@ -101,7 +103,7 @@ public class LogtubeLoggerFactory implements ILoggerFactory, ILifeCycle {
         if (logger != null) {
             return logger;
         } else {
-            IEventLogger newInstance = new EventLogger(getProcessor(), name, findTopicAware(name));
+            IEventLogger newInstance = new EventLogger(this, name, findTopicAware(name));
             IEventLogger oldInstance = this.loggers.putIfAbsent(name, newInstance);
             return oldInstance == null ? newInstance : oldInstance;
         }

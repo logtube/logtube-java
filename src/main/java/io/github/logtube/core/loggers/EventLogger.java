@@ -2,7 +2,7 @@ package io.github.logtube.core.loggers;
 
 import io.github.logtube.core.IEventLogger;
 import io.github.logtube.core.IEventMiddleware;
-import io.github.logtube.core.IEventProcessor;
+import io.github.logtube.core.IEventProcessorFactory;
 import io.github.logtube.core.IMutableEvent;
 import io.github.logtube.core.events.NOPEvent;
 import io.github.logtube.utils.ITopicAware;
@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 public class EventLogger implements IEventLogger {
 
     @NotNull
-    private final IEventProcessor processor;
+    private final IEventProcessorFactory processorFactory;
 
     @NotNull
     private final String name;
@@ -26,12 +26,12 @@ public class EventLogger implements IEventLogger {
     /**
      * 创建一个新的子日志器
      *
-     * @param processor  父
-     * @param name       名字
-     * @param topicAware 主题过滤逻辑
+     * @param processorFactory 父
+     * @param name             名字
+     * @param topicAware       主题过滤逻辑
      */
-    public EventLogger(@NotNull IEventProcessor processor, @NotNull String name, @Nullable ITopicAware topicAware) {
-        this.processor = processor;
+    public EventLogger(@NotNull IEventProcessorFactory processorFactory, @NotNull String name, @Nullable ITopicAware topicAware) {
+        this.processorFactory = processorFactory;
         this.name = name;
         this.topicAware = topicAware;
     }
@@ -46,7 +46,7 @@ public class EventLogger implements IEventLogger {
         if (!isTopicEnabled(topic)) {
             return NOPEvent.getSingleton();
         }
-        return this.processor.event().topic(topic);
+        return this.processorFactory.getProcessor().event().topic(topic);
     }
 
     @Override
