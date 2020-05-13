@@ -8,11 +8,11 @@
 
 **Properties 格式**
 
-删除 `logtube.file-json` 相关的配置
+* 删除 `logtube.file-json` 相关的配置
 
-删除 `logtube.file-plain` 相关配置
+* 删除 `logtube.file-plain` 相关配置
 
-增加如下配置:
+* 增加如下配置:
 
 ```
 # 开启日志文件
@@ -31,9 +31,11 @@ logtube.file.subdir-mappings=ALL=xlog,trace=others,debug=others
 
 **YAML 格式**
 
-删除 `logtube` 字段下的 `file-plain` 和 `file-json` 字段
+* 删除 `file-plain` 字段
 
-在 `logtube` 字段下新加 `file` 字段如下:
+* 删除 `file-json` 字段
+
+* 新增 `file` 字段如下:
 
 ```yaml
 logtube:
@@ -59,7 +61,15 @@ private static final IEventLogger LOGGER = Logtube.getLogger(XXXX.class);
 LOGGER.fatal("This is a FATAL message");
 ```
 
-### 3. 使用 XAudit 输出审计日志
+### 3. 使用 Warn 级别
+
+先前 `warn` 级别是被合并进入 `info` 的，之后，`warn` 级别重新启用。
+
+* 修改 `logtube.topic-mappings`，移除 `warn=info` 这一条重命名规则，保留其他规则
+
+不紧急的业务异常使用该级别进行输出。
+
+### 4. 使用 XAudit 输出审计日志
 
 新增了一个 `x-audit` 主题用以汇总审计日志
 
