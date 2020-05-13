@@ -1,5 +1,83 @@
 Guo Y.K. 2019年04月23日
 
+# 升级到 0.33 + 版本
+
+## 1. 修改 logtube.properties 或者 logtube.yml 文件
+
+`file-plain` 和 `file-json` 合并为一套配置了，参考以下说明进行修改。
+
+**Properties 格式**
+
+删除 `logtube.file-json` 相关的配置
+
+删除 `logtube.file-plain` 相关配置
+
+增加如下配置:
+
+```
+# 开启日志文件
+logtube.file.enabled=true
+# 日志文件输出包含所有主题（仍然受制于全局过滤器）
+logtube.file.topics=ALL
+# 日志文件重新打开信号文件，用于 logrotate
+logtube.file.signal=/tmp/xlog.reopen.txt
+# 日志文件路径
+logtube.file.dir=logs
+# 日志子文件夹，除了 trace 和 debug 日志进入 others 子文件夹，剩下的全部进入 xlog 子文件夹
+logtube.file.subdir-mappings=ALL=xlog,trace=others,debug=others
+```
+
+上述配置基本上不需要进行修改，可以直接添加
+
+**YAML 格式**
+
+删除 `logtube` 字段下的 `file-plain` 和 `file-json` 字段
+
+在 `logtube` 字段下新加 `file` 字段如下:
+
+```yaml
+logtube:
+  file:
+    enabled: true
+    topics: ALL
+    signal: /tmp/xlog.reopen.txt
+    dir: logs
+    subdir-mappings: ALL=xlog,trace=others,debug=others
+```
+
+上述配置基本上不需要进行修改，可以直接添加
+
+## 2. 使用 Fatal 级别
+
+除了现有的级别之外，新加入了 `fatal` 级别，用以表示影响系统正常使用的错误。
+
+输出到 `fatal` 级别的日志为不可忽略的错误日志，一般会触发报警。
+
+```java
+private static final IEventLogger LOGGER = Logtube.getLogger(XXXX.class);
+
+LOGGER.fatal("This is a FATAL message");
+```
+
+## 3. 使用 XAudit 输出审计日志
+
+新增了一个 `x-audit` 主题用以汇总审计日志
+
+目前预置了一些字段，可以使用如下方式调用
+
+```java
+private static final IEventLogger LOGGER = Logtube.getLogger(XXXX.class);
+
+ XAudit.create(LOGGER)
+        .setUserCode("2020020201")
+        .setUserName("刘德华")
+        .setIP("10.10.10.10")
+        .setAction("some_action")
+        // 等各种 Setter
+        .commit() // 最后记得调用 commit
+```
+
+
 # Maven 依赖
 
 1. 添加 Maven 依赖项
