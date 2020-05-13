@@ -1,8 +1,8 @@
-Guo Y.K. 2019年04月23日
+# 升级日志
 
-# 升级到 0.33 + 版本
+## 升级到 0.33 + 版本
 
-## 1. 修改 logtube.properties 或者 logtube.yml 文件
+### 1. 修改 logtube.properties 或者 logtube.yml 文件
 
 `file-plain` 和 `file-json` 合并为一套配置了，参考以下说明进行修改。
 
@@ -47,7 +47,7 @@ logtube:
 
 上述配置基本上不需要进行修改，可以直接添加
 
-## 2. 使用 Fatal 级别
+### 2. 使用 Fatal 级别
 
 除了现有的级别之外，新加入了 `fatal` 级别，用以表示影响系统正常使用的错误。
 
@@ -59,7 +59,7 @@ private static final IEventLogger LOGGER = Logtube.getLogger(XXXX.class);
 LOGGER.fatal("This is a FATAL message");
 ```
 
-## 3. 使用 XAudit 输出审计日志
+### 3. 使用 XAudit 输出审计日志
 
 新增了一个 `x-audit` 主题用以汇总审计日志
 
