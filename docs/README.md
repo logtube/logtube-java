@@ -235,7 +235,7 @@ logger.warn("warn test");
 logger.trace("hello world {}", "222");
 ```
 
-##### 2. 使用 LogtubeLogger
+##### 2. 使用 IEventLogger
 
 ```java
 IEventLogger logger = Logtube.getLogger(LogtubeTest.class);
@@ -250,6 +250,8 @@ logger.withK("关键字1", "关键字2").info("hello world"); // 等价写法
 // 使用 extra 字段的结构化日志，需要用 commit() 做结束
 logger.topic("custom-topic").extras("key1", "val1", "key2", "val2").message("hello world").commit();
 ```
+
+**IEventLogger** 新增了一个新的传统级别 `fatal`，只有影响系统可用性的高级别错误，才应该输出到这个级别
 
 ##### 3. 使用 Logtube 静态方法
 
