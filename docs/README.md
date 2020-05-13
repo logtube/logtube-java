@@ -27,7 +27,7 @@ logtube.file.dir=logs
 logtube.file.subdir-mappings=ALL=xlog,trace=others,debug=others
 ```
 
-上述配置基本上不需要进行修改，可以直接添加
+上述配置基本上不需要进行修改
 
 **YAML 格式**
 
@@ -40,14 +40,19 @@ logtube.file.subdir-mappings=ALL=xlog,trace=others,debug=others
 ```yaml
 logtube:
   file:
+    # 开启日志文件
     enabled: true
+    # 日志文件输出包含所有主题（仍然受制于全局过滤器）
     topics: ALL
+    # 日志文件重新打开信号文件，用于 logrotate
     signal: /tmp/xlog.reopen.txt
+    # 日志文件路径
     dir: logs
+    # 日志子文件夹，除了 trace 和 debug 日志进入 others 子文件夹，剩下的全部进入 xlog 子文件夹
     subdir-mappings: ALL=xlog,trace=others,debug=others
 ```
 
-上述配置基本上不需要进行修改，可以直接添加
+上述配置基本上不需要进行修改
 
 ### 2. 使用 fatal 级别
 
