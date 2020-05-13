@@ -8,11 +8,11 @@
 
 **Properties 格式**
 
-* 删除 `logtube.file-json` 相关的配置
+* 删除 `logtube.file-json` 相关字段
 
-* 删除 `logtube.file-plain` 相关配置
+* 删除 `logtube.file-plain` 相关字段
 
-* 增加如下配置:
+* 增加 `logtube.file` 字段如下:
 
 ```
 # 开启日志文件
@@ -49,7 +49,7 @@ logtube:
 
 上述配置基本上不需要进行修改，可以直接添加
 
-### 2. 使用 Fatal 级别
+### 2. 使用 fatal 级别
 
 除了现有的级别之外，新加入了 `fatal` 级别，用以表示影响系统正常使用的错误。
 
@@ -61,13 +61,13 @@ private static final IEventLogger LOGGER = Logtube.getLogger(XXXX.class);
 LOGGER.fatal("This is a FATAL message");
 ```
 
-### 3. 使用 Warn 级别
+### 3. 使用 warn 级别
 
 先前 `warn` 级别是被合并进入 `info` 的，之后，`warn` 级别重新启用。
 
 * 修改 `logtube.topic-mappings`，移除 `warn=info` 这一条重命名规则，保留其他规则
 
-不紧急的业务异常使用该级别进行输出。
+原先输出在 `error` 级别的，不紧急的业务异常应该改为此级别。
 
 ### 4. 使用 XAudit 输出审计日志
 
