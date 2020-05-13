@@ -39,6 +39,7 @@ logtube.file.subdir-mappings=ALL=xlog,trace=others,debug=others
 
 ```yaml
 logtube:
+  # ...
   file:
     # 开启日志文件
     enabled: true
