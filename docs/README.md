@@ -361,9 +361,13 @@ private static final IEventLogger logger = Logtube.getLogger(LogtubeTest.class);
 
 private void someMethod() {
   // 然后创建 XPerfCommitter
-  XPerfCommitter committer = XPerf.create(logger, "my_action_id", "my_action_argument1", "my_action_argument2");
+  XPerfCommitter committer = XPerf.create(logger)
+                                    .setAction("some_action")
+                                    .setActionDetail("some action detail");
   // 执行某个耗时操作
   Thread.sleep(2000);
+  // 设置某个值
+  committer.setValueInteger(100);
   // 提交 XPerfCommitter
   committer.commit()
 }
