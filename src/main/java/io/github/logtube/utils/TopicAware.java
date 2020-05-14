@@ -84,16 +84,15 @@ public class TopicAware implements ITopicMutableAware {
     }
 
     private void updateKnownTopics() {
-        this.traceEnabled = this.isTopicEnabled("trace");
-        this.debugEnabled = this.isTopicEnabled("debug");
-        this.infoEnabled = this.isTopicEnabled("info");
-        this.warnEnabled = this.isTopicEnabled("warn");
-        this.errorEnabled = this.isTopicEnabled("error");
-        this.fatalEnabled = this.isTopicEnabled("fatal");
+        this.traceEnabled = this._isTopicEnabled("trace");
+        this.debugEnabled = this._isTopicEnabled("debug");
+        this.infoEnabled = this._isTopicEnabled("info");
+        this.warnEnabled = this._isTopicEnabled("warn");
+        this.errorEnabled = this._isTopicEnabled("error");
+        this.fatalEnabled = this._isTopicEnabled("fatal");
     }
 
-    @Override
-    public boolean isTopicEnabled(@NotNull String topic) {
+    private boolean _isTopicEnabled(@NotNull String topic) {
         if (this.topics == null) {
             return !this.isTopicsBlacklist;
         }
@@ -101,6 +100,26 @@ public class TopicAware implements ITopicMutableAware {
             return !this.topics.contains(topic);
         }
         return this.topics.contains(topic);
+    }
+
+    @Override
+    public boolean isTopicEnabled(@NotNull String topic) {
+        switch (topic) {
+            case "trace":
+                return this.isTraceEnabled();
+            case "debug":
+                return this.isDebugEnabled();
+            case "info":
+                return this.isInfoEnabled();
+            case "warn":
+                return this.isWarnEnabled();
+            case "error":
+                return this.isErrorEnabled();
+            case "fatal":
+                return this.isFatalEnabled();
+            default:
+                return _isTopicEnabled(topic);
+        }
     }
 
     @Override

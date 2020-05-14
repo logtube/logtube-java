@@ -2,7 +2,6 @@ package io.github.logtube.core;
 
 import io.github.logtube.core.events.NOPEvent;
 import io.github.logtube.utils.ITopicAware;
-import io.github.logtube.utils.Reflections;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -90,25 +89,16 @@ public interface IEventLogger extends ITopicAware, Logger {
     }
 
     default void _message(@NotNull String topic, @NotNull String msg, @Nullable Throwable t) {
+        IMutableEvent event = topic(topic);
         StringWriter buf = new StringWriter();
-        buf.append('[');
-        buf.append(Thread.currentThread().getName());
-        buf.append("] [");
-        buf.append(topic.toUpperCase());
-        buf.append("] ");
-        if (getName() != null && !getName().equalsIgnoreCase(Logger.ROOT_LOGGER_NAME)) {
-            buf.append(getName());
-            buf.append(':');
-            buf.append(String.valueOf(Reflections.getLineNumber(IEventLogger.class)));
-            buf.append(' ');
-        }
-        buf.append("- ");
         buf.append(msg);
         if (t != null) {
+            event.extra("exception_class", t.getClass().getCanonicalName());
             buf.append("\r\n");
             t.printStackTrace(new PrintWriter(buf));
         }
-        topic(topic).message(buf.toString()).commit();
+        event.message(buf.toString());
+        event.commit();
     }
 
     @Override

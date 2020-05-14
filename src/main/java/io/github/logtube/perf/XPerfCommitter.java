@@ -1,44 +1,55 @@
 package io.github.logtube.perf;
 
-import io.github.logtube.Logtube;
-import io.github.logtube.core.IEventLogger;
 import io.github.logtube.core.IMutableEvent;
-import io.github.logtube.utils.Strings;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 public class XPerfCommitter {
-
-    private final static IEventLogger defaultLogger = Logtube.getLogger(XPerfCommitter.class);
 
     private final IMutableEvent event;
 
     private final long startTime = System.currentTimeMillis();
 
-    public XPerfCommitter(@Nullable IEventLogger logger, @Nullable String className, @Nullable String methodName) {
-        if (logger == null) {
-            logger = defaultLogger;
-        }
-        this.event = logger.topic("x-perf")
-                .extra("logger_name", logger.getName())
-                .extra("class_name", className)
-                .extra("method_name", methodName);
+    public XPerfCommitter(@NotNull IMutableEvent event) {
+        this.event = event;
     }
 
-    @Deprecated
-    public XPerfCommitter(@Nullable String className, @Nullable String methodName) {
-        this(null, className, methodName);
-    }
-
+    /**
+     * 设置操作类型，用于分类
+     *
+     * @param action 操作
+     * @return this
+     */
     @NotNull
-    @Contract("_,_->this")
-    public XPerfCommitter setCommand(String action, Object... arguments) {
+    @Contract("_->this")
+    public XPerfCommitter setAction(String action) {
         this.event.extra("action", action);
-        this.event.extra("arguments", Arrays.stream(arguments).map(Strings::safeNormalize).collect(Collectors.toList()));
+        return this;
+    }
+
+    /**
+     * 设置操作详情，用于记录
+     *
+     * @param actionDetail 操作详情
+     * @return this
+     */
+    @NotNull
+    @Contract("_->this")
+    public XPerfCommitter setActionDetail(String actionDetail) {
+        this.event.extra("action_detail", actionDetail);
+        return this;
+    }
+
+    /**
+     * 设置一个整数返回值，用于记录和查询
+     *
+     * @param value 返回值
+     * @return this
+     */
+    @NotNull
+    @Contract("_->this")
+    public XPerfCommitter setValueInteger(long value) {
+        this.event.extra("value_integer", value);
         return this;
     }
 

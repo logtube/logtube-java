@@ -5,13 +5,19 @@ import org.jetbrains.annotations.Nullable;
 
 public class Reflections {
 
-    public static @Nullable StackTraceElement getStackTraceElement(@NotNull Class boundaryClass) {
+    private static final String LOGTUBE_BOUNDARY_PREFIX = "io.github.logtube.";
+
+    private static boolean isInternalClass(@NotNull String className) {
+        return className.startsWith(LOGTUBE_BOUNDARY_PREFIX) && !className.contains("Test");
+    }
+
+    public static @Nullable StackTraceElement getStackTraceElement() {
         boolean found = false;
 
         StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
 
         for (StackTraceElement element : stackTraceElements) {
-            if (element.getClassName().equals(boundaryClass.getName())) {
+            if (isInternalClass(element.getClassName())) {
                 found = true;
             } else {
                 if (found) {
@@ -20,15 +26,6 @@ public class Reflections {
             }
         }
         return null;
-    }
-
-    public static int getLineNumber(@NotNull Class boundaryClass) {
-        int result = -1;
-        StackTraceElement element = getStackTraceElement(boundaryClass);
-        if (element != null) {
-            result = element.getLineNumber();
-        }
-        return result;
     }
 
 }

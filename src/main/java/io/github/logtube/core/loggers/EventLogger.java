@@ -6,6 +6,7 @@ import io.github.logtube.core.IEventProcessorFactory;
 import io.github.logtube.core.IMutableEvent;
 import io.github.logtube.core.events.NOPEvent;
 import io.github.logtube.utils.ITopicAware;
+import io.github.logtube.utils.Reflections;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,7 +47,18 @@ public class EventLogger implements IEventLogger {
         if (!isTopicEnabled(topic)) {
             return NOPEvent.getSingleton();
         }
-        return this.processorFactory.getProcessor().event().topic(topic);
+        IMutableEvent event = this.processorFactory.getProcessor().event()
+                .topic(topic)
+                .extra("thread_name", Thread.currentThread().getName());
+        StackTraceElement element = Reflections.getStackTraceElement();
+        if (element != null) {
+            event.extras(
+                    "class_name", element.getClassName(),
+                    "class_line", element.getLineNumber(),
+                    "method_name", element.getMethodName()
+            );
+        }
+        return event;
     }
 
     @Override

@@ -24,20 +24,19 @@ public class EventConsoleSerializer implements IEventSerializer {
             w.write(e.getKeyword());
             w.write("] ");
         }
-        if (e.getMessage() != null) {
-            w.write(e.getMessage());
-        }
         Map<String, Object> extra = e.getExtra();
         if (extra != null && !extra.isEmpty()) {
-            w.write(" {");
+            w.write('{');
             for (Map.Entry<String, Object> entry : extra.entrySet()) {
                 w.write(entry.getKey());
                 w.write('=');
                 w.write(entry.getValue().toString());
                 w.write(',');
             }
-            w.write('}');
+            w.write("} ");
+        }
+        if (e.getMessage() != null) {
+            w.write(e.getMessage());
         }
     }
-
 }

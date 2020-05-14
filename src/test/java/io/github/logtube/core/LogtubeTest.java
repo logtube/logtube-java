@@ -1,14 +1,16 @@
 package io.github.logtube.core;
 
 import io.github.logtube.Logtube;
+import io.github.logtube.audit.XAudit;
 import io.github.logtube.perf.XPerf;
 import io.github.logtube.perf.XPerfCommitter;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class LogtubeTest {
+import java.io.IOException;
 
+public class LogtubeTest {
 
     @Test
     public void binding() throws InterruptedException {
@@ -18,9 +20,16 @@ public class LogtubeTest {
         logger.warn("warn test");
         logger.trace("hello world {}", "222");
         logger.error("err test {}", "333");
-        XPerfCommitter committer = XPerf.create("test", 1, 2, 3, 4);
-        Thread.sleep(1000);
+        logger.error("test exception", new IOException("my exception"));
+    }
+
+    @Test
+    public void perfAndAudit() throws InterruptedException {
+        IEventLogger logger = Logtube.getLogger(LogtubeTest.class);
+        XPerfCommitter committer = XPerf.create(logger).setAction("hello").setActionDetail("world");
+        Thread.sleep(2000);
         committer.commit();
+        XAudit.create(logger).setUserCode("100086").setUserName("郭德纲").setAction("hello").commit();
     }
 
 

@@ -4,7 +4,6 @@ import io.github.logtube.core.IEventContext;
 import io.github.logtube.core.IEventLogger;
 import io.github.logtube.core.IEventProcessor;
 import io.github.logtube.core.IMutableEvent;
-import io.github.logtube.perf.XPerf;
 import io.github.logtube.utils.Reflections;
 import io.github.logtube.utils.Strings;
 import org.jetbrains.annotations.NotNull;
@@ -30,14 +29,14 @@ public class Logtube {
     }
 
     @NotNull
-    public static IEventLogger getLogger(@NotNull Class clazz) {
+    public static IEventLogger getLogger(@NotNull Class<?> clazz) {
         return getLogger(clazz.getName());
     }
 
     @NotNull
     public static IEventLogger getLogger() {
         String className = Logger.ROOT_LOGGER_NAME;
-        StackTraceElement element = Reflections.getStackTraceElement(XPerf.class);
+        StackTraceElement element = Reflections.getStackTraceElement();
         if (element != null) {
             className = element.getClassName();
         }
