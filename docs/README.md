@@ -1,4 +1,98 @@
-Guo Y.K. 2019年04月23日
+# 升级日志
+
+## 升级到 0.33 + 版本
+
+### 1. 修改 logtube.properties 或者 logtube.yml 文件
+
+`file-plain` 和 `file-json` 合并为一套配置了，参考以下说明进行修改。
+
+**Properties 格式**
+
+* 删除 `logtube.file-json` 相关字段
+
+* 删除 `logtube.file-plain` 相关字段
+
+* 增加 `logtube.file` 字段如下:
+
+```
+# 开启日志文件
+logtube.file.enabled=true
+# 日志文件输出包含所有主题（仍然受制于全局过滤器）
+logtube.file.topics=ALL
+# 日志文件重新打开信号文件，用于 logrotate
+logtube.file.signal=/tmp/xlog.reopen.txt
+# 日志文件路径
+logtube.file.dir=logs
+# 日志子文件夹，除了 trace 和 debug 日志进入 others 子文件夹，剩下的全部进入 xlog 子文件夹
+logtube.file.subdir-mappings=ALL=xlog,trace=others,debug=others
+```
+
+上述配置基本上不需要进行修改
+
+**YAML 格式**
+
+* 删除 `file-plain` 字段
+
+* 删除 `file-json` 字段
+
+* 新增 `file` 字段如下:
+
+```yaml
+logtube:
+  # ...
+  file:
+    # 开启日志文件
+    enabled: true
+    # 日志文件输出包含所有主题（仍然受制于全局过滤器）
+    topics: ALL
+    # 日志文件重新打开信号文件，用于 logrotate
+    signal: /tmp/xlog.reopen.txt
+    # 日志文件路径
+    dir: logs
+    # 日志子文件夹，除了 trace 和 debug 日志进入 others 子文件夹，剩下的全部进入 xlog 子文件夹
+    subdir-mappings: ALL=xlog,trace=others,debug=others
+```
+
+上述配置基本上不需要进行修改
+
+### 2. 使用 fatal 级别
+
+除了现有的级别之外，新加入了 `fatal` 级别，用以表示影响系统正常使用的错误。
+
+输出到 `fatal` 级别的日志为不可忽略的错误日志，一般会触发报警。
+
+```java
+private static final IEventLogger LOGGER = Logtube.getLogger(XXXX.class);
+
+LOGGER.fatal("This is a FATAL message");
+```
+
+### 3. 使用 warn 级别
+
+先前 `warn` 级别是被合并进入 `info` 的，之后，`warn` 级别重新启用。
+
+* 修改 `logtube.topic-mappings`，移除 `warn=info` 这一条重命名规则，保留其他规则
+
+原先输出在 `error` 级别的，不紧急的业务异常应该改为此级别。
+
+### 4. 使用 XAudit 输出审计日志
+
+新增了一个 `x-audit` 主题用以汇总审计日志
+
+目前预置了一些字段，可以使用如下方式调用
+
+```java
+private static final IEventLogger LOGGER = Logtube.getLogger(XXXX.class);
+
+ XAudit.create(LOGGER)
+        .setUserCode("2020020201")
+        .setUserName("刘德华")
+        .setIP("10.10.10.10")
+        .setAction("some_action")
+        // 等各种 Setter
+        .commit() // 最后记得调用 commit
+```
+
 
 # Maven 依赖
 
@@ -235,7 +329,7 @@ logger.warn("warn test");
 logger.trace("hello world {}", "222");
 ```
 
-##### 2. 使用 LogtubeLogger
+##### 2. 使用 IEventLogger
 
 ```java
 IEventLogger logger = Logtube.getLogger(LogtubeTest.class);
@@ -250,6 +344,8 @@ logger.withK("关键字1", "关键字2").info("hello world"); // 等价写法
 // 使用 extra 字段的结构化日志，需要用 commit() 做结束
 logger.topic("custom-topic").extras("key1", "val1", "key2", "val2").message("hello world").commit();
 ```
+
+**IEventLogger** 新增了一个新的传统级别 `fatal`，只有影响系统可用性的高级别错误，才应该输出到这个级别
 
 ##### 3. 使用 Logtube 静态方法
 
