@@ -28,7 +28,7 @@ public class LogtubeTest {
         IEventLogger logger = Logtube.getLogger(LogtubeTest.class);
         XPerfCommitter committer = XPerf.create(logger).setAction("hello").setActionDetail("world");
         Thread.sleep(2000);
-        committer.commit();
+        committer.setValueInteger(999).commit();
         XAudit.create(logger).setUserCode("100086").setUserName("郭德纲").setAction("hello").commit();
     }
 
