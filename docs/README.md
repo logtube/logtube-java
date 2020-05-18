@@ -102,7 +102,7 @@ private static final IEventLogger LOGGER = Logtube.getLogger(XXXX.class);
 <dependency>
     <groupId>io.github.logtube</groupId>
     <artifactId>logtube</artifactId>
-    <version>0.32</version>
+    <version>0.33</version>
 </dependency>
 ```
 
