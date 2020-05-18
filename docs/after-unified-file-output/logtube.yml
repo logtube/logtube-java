@@ -7,7 +7,7 @@ logtube:
   topic-mappings: trace=debug, error=err
 
   console:
-    enabled: true
+    enabled: false
     topics: ALL
 
   file:
