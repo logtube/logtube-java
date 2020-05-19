@@ -1,6 +1,15 @@
 # 升级日志
 
-## 升级到 0.33 + 版本
+## 升级到 0.34 版本
+
+从 0.34 开始，支持 dubbo 2.7 + 版本，需要作出如下修改
+
+```properties
+dubboLogConsumerFilter=io.github.logtube.dubbo.LogtubeApacheDubboConsumerFilter
+dubboLogProviderFilter=io.github.logtube.dubbo.LogtubeApacheDubboProviderFilter
+```
+
+## 升级到 0.33 版本
 
 ### 1. 修改 logtube.properties 或者 logtube.yml 文件
 
@@ -228,11 +237,21 @@ public FilterRegistrationBean xlogFilter() {
 ```
 
 ##### 4. Dubbo访问日志配置
+
+**Dubbo 2.7 以下**
+
 在src/main/resources/META-INF/dubbo目录下添加文件com.alibaba.dubbo.rpc.Filter。文件内容：
 
 ```properties
 dubboLogConsumerFilter=io.github.logtube.dubbo.LogtubeDubboConsumerFilter
 dubboLogProviderFilter=io.github.logtube.dubbo.LogtubeDubboProviderFilter
+```
+
+**Dubbo 2.7 以上 (logtube 0.34 以上版本支持）**
+
+```properties
+dubboLogConsumerFilter=io.github.logtube.dubbo.LogtubeApacheDubboConsumerFilter
+dubboLogProviderFilter=io.github.logtube.dubbo.LogtubeApacheDubboProviderFilter
 ```
 
 **【注意】 如果META-INF、dubbo目录不存在则需要手工创建，如果com.alibaba.dubbo.rpc.Filter已经存在则在文件中追加上面的内容。**
