@@ -5,8 +5,8 @@
 从 0.34 开始，支持 dubbo 2.7 + 版本，需要作出如下修改
 
 ```properties
-dubboLogConsumerFilter=io.github.logtube.dubbo.LogtubeApacheDubboConsumerFilter
-dubboLogProviderFilter=io.github.logtube.dubbo.LogtubeApacheDubboProviderFilter
+dubboLogConsumerFilter=io.github.logtube.dubbo27.LogtubeDubboConsumerFilter
+dubboLogProviderFilter=io.github.logtube.dubbo27.LogtubeDubboProviderFilter
 ```
 
 ## 升级到 0.33 版本
@@ -250,8 +250,8 @@ dubboLogProviderFilter=io.github.logtube.dubbo.LogtubeDubboProviderFilter
 **Dubbo 2.7 以上 (logtube 0.34 以上版本支持）**
 
 ```properties
-dubboLogConsumerFilter=io.github.logtube.dubbo.LogtubeApacheDubboConsumerFilter
-dubboLogProviderFilter=io.github.logtube.dubbo.LogtubeApacheDubboProviderFilter
+dubboLogConsumerFilter=io.github.logtube.dubbo27.LogtubeDubboConsumerFilter
+dubboLogProviderFilter=io.github.logtube.dubbo27.LogtubeDubboProviderFilter
 ```
 
 **【注意】 如果META-INF、dubbo目录不存在则需要手工创建，如果com.alibaba.dubbo.rpc.Filter已经存在则在文件中追加上面的内容。**

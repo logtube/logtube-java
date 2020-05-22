@@ -1,4 +1,4 @@
-package io.github.logtube.dubbo;
+package io.github.logtube.dubbo27;
 
 import io.github.logtube.Logtube;
 import io.github.logtube.LogtubeConstants;
@@ -6,7 +6,7 @@ import org.apache.dubbo.common.extension.Activate;
 import org.apache.dubbo.rpc.*;
 
 @Activate(group = {"consumer"})
-public class LogtubeApacheDubboConsumerFilter implements Filter {
+public class LogtubeDubboConsumerFilter implements Filter {
 
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
