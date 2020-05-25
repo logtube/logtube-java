@@ -97,7 +97,8 @@ private static final IEventLogger LOGGER = Logtube.getLogger(XXXX.class);
         .setUserCode("2020020201")
         .setUserName("刘德华")
         .setIP("10.10.10.10")
-        .setAction("some_action")
+        .setAction("some_action")                   // 操作标识，用于对操作分类 比如 "refund_order" 这样
+        .setActionDetail("hello, world, dubababu")  // 操作详情，用于记录操作的细节
         // 等各种 Setter
         .commit() // 最后记得调用 commit
 ```
