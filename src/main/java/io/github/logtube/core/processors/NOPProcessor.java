@@ -23,6 +23,11 @@ public class NOPProcessor implements IEventProcessor {
     }
 
     @Override
+    public @NotNull String getProject() {
+        return "uninitialized-project";
+    }
+
+    @Override
     public @NotNull IMutableEvent event() {
         return NOPEvent.getSingleton();
     }
@@ -65,6 +70,26 @@ public class NOPProcessor implements IEventProcessor {
     @Override
     public @Nullable String getPathDigest() {
         return null;
+    }
+
+    @Override
+    public void clearContext() {
+
+    }
+
+    @Override
+    public void clearCrsrc() {
+
+    }
+
+    @Override
+    public void setCrsrc(@Nullable String crsrc) {
+
+    }
+
+    @Override
+    public @NotNull String getCrsrc() {
+        return "-";
     }
 
     @Override

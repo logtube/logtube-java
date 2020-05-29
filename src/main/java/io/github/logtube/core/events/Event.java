@@ -37,6 +37,8 @@ public class Event implements IMutableEvent {
      */
     public static final String UNKNOWN_CRID = "-";
 
+    public static final String UNKNOWN_CRSRC = "-";
+
     private long timestamp = 0;
 
     private @Nullable String hostname = null;
@@ -48,6 +50,8 @@ public class Event implements IMutableEvent {
     private @Nullable String topic = null;
 
     private @Nullable String crid = null;
+
+    private @Nullable String crsrc = null;
 
     private @Nullable String message = null;
 
@@ -113,6 +117,16 @@ public class Event implements IMutableEvent {
     @Override
     public void setCrid(@Nullable String crid) {
         this.crid = crid;
+    }
+
+    @Override
+    public @NotNull String getCrsrc() {
+        return crsrc == null ? UNKNOWN_CRSRC : crsrc;
+    }
+
+    @Override
+    public void setCrsrc(@Nullable String crsrc) {
+        this.crsrc = crsrc;
     }
 
     @Override

@@ -88,11 +88,13 @@ public class LogtubeHttpFilter implements Filter {
     private void setupRootLogger(HttpServletRequest request, HttpServletResponse response) {
         Logtube.getProcessor().setPath(request.getRequestURI());
         Logtube.getProcessor().setCrid(request.getHeader(LogtubeConstants.HTTP_CRID_HEADER));
+        Logtube.getProcessor().setCrsrc(request.getHeader(LogtubeConstants.HTTP_CRSRC_HEADER));
         response.setHeader(LogtubeConstants.HTTP_CRID_HEADER, Logtube.getProcessor().getCrid());
     }
 
     private void resetRootLogger() {
         Logtube.getProcessor().clearCrid();
+        Logtube.getProcessor().clearCrsrc();
         Logtube.getProcessor().clearPath();
     }
 

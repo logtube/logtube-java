@@ -25,6 +25,8 @@ public interface IMutableEvent extends IEvent {
 
     void setCrid(@Nullable String crid);
 
+    void setCrsrc(@Nullable String crsrc);
+
     void setMessage(@Nullable String message);
 
     void setKeyword(@Nullable String keyword);
@@ -66,6 +68,12 @@ public interface IMutableEvent extends IEvent {
     @Contract("_ -> this")
     default @NotNull IMutableEvent crid(@Nullable String crid) {
         setCrid(crid);
+        return this;
+    }
+
+    @Contract("_ -> this")
+    default @NotNull IMutableEvent crsrc(@Nullable String crsrc) {
+        setCrsrc(crsrc);
         return this;
     }
 

@@ -20,6 +20,8 @@ import java.util.Map;
  */
 public class EventProcessor extends LifeCycle implements IEventProcessor {
 
+    public static final String UNKNOWN_PROJECT = "unknown-project";
+
     private @Nullable String hostname = null;
 
     private @Nullable String project = null;
@@ -34,8 +36,8 @@ public class EventProcessor extends LifeCycle implements IEventProcessor {
         this.hostname = hostname;
     }
 
-    public @Nullable String getProject() {
-        return project;
+    public @NotNull String getProject() {
+        return project == null ? UNKNOWN_PROJECT : project;
     }
 
     public void setProject(@Nullable String project) {
@@ -82,6 +84,8 @@ public class EventProcessor extends LifeCycle implements IEventProcessor {
 
     private final CridThreadLocal cridThreadLocal = new CridThreadLocal();
 
+    private final CrsrcThreadLocal crsrcThreadLocal = new CrsrcThreadLocal();
+
     private final ThreadLocal<String> pathThreadLocal = new InheritableThreadLocal<>();
 
     private final ThreadLocal<String> pathDigestThreadLocal = new InheritableThreadLocal<>();
@@ -89,12 +93,17 @@ public class EventProcessor extends LifeCycle implements IEventProcessor {
     @Override
     @NotNull
     public IEventContext captureContext() {
-        return new EventContext(this.getCrid(), this.getPath());
+        return new EventContext(this.getCrid(), this.getCrsrc(), this.getPath());
     }
 
     @Override
     public void clearCrid() {
         this.cridThreadLocal.remove();
+    }
+
+    @Override
+    public void clearCrsrc() {
+        this.crsrcThreadLocal.remove();
     }
 
     @Override
@@ -107,8 +116,22 @@ public class EventProcessor extends LifeCycle implements IEventProcessor {
     }
 
     @Override
+    public void setCrsrc(@Nullable String crsrc) {
+        if (crsrc != null) {
+            this.crsrcThreadLocal.set(crsrc);
+        } else {
+            this.crsrcThreadLocal.remove();
+        }
+    }
+
+    @Override
     public @NotNull String getCrid() {
         return this.cridThreadLocal.get();
+    }
+
+    @Override
+    public @NotNull String getCrsrc() {
+        return this.crsrcThreadLocal.get();
     }
 
     @Override
@@ -158,6 +181,7 @@ public class EventProcessor extends LifeCycle implements IEventProcessor {
                 .env(getEnv())
                 .project(getProject())
                 .crid(getCrid())
+                .crsrc(getCrsrc())
                 .extras("path", getPath(), "path_digest", getPathDigest());
     }
 
@@ -190,7 +214,16 @@ public class EventProcessor extends LifeCycle implements IEventProcessor {
 
     }
 
-    private class CridThreadLocal extends InheritableThreadLocal<String> {
+    private static class CridThreadLocal extends InheritableThreadLocal<String> {
+
+        @Override
+        protected String initialValue() {
+            return "-";
+        }
+
+    }
+
+    private static class CrsrcThreadLocal extends InheritableThreadLocal<String> {
 
         @Override
         protected String initialValue() {

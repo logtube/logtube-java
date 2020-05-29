@@ -27,6 +27,7 @@ public class EventFileSerializer extends BaseEventFileSerializer {
         j.beginArray();
         j.beginObject();
         j.name("c").value(e.getCrid());
+        j.name("s").value(e.getCrsrc());
         if (e.getKeyword() != null) {
             j.name("k").value(e.getKeyword());
         }

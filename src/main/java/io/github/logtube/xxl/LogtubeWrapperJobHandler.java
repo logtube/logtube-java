@@ -33,10 +33,12 @@ public class LogtubeWrapperJobHandler extends IJobHandler {
     public ReturnT<String> execute(String s) throws Exception {
         try {
             Logtube.getProcessor().setCrid(null); // set null to create a random one
+            Logtube.getProcessor().setCrsrc("xxljob");
             Logtube.getProcessor().setPath(this.name);
             return this.internal.execute(s);
         } finally {
             Logtube.getProcessor().clearCrid();
+            Logtube.getProcessor().clearCrsrc();
             Logtube.getProcessor().clearPath();
         }
     }

@@ -21,6 +21,7 @@ public class EventJSONSerializer implements IEventSerializer {
         j.name("p").value(e.getProject());
         j.name("o").value(e.getTopic());
         j.name("c").value(e.getCrid());
+        j.name("s").value(e.getCrsrc());
         if (e.getMessage() != null) {
             j.name("m").value(e.getMessage());
         }

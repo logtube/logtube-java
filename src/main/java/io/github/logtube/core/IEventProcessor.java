@@ -19,11 +19,19 @@ public interface IEventProcessor extends ILifeCycle {
 
     @NotNull IMutableEvent event();
 
+    @NotNull String getProject();
+
     void clearCrid();
+
+    void clearCrsrc();
 
     void setCrid(@Nullable String crid);
 
+    void setCrsrc(@Nullable String crsrc);
+
     @NotNull String getCrid();
+
+    @NotNull String getCrsrc();
 
     void clearPath();
 

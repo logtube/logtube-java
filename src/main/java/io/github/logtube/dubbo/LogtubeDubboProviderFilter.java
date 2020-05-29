@@ -22,11 +22,13 @@ public class LogtubeDubboProviderFilter implements Filter {
 
     private void setupRootLogger() {
         Logtube.getProcessor().setCrid(RpcContext.getContext().getAttachment(LogtubeConstants.DUBBO_CRID_KEY));
+        Logtube.getProcessor().setCrsrc(RpcContext.getContext().getAttachment(LogtubeConstants.DUBBO_CRSRC_KEY));
         Logtube.getProcessor().setPath(RpcContext.getContext().getAttachment("interface") + "." + RpcContext.getContext().getMethodName());
     }
 
     private void resetRootLogger() {
         Logtube.getProcessor().clearCrid();
+        Logtube.getProcessor().clearCrsrc();
         Logtube.getProcessor().clearPath();
     }
 

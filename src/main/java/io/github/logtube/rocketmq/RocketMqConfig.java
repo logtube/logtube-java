@@ -49,6 +49,7 @@ public class RocketMqConfig {
                                 if (ROCKETMQ_MESSAGE_OBJECT_KEY.equals(h.getKey())) {
                                     MessageExt me = (MessageExt) h.getValue();
                                     Logtube.getProcessor().setCrid(me.getProperty(LogtubeConstants.DUBBO_CRID_KEY));
+                                    Logtube.getProcessor().setCrsrc(me.getProperty(LogtubeConstants.DUBBO_CRSRC_KEY));
                                 }
                             });
                             return message;
@@ -61,6 +62,7 @@ public class RocketMqConfig {
                         public Message<?> preSend(Message<?> message, MessageChannel channel) {
                             MessageBuilder<?> messageBuilder = MessageBuilder.fromMessage(message);
                             messageBuilder.setHeader(LogtubeConstants.DUBBO_CRID_KEY, Logtube.getProcessor().getCrid());
+                            messageBuilder.setHeader(LogtubeConstants.DUBBO_CRSRC_KEY, Logtube.getProcessor().getProject());
                             return messageBuilder.build();
                         }
 

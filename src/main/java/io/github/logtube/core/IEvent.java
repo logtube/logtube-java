@@ -53,6 +53,13 @@ public interface IEvent {
     @NotNull String getCrid();
 
     /**
+     * CRSRC
+     *
+     * @return CRSRC
+     */
+    @NotNull String getCrsrc();
+
+    /**
      * 消息内容，对于结构化日志，消息内容可以为空
      *
      * @return 消息

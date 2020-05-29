@@ -53,6 +53,10 @@ public class NOPEvent implements IMutableEvent {
     }
 
     @Override
+    public void setCrsrc(@Nullable String crsrc) {
+    }
+
+    @Override
     public void setMessage(@Nullable String message) {
     }
 
@@ -92,6 +96,11 @@ public class NOPEvent implements IMutableEvent {
     @Override
     public @NotNull String getCrid() {
         return UNKNOWN_CRID;
+    }
+
+    @Override
+    public @NotNull String getCrsrc() {
+        return UNKNOWN_CRSRC;
     }
 
     @Override

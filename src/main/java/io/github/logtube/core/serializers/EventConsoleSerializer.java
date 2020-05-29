@@ -17,6 +17,8 @@ public class EventConsoleSerializer implements IEventSerializer {
         w.write(" [");
         w.write(e.getTopic());
         w.write("] (");
+        w.write(e.getCrsrc());
+        w.write("/");
         w.write(e.getCrid());
         w.write(") ");
         if (e.getKeyword() != null) {
