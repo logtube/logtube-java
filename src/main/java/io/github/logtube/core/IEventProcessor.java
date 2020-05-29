@@ -12,30 +12,21 @@ public interface IEventProcessor extends ILifeCycle {
     @NotNull
     IEventContext captureContext();
 
-    default void clearContext() {
-        clearCrid();
-        clearPath();
-    }
+    void clearContext();
 
     @NotNull IMutableEvent event();
 
     @NotNull String getProject();
 
-    void clearCrid();
-
-    void clearCrsrc();
-
     void setCrid(@Nullable String crid);
 
     void setCrsrc(@Nullable String crsrc);
 
+    void setPath(@Nullable String path);
+
     @NotNull String getCrid();
 
     @NotNull String getCrsrc();
-
-    void clearPath();
-
-    void setPath(@Nullable String path);
 
     @Nullable String getPath();
 

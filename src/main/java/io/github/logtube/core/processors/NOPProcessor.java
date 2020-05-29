@@ -39,22 +39,12 @@ public class NOPProcessor implements IEventProcessor {
     }
 
     @Override
-    public void clearCrid() {
-
-    }
-
-    @Override
     public void setCrid(@Nullable String crid) {
     }
 
     @Override
     public @NotNull String getCrid() {
         return "-";
-    }
-
-    @Override
-    public void clearPath() {
-
     }
 
     @Override
@@ -74,12 +64,6 @@ public class NOPProcessor implements IEventProcessor {
 
     @Override
     public void clearContext() {
-
-    }
-
-    @Override
-    public void clearCrsrc() {
-
     }
 
     @Override

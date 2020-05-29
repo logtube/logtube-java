@@ -27,9 +27,7 @@ public class LogtubeDubboProviderFilter implements Filter {
     }
 
     private void resetRootLogger() {
-        Logtube.getProcessor().clearCrid();
-        Logtube.getProcessor().clearCrsrc();
-        Logtube.getProcessor().clearPath();
+        Logtube.getProcessor().clearContext();
     }
 
 }

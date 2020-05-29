@@ -37,9 +37,7 @@ public class LogtubeWrapperJobHandler extends IJobHandler {
             Logtube.getProcessor().setPath(this.name);
             return this.internal.execute(s);
         } finally {
-            Logtube.getProcessor().clearCrid();
-            Logtube.getProcessor().clearCrsrc();
-            Logtube.getProcessor().clearPath();
+            Logtube.getProcessor().clearContext();
         }
     }
 

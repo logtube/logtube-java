@@ -97,13 +97,11 @@ public class EventProcessor extends LifeCycle implements IEventProcessor {
     }
 
     @Override
-    public void clearCrid() {
+    public void clearContext() {
         this.cridThreadLocal.remove();
-    }
-
-    @Override
-    public void clearCrsrc() {
         this.crsrcThreadLocal.remove();
+        this.pathDigestThreadLocal.remove();
+        this.pathThreadLocal.remove();
     }
 
     @Override
@@ -135,12 +133,6 @@ public class EventProcessor extends LifeCycle implements IEventProcessor {
     }
 
     @Override
-    public void clearPath() {
-        this.pathDigestThreadLocal.remove();
-        this.pathThreadLocal.remove();
-    }
-
-    @Override
     public void setPath(@Nullable String path) {
         path = Strings.normalize(path);
         if (path != null) {
@@ -153,8 +145,6 @@ public class EventProcessor extends LifeCycle implements IEventProcessor {
              */
             this.pathDigestThreadLocal.set(Hex.md5(path.replaceAll("(\\b/)\\d+", "/:num")));
             this.pathThreadLocal.set(path);
-        } else {
-            clearPath();
         }
     }
 
