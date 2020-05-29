@@ -24,7 +24,7 @@
 
     <groupId>io.github.logtube</groupId>
     <artifactId>logtube</artifactId>
-    <version>0.34</version>
+    <version>0.35.RC1</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Logtube Java SDK</description>
@@ -99,6 +99,15 @@
             <version>2.9.0</version>
             <scope>provided</scope>
         </dependency>
+
+        <!-- Lettuce -->
+        <!--
+        <dependency>
+            <groupId>io.lettuce</groupId>
+            <artifactId>lettuce-core</artifactId>
+            <version>5.1.8.RELEASE</version>
+        </dependency>
+        -->
 
         <!-- Servlet API -->
         <dependency>

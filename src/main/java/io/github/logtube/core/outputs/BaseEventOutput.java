@@ -9,6 +9,9 @@ public abstract class BaseEventOutput extends TopicAwareLifeCycle implements IEv
 
     @Override
     public void appendEvent(@NotNull IEvent e) {
+        if (!this.isStarted) {
+            return;
+        }
         if (isTopicEnabled(e.getTopic())) {
             doAppendEvent(e);
         }

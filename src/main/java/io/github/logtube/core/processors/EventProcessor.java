@@ -194,6 +194,9 @@ public class EventProcessor extends LifeCycle implements IEventProcessor {
 
         @Override
         public void commit() {
+            if (!EventProcessor.this.isStarted) {
+                return;
+            }
             getOutputs().forEach(o -> {
                 try {
                     o.appendEvent(decorate(this));

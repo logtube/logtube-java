@@ -8,9 +8,9 @@ import io.github.logtube.core.outputs.*;
 import io.github.logtube.core.processors.EventProcessor;
 import io.github.logtube.core.processors.NOPProcessor;
 import io.github.logtube.redis.RedisTrackEventCommitter;
-import io.github.logtube.utils.ILifeCycle;
 import io.github.logtube.utils.ITopicAware;
 import io.github.logtube.utils.ITopicMutableAware;
+import io.github.logtube.utils.LifeCycle;
 import io.github.logtube.utils.TopicAware;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-public class LogtubeLoggerFactory implements ILoggerFactory, IEventProcessorFactory, ILifeCycle {
+public class LogtubeLoggerFactory extends LifeCycle implements ILoggerFactory, IEventProcessorFactory {
 
     ///////////////////////  SINGLETON ////////////////////////////
 
@@ -51,8 +51,6 @@ public class LogtubeLoggerFactory implements ILoggerFactory, IEventProcessorFact
     private Map<String, ITopicAware> customTopics = new HashMap<>();
 
     private final ConcurrentMap<String, IEventLogger> loggers = new ConcurrentHashMap<>();
-
-    private boolean isStarted = false;
 
     private LogtubeLoggerFactory() {
     }
@@ -114,19 +112,30 @@ public class LogtubeLoggerFactory implements ILoggerFactory, IEventProcessorFact
         return getEventLogger(name);
     }
 
+    private void swapProcessor(IEventProcessor newProcessor) {
+        if (newProcessor == this.processor) {
+            return;
+        }
 
-    public synchronized void start() {
-        if (this.isStarted) throw new RuntimeException("already started");
+        newProcessor.start();
+        IEventProcessor processor = this.processor;
+        this.processor = newProcessor;
+        processor.stop();
+    }
+
+    private void init() {
+        ITopicMutableAware rootTopics = new TopicAware();
+        Map<String, ITopicAware> customTopics = new HashMap<>();
 
         LogtubeOptions options = LogtubeOptions.fromClasspath();
 
         // setup topics
-        this.rootTopics.setTopics(options.getTopics());
+        rootTopics.setTopics(options.getTopics());
 
         options.getCustomTopics().forEach((k, v) -> {
             TopicAware topicAware = new TopicAware();
             topicAware.setTopics(v);
-            this.customTopics.put(k, topicAware);
+            customTopics.put(k, topicAware);
         });
 
         // setup processor
@@ -189,34 +198,32 @@ public class LogtubeLoggerFactory implements ILoggerFactory, IEventProcessorFact
             processor.addOutput(output);
         }
 
-        processor.start();
-
-        // configure component
         RedisTrackEventCommitter.setMinDuration(options.getRedisMinDuration());
         RedisTrackEventCommitter.setMinResultSize(options.getRedisMinResultSize());
 
-        this.processor = processor;
+        this.rootTopics = rootTopics;
+        this.customTopics = customTopics;
         this.options = options;
-        this.isStarted = true;
+
+        this.swapProcessor(processor);
+    }
+
+    public synchronized void reload() {
+        init();
+    }
+
+    public synchronized void doStart() {
+        super.doStart();
+        init();
     }
 
     @Override
-    public synchronized void stop() {
-        if (!this.isStarted) throw new RuntimeException("not started");
-        this.isStarted = false;
-
-        // clear topics
+    public synchronized void doStop() {
         this.rootTopics = new TopicAware();
         this.customTopics = new HashMap<>();
-
-        // switch root logger
-        IEventProcessor processor = this.processor;
-        this.processor = NOPProcessor.getSingleton();
-
-        // switch options
         this.options = LogtubeOptions.getDefault();
-
-        processor.stop();
+        this.swapProcessor(NOPProcessor.getSingleton());
+        super.doStop();
     }
 
 }

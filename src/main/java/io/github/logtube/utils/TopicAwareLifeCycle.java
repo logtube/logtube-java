@@ -2,13 +2,13 @@ package io.github.logtube.utils;
 
 public abstract class TopicAwareLifeCycle extends TopicAware implements ILifeCycle {
 
-    private boolean isStarted = false;
+    protected boolean isStarted = false;
 
     @Override
     public synchronized void start() {
         if (this.isStarted) throw new RuntimeException("already started");
-        this.isStarted = true;
         doStart();
+        this.isStarted = true;
     }
 
     @Override
