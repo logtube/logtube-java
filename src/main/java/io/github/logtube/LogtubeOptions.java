@@ -373,11 +373,11 @@ public class LogtubeOptions {
     }
 
     public int getRedisMinDuration() {
-        return intValue("logtube.filter.redis-min-duration", 100);
+        return intValue("logtube.filter.redis-min-duration", 0);
     }
 
     public int getRedisMinResultSize() {
-        return intValue("logtube.filter.redis-min-result-size", 1000);
+        return intValue("logtube.filter.redis-min-result-size", 0);
     }
 
 }
