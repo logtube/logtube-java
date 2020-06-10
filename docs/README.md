@@ -1,10 +1,14 @@
 # 升级日志
 
-## 升级到 0.35
+## 升级到 0.35 版本
 
 0.35 版本增加了 `crsrc` 字段，用于互相调用时，声明自身的身份，并保留在日志内容里
 
-理论上不需要用户做任何修改
+`dubboe` 和 `rocketmq` 已经做了处理，但是如果在代码中使用了手动 HTTP 调用，需要补充以下代码，以将自身的 `project` 作为 `X-Correlation-Src` 头传递出去
+
+```java
+conn.setRequestProperty(LogtubeConstants.HTTP_CRSRC_HEADER, Logtube.getProcessor().getProject());
+```
 
 ## 升级到 0.34 版本
 
@@ -329,6 +333,7 @@ System.setProperty("druid.filters", "xLogSql");
     conn.setRequestProperty("Content-Type", clientRequest.getContentType());
     conn.setRequestProperty("User-Agent", clientRequest.getUserAgent());
     conn.setRequestProperty(LogtubeConstants.HTTP_CRID_HEADER, Logtube.getProcessor().getCrid());
+    conn.setRequestProperty(LogtubeConstants.HTTP_CRSRC_HEADER, Logtube.getProcessor().getProject());
     return conn;
 ```
 
