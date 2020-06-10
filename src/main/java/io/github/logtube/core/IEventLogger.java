@@ -90,14 +90,13 @@ public interface IEventLogger extends ITopicAware, Logger {
 
     default void _message(@NotNull String topic, @NotNull String msg, @Nullable Throwable t) {
         IMutableEvent event = topic(topic);
-        StringWriter buf = new StringWriter();
-        buf.append(msg);
         if (t != null) {
             event.extra("exception_class", t.getClass().getCanonicalName());
-            buf.append("\r\n");
-            t.printStackTrace(new PrintWriter(buf));
+            StringWriter sw = new StringWriter();
+            t.printStackTrace(new PrintWriter(sw));
+            event.extra("exception_stack", sw.toString());
         }
-        event.message(buf.toString());
+        event.message(msg);
         event.commit();
     }
 
