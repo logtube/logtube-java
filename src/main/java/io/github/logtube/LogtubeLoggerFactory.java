@@ -7,17 +7,16 @@ import io.github.logtube.core.loggers.EventLogger;
 import io.github.logtube.core.outputs.*;
 import io.github.logtube.core.processors.EventProcessor;
 import io.github.logtube.core.processors.NOPProcessor;
-import io.github.logtube.utils.ITopicAware;
-import io.github.logtube.utils.ITopicMutableAware;
-import io.github.logtube.utils.LifeCycle;
-import io.github.logtube.utils.TopicAware;
+import io.github.logtube.utils.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.Logger;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -50,6 +49,8 @@ public class LogtubeLoggerFactory extends LifeCycle implements ILoggerFactory, I
     private Map<String, ITopicAware> customTopics = new HashMap<>();
 
     private final ConcurrentMap<String, IEventLogger> loggers = new ConcurrentHashMap<>();
+
+    private RotationThread rotationThread = null;
 
     private LogtubeLoggerFactory() {
     }
@@ -125,6 +126,8 @@ public class LogtubeLoggerFactory extends LifeCycle implements ILoggerFactory, I
     private void init() {
         ITopicMutableAware rootTopics = new TopicAware();
         Map<String, ITopicAware> customTopics = new HashMap<>();
+        Set<String> logDirs = new HashSet<>();
+        Set<String> logSignals = new HashSet<>();
 
         LogtubeOptions options = LogtubeOptions.fromClasspath();
 
@@ -157,6 +160,8 @@ public class LogtubeLoggerFactory extends LifeCycle implements ILoggerFactory, I
                     options.getFileSubdirMappings(),
                     options.getFileSignal()
             );
+            logDirs.add(options.getFileDir());
+            logSignals.add(options.getFileSignal());
             output.setTopics(options.getFileTopics());
             processor.addOutput(output);
         } else {
@@ -166,6 +171,8 @@ public class LogtubeLoggerFactory extends LifeCycle implements ILoggerFactory, I
                         options.getFilePlainSubdirMappings(),
                         options.getFilePlainSignal()
                 );
+                logDirs.add(options.getFilePlainDir());
+                logSignals.add(options.getFilePlainSignal());
                 output.setTopics(options.getFilePlainTopics());
                 processor.addOutput(output);
             }
@@ -176,6 +183,8 @@ public class LogtubeLoggerFactory extends LifeCycle implements ILoggerFactory, I
                         options.getFileJSONSubdirMappings(),
                         options.getFileJSONSignal()
                 );
+                logDirs.add(options.getFileJSONDir());
+                logSignals.add(options.getFileJSONSignal());
                 output.setTopics(options.getFileJSONTopics());
                 processor.addOutput(output);
             }
@@ -205,6 +214,8 @@ public class LogtubeLoggerFactory extends LifeCycle implements ILoggerFactory, I
         this.customTopics = customTopics;
         this.options = options;
 
+        this.rotationThread.setup(options.getRotationMode(), options.getRotationKeep(), logDirs, logSignals);
+
         this.swapProcessor(processor);
     }
 
@@ -225,11 +236,15 @@ public class LogtubeLoggerFactory extends LifeCycle implements ILoggerFactory, I
 
     public synchronized void doStart() {
         super.doStart();
+        this.rotationThread = new RotationThread();
+        this.rotationThread.start();
         init();
     }
 
     @Override
     public synchronized void doStop() {
+        this.rotationThread.interrupt();
+        this.rotationThread = null;
         this.rootTopics = new TopicAware();
         this.customTopics = new HashMap<>();
         this.options = LogtubeOptions.getDefault();
