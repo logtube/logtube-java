@@ -1,5 +1,6 @@
 package io.github.logtube;
 
+import io.github.logtube.utils.HttpIgnore;
 import io.github.logtube.utils.Maps;
 import io.github.logtube.utils.Strings;
 import org.jetbrains.annotations.Contract;
@@ -266,6 +267,15 @@ public class LogtubeOptions {
         return setValue("logtube.console.topics", null);
     }
 
+    @NotNull
+    public String getRotationMode() {
+        return stringValue("logtube.rotation.mode", "none");
+    }
+
+    public int getRotationKeep() {
+        return intValue("logtube.rotation.keep", 0);
+    }
+
     public boolean getFileEnabled() {
         return booleanValue("logtube.file.enabled", false);
     }
@@ -370,6 +380,19 @@ public class LogtubeOptions {
     @NotNull
     public String getRedisKey() {
         return stringValue("logtube.redis.key", "logtube");
+    }
+
+    public HttpIgnore[] getHttpIgnores() {
+        String[] raw = arrayValue("logtube.filter.http-ignores", new String[0]);
+        ArrayList<HttpIgnore> ret = new ArrayList<>();
+        for (String s : raw) {
+            String[] split = s.split(",");
+            if (split.length != 2) {
+                continue;
+            }
+            ret.add(new HttpIgnore(split[0], split[1]));
+        }
+        return ret.toArray(new HttpIgnore[0]);
     }
 
     public int getRedisMinDuration() {

@@ -10,6 +10,10 @@ logtube:
     enabled: false
     topics: ALL
 
+  rotation:
+    mode: daily
+    keep: 3
+
   file:
     enabled: true
     topics: ALL
@@ -25,5 +29,6 @@ logtube:
     key: xlog
 
   filter:
+    http-ignores: GET /my/custom/check, GET /my/custom/check2
     redis-min-duration: 100
     redis-min-result-size: 1000

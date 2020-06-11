@@ -7,7 +7,6 @@ import io.github.logtube.core.loggers.EventLogger;
 import io.github.logtube.core.outputs.*;
 import io.github.logtube.core.processors.EventProcessor;
 import io.github.logtube.core.processors.NOPProcessor;
-import io.github.logtube.redis.RedisTrackEventCommitter;
 import io.github.logtube.utils.ITopicAware;
 import io.github.logtube.utils.ITopicMutableAware;
 import io.github.logtube.utils.LifeCycle;
@@ -198,14 +197,26 @@ public class LogtubeLoggerFactory extends LifeCycle implements ILoggerFactory, I
             processor.addOutput(output);
         }
 
-        RedisTrackEventCommitter.setMinDuration(options.getRedisMinDuration());
-        RedisTrackEventCommitter.setMinResultSize(options.getRedisMinResultSize());
+        // 使用动态配置的方式，防止显式 import 而项目不需要该功能，没有配置对应的依赖库导致整体崩溃
+        configureComponent("io.github.logtube.redis.LogtubeJedisConfigurator", options);
+        configureComponent("io.github.logtube.http.LogtubeHttpConfigurator", options);
 
         this.rootTopics = rootTopics;
         this.customTopics = customTopics;
         this.options = options;
 
         this.swapProcessor(processor);
+    }
+
+    private void configureComponent(String className, LogtubeOptions options) {
+        try {
+            Class<?> clazz = Class.forName(className);
+            Object object = clazz.newInstance();
+            if (object instanceof LogtubeComponentConfigurator) {
+                ((LogtubeComponentConfigurator) object).configure(options);
+            }
+        } catch (Exception ignored) {
+        }
     }
 
     public synchronized void reload() {

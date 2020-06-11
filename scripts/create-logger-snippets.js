@@ -1,7 +1,7 @@
 let levels = ['trace', 'debug', 'info', 'warn', 'error']
 
 for (let level of levels) {
-    let upperLevel = level.substring(0,1).toUpperCase() + level.substring(1)
+    let upperLevel = level.substring(0, 1).toUpperCase() + level.substring(1)
     console.log(`
         @Override
         default void ${level}(String msg) {

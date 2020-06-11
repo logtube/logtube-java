@@ -1,5 +1,15 @@
 # 升级日志
 
+## 升级到 0.36 版本
+
+* 增加了自动日志切分功能
+* 增加了 HTTP 路径和方法例外（用以忽略 健康检查 产生的访问日志）
+
+参考配置文件中 `logtube.rotation.mode`, `logtube.rotation.keep`, `logtube.filter.http-ignores` 字段
+
+https://github.com/logtube/logtube-java/blob/master/docs/after-unified-file-output/logtube.properties
+https://github.com/logtube/logtube-java/blob/master/docs/after-unified-file-output/logtube.yml
+
 ## 升级到 0.35 版本
 
 0.35 版本增加了 `crsrc` 字段，用于互相调用时，声明自身的身份，并保留在日志内容里

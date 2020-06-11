@@ -2,6 +2,7 @@ package io.github.logtube.http;
 
 import io.github.logtube.Logtube;
 import io.github.logtube.LogtubeConstants;
+import io.github.logtube.utils.HttpIgnore;
 import io.github.logtube.utils.Requests;
 import io.github.logtube.utils.Strings;
 import org.jetbrains.annotations.NotNull;
@@ -10,9 +11,8 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * This class provides a servlet Filter, setup correlation id, outputs structured events
@@ -23,18 +23,21 @@ import java.util.Set;
  */
 public class LogtubeHttpFilter implements Filter {
 
-    /**
-     * -例外名单。此名单中的请求将不记录xlog
-     */
-    public static final Set<String> EXCLUSION_PATH_LIST = new HashSet<>();
+    public static HttpIgnore[] GLOBAL_HTTP_IGNORES = new HttpIgnore[0];
+
+    private HttpIgnore[] LOCAL_HTTP_IGNORES = new HttpIgnore[0];
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
+        // 兼容旧配置，从 HttpFilter 配置中获取要忽略的 HTTP 请求
+        ArrayList<HttpIgnore> httpIgnores = new ArrayList<>();
         String exclusionListStr = filterConfig.getInitParameter(LogtubeConstants.EXCLUSION_PATH_LIST_PARAM_NAME);
         if (!Strings.isEmpty(exclusionListStr)) {
-            Arrays.stream(exclusionListStr.split(",")).map(Strings::safeNormalize).forEach(EXCLUSION_PATH_LIST::add);
+            Arrays.stream(exclusionListStr.split(",")).map(Strings::safeNormalize).forEach((s) -> {
+                httpIgnores.add(new HttpIgnore("GET", s));
+            });
         }
-        EXCLUSION_PATH_LIST.add("/check");
+        this.LOCAL_HTTP_IGNORES = httpIgnores.toArray(new HttpIgnore[]{});
     }
 
     @Override
@@ -49,10 +52,25 @@ public class LogtubeHttpFilter implements Filter {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
         // 如果是例外名单，不走xlog处理流程，直接往下去
-        if (EXCLUSION_PATH_LIST.contains(httpRequest.getRequestURI()))
-            chain.doFilter(request, response);
-        else
-            process(httpRequest, httpResponse, chain);
+
+        // 兼容的旧配置，从 ServletFilter 初始化出来的配置
+        for (HttpIgnore hi : this.LOCAL_HTTP_IGNORES) {
+            if (hi.method.equalsIgnoreCase(httpRequest.getMethod()) && hi.path.equals(httpRequest.getRequestURI())) {
+                chain.doFilter(request, response);
+                return;
+            }
+        }
+
+        // logtube.yml/logtube.properties 的全局配置
+        for (HttpIgnore hi : GLOBAL_HTTP_IGNORES) {
+            if (hi.method.equalsIgnoreCase(httpRequest.getMethod()) && hi.path.equals(httpRequest.getRequestURI())) {
+                chain.doFilter(request, response);
+                return;
+            }
+        }
+
+        // 例外没有匹配，执行
+        process(httpRequest, httpResponse, chain);
     }
 
     private void process(HttpServletRequest request, HttpServletResponse response, FilterChain chain)

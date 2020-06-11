@@ -9,8 +9,6 @@ import org.junit.Test;
 
 import java.util.concurrent.ExecutionException;
 
-import static org.junit.Assert.*;
-
 public class LogtubeLettuceCollectorTest {
 
     @Test

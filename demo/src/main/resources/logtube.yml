@@ -1,2 +1,2 @@
 logtube:
-    config-file: logtube-dev.yml
+  config-file: logtube-dev.yml
