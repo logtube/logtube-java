@@ -4,6 +4,8 @@
 
 ## 升级到 0.36.RC1 版本
 
+* 增加了 `exception_stack` 字段，异常的堆栈信息会放入这个字段，允许全文搜索
+
 * 所有输出改为了默认不开启，对于要启动的输出，比如 `console`, `file` (以及不再建议使用的 `file-plain`, `file-json`, `redis` 等)，需要写明 `enabled=true`
 
     比如
