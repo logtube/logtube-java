@@ -13,10 +13,6 @@ logtube:
     mode: 1mb
     keep: 4
 
-  # 命令行输出
-  console:
-    enabled: false
-
   # JSON文本输出
   file:
     enabled: true
@@ -24,11 +20,3 @@ logtube:
     dir: logs
     subdir-mappings: err=xlog
     signal: logtubed.reopen.log
-
-  # SPTP 远程输出
-  remote:
-    enabled: false
-
-  # Redis 远程输出
-  redis:
-    enabled: false

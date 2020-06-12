@@ -4,6 +4,8 @@ package io.github.logtube.utils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 public class RotationThread extends Thread {
@@ -115,7 +117,14 @@ public class RotationThread extends Thread {
 
     private void touchSignals() {
         // 更新所有信号文件的最后修改日期，触发日志文件重新打开
-        this.signalFiles.forEach((f) -> new File(f).setLastModified(System.currentTimeMillis()));
+        this.signalFiles.forEach((f) -> {
+            try {
+                FileWriter fw = new FileWriter(f);
+                fw.close();
+            } catch (IOException ignored) {
+            }
+            new File(f).setLastModified(System.currentTimeMillis());
+        });
     }
 
     @Override
