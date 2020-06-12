@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 public class RotationThread extends Thread {
 
@@ -74,8 +75,24 @@ public class RotationThread extends Thread {
         HashMap<String, RotationFile> rotationFiles = RotationFile.fromFiles(files);
         // 对每组日志文件进行处理
         rotationFiles.forEach((filename, rf) -> {
-            // 对所有 Mark 进行递增排序
+            // 列出所有标记
             Set<String> marks = rf.getMarks();
+            // 列出不合规的标记
+            Set<String> badMarks = marks.stream().filter((m) -> {
+                if (this.mode == Mode.Daily) {
+                    return !m.matches("^\\d{4}-\\d{2}-\\d{2}$");
+                } else if (this.mode == Mode.Size) {
+                    return !m.matches("^\\d+$");
+                } else {
+                    return false;
+                }
+            }).collect(Collectors.toSet());
+            // 删除标记不合规的日志文件
+            badMarks.forEach((m) -> {
+                marks.remove(m);
+                new File(RotationFile.deriveFilename(filename, m)).delete();
+            });
+            // 对所有 Mark 进行递增排序
             ArrayList<String> markList = new ArrayList<>(marks);
             markList.sort(Comparator.comparing(String::toString));
             // 第一步，删除超期文件
