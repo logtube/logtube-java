@@ -1,8 +1,10 @@
 # 升级日志
 
-## 升级到 0.36 版本
+**RC (Release Candidate, 发布候选) 代表尚在测试中，但是功能已经验证稳定**
 
-* 所有输出改为了默认不开启，对于要启动的输出，比如 `console`, `file` (以及不再建议使用的 `file-plain`, `file-json`, `redis`)，需要写明 `enabled=true`
+## 升级到 0.36.RC1 版本
+
+* 所有输出改为了默认不开启，对于要启动的输出，比如 `console`, `file` (以及不再建议使用的 `file-plain`, `file-json`, `redis` 等)，需要写明 `enabled=true`
 
     比如
 
@@ -23,7 +25,7 @@ https://github.com/logtube/logtube-java/blob/master/docs/after-unified-file-outp
 
 ## 升级到 0.35 版本
 
-0.35 版本增加了 `crsrc` 字段，用于互相调用时，声明自身的身份，并保留在日志内容里
+增加了 `crsrc` 字段，用于互相调用时，声明自身的身份，并保留在日志内容里
 
 `dubboe` 和 `rocketmq` 已经做了处理，但是如果在代码中使用了手动 HTTP 调用，需要补充以下代码，以将自身的 `project` 作为 `X-Correlation-Src` 头传递出去
 
