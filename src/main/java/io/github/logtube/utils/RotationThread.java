@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class RotationThread extends Thread {
 
@@ -65,6 +66,7 @@ public class RotationThread extends Thread {
     }
 
     private boolean rotateDirs() {
+        AtomicBoolean rotated = new AtomicBoolean(false);
         // 收集所有以 .log 结尾的文件名
         Set<String> files = new HashSet<>();
         this.dirs.forEach((d) -> collectFiles(files, new File(d)));
@@ -92,6 +94,7 @@ public class RotationThread extends Thread {
                 // 重命名文件
                 String newFilename = RotationFile.deriveFilename(filename, newMark);
                 new File(filename).renameTo(new File(newFilename));
+                rotated.set(true);
             } else if (this.mode == Mode.Size) {
                 // 文件还小，退出，不进行轮转
                 if (new File(filename).length() < this.size) {
@@ -110,9 +113,10 @@ public class RotationThread extends Thread {
                 // 重命名文件
                 String newFilename = RotationFile.deriveFilename(filename, String.format("%012d", nextId));
                 new File(filename).renameTo(new File(newFilename));
+                rotated.set(true);
             }
         });
-        return false;
+        return rotated.get();
     }
 
     private void touchSignals() {
