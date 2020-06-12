@@ -259,7 +259,7 @@ public class LogtubeOptions {
     }
 
     public boolean getConsoleEnabled() {
-        return booleanValue("logtube.console.enabled", true);
+        return booleanValue("logtube.console.enabled", false);
     }
 
     @Nullable
@@ -301,7 +301,7 @@ public class LogtubeOptions {
     }
 
     public boolean getFilePlainEnabled() {
-        return booleanValue("logtube.file-plain.enabled", true);
+        return booleanValue("logtube.file-plain.enabled", false);
     }
 
     @Nullable

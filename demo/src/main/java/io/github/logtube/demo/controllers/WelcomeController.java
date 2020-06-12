@@ -12,11 +12,13 @@ public class WelcomeController {
 
     @GetMapping("/hello")
     public String hello() {
-        LOGGER.withK("keyword1").trace("this is a trace");
-        LOGGER.withK("keyword2").debug("this is a debug");
-        LOGGER.withK("keyword3").info("this is a info");
-        LOGGER.withK("keyword4").warn("this is a warn");
-        LOGGER.withK("keyword5").error("this is a error");
+        for (int i = 0; i < 1000; i++) {
+            LOGGER.keyword("keyword").trace("this is a trace");
+            LOGGER.keyword("keyword").debug("this is a debug");
+            LOGGER.keyword("keyword").info("this is a info");
+            LOGGER.keyword("keyword").warn("this is a warn");
+            LOGGER.keyword("keyword").error("this is a error", new Exception("hahah"));
+        }
         return "world";
     }
 

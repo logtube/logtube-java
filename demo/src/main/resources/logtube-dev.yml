@@ -5,41 +5,30 @@ logtube:
   env: dev
   # 主题过滤器
   topics:
-    root: ALL
-    io.github.logtube.demo.controllers.suppressed: ALL, -debug, -trace
-    org.springframework: ALL, -debug, -trace
-    org.hibernate: ALL, -debug, -trace
+    root: ALL,-debug,-trace
   # 主题映射（以下为常用映射）
-  topic-mappings: trace=debug, error=err, warn=info
+  topic-mappings: trace=debug, error=err
+
+  rotation:
+    mode: 1mb
+    keep: 4
 
   # 命令行输出
   console:
-    enabled: true
-    topics: ALL
-
-  # 纯文本输出
-  file-plain:
-    enabled: true
-    topics: app, debug, info, err
-    dir: logs
-    signal: logtubed.reopen.log
+    enabled: false
 
   # JSON文本输出
-  file-json:
+  file:
     enabled: true
-    topics: ALL, -app, -debug, -info, -err
+    topics: ALL
     dir: logs
+    subdir-mappings: err=xlog
     signal: logtubed.reopen.log
 
   # SPTP 远程输出
   remote:
     enabled: false
-    topics: ALL
-    hosts: 127.0.0.1:9921
 
   # Redis 远程输出
   redis:
-    enabled: true
-    topics: ALL
-    hosts: 127.0.0.1, 127.0.0.1
-    key: xlog
+    enabled: false
