@@ -81,7 +81,7 @@ public class RotationThread extends Thread {
             // 第一步，删除超期文件
             if (this.keep > 0 && marks.size() > this.keep) {
                 // 递增排序后，删除前 N-K 个文件
-                List<String> deleteList = markList.subList(0, marks.size() - this.keep);
+                List<String> deleteList = markList.subList(0, marks.size() - this.keep + 1);
                 deleteList.forEach((m) -> new File(RotationFile.deriveFilename(filename, m)).delete());
             }
             // 第二步，判断然后轮转
