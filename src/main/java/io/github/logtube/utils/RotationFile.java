@@ -43,6 +43,9 @@ public class RotationFile {
 
     /**
      * 从一组原始文件中，将日志文件和切割后文件进行分组
+     *
+     * @param files 原始文件
+     * @return 分组后的日志文件
      */
     public static HashMap<String, RotationFile> fromFiles(@NotNull Set<String> files) {
         HashMap<String, RotationFile> result = new HashMap<>();
