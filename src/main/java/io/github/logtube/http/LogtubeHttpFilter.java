@@ -23,6 +23,8 @@ import java.util.Arrays;
  */
 public class LogtubeHttpFilter implements Filter {
 
+    private static final String ONCE_KEY = "io.github.logtube.http.filter.once";
+
     public static HttpIgnore[] GLOBAL_HTTP_IGNORES = new HttpIgnore[0];
 
     private HttpIgnore[] LOCAL_HTTP_IGNORES = new HttpIgnore[0];
@@ -42,6 +44,12 @@ public class LogtubeHttpFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        if (request.getAttribute(ONCE_KEY) != null) {
+            chain.doFilter(request, response);
+            return;
+        }
+        request.setAttribute(ONCE_KEY, true);
+
         // 如果不是HTTP请求，不走xlog处理流程，直接往下去
         if (!(request instanceof HttpServletRequest && response instanceof HttpServletResponse)) {
             chain.doFilter(request, response);

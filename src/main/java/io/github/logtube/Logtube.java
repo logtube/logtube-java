@@ -13,6 +13,10 @@ import org.slf4j.Marker;
 
 public class Logtube {
 
+    private static void reload() {
+        LogtubeLoggerFactory.getSingleton().reload();
+    }
+
     @NotNull
     public static IEventContext captureContext() {
         return getProcessor().captureContext();
