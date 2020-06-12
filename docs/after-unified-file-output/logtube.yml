@@ -29,6 +29,8 @@ logtube:
     key: xlog
 
   filter:
-    http-ignores: GET /my/custom/check, GET /my/custom/check2
+    http-ignores:
+      - GET /my/custom/check
+      - GET /my/custom/check2
     redis-min-duration: 100
     redis-min-result-size: 1000
