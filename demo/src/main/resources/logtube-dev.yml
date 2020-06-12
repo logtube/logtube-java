@@ -10,8 +10,11 @@ logtube:
   topic-mappings: trace=debug, error=err
 
   rotation:
-    mode: 1mb
+    mode: 16mb
     keep: 4
+
+  console:
+    enabled: true
 
   # JSON文本输出
   file:
@@ -20,3 +23,6 @@ logtube:
     dir: logs
     subdir-mappings: err=xlog
     signal: logtubed.reopen.log
+
+  filter:
+    http-ignores: GET /mytest

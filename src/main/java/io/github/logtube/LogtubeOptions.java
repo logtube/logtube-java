@@ -386,12 +386,15 @@ public class LogtubeOptions {
         String[] raw = arrayValue("logtube.filter.http-ignores", new String[0]);
         ArrayList<HttpIgnore> ret = new ArrayList<>();
         for (String s : raw) {
-            String[] split = s.split(",");
+            String[] split = s.split(" ");
             if (split.length != 2) {
                 continue;
             }
-            ret.add(new HttpIgnore(split[0], split[1]));
+            ret.add(new HttpIgnore(split[0].trim(), split[1].trim()));
         }
+        ret.add(new HttpIgnore("HEAD", "/"));
+        ret.add(new HttpIgnore("GET", "/check"));
+        ret.add(new HttpIgnore("GET", "/favicon.ico"));
         return ret.toArray(new HttpIgnore[0]);
     }
 

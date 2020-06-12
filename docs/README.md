@@ -2,7 +2,7 @@
 
 ## 升级到 0.36 版本
 
-* 所有输出改为了默认不开启，对于要启动的输出，需要写明 `enabled=true`
+* 所有输出改为了默认不开启，对于要启动的输出，比如 `console`, `file` (以及不再建议使用的 `file-plain`, `file-json`, `redis`)，需要写明 `enabled=true`
 
     比如
 
