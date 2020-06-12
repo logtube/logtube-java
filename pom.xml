@@ -232,6 +232,10 @@
                                 </goals>
                             </execution>
                         </executions>
+                        <configuration>
+                            <encoding>${project.build.sourceEncoding}</encoding>
+                            <source>${maven.compiler.source}</source>
+                        </configuration>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
