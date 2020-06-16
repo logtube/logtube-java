@@ -92,15 +92,20 @@ public class LogtubeOptions {
 
     @Nullable
     private static Properties propertiesFromApollo() {
+        return propertiesFromProvider("io.github.logtube.apollo.LogtubeApolloOptionsProvider");
+    }
+
+    @Nullable
+    private static Properties propertiesFromProvider(String className) {
         try {
-            Class providerClass = Class.forName("io.github.logtube.apollo.LogtubeApolloOptionsProvider");
+            Class<?> providerClass = Class.forName(className);
             Object provider = providerClass.newInstance();
             if (provider instanceof LogtubeOptionsProvider) {
                 return ((LogtubeOptionsProvider) provider).loadOptions();
             }
             return null;
-        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
-            e.printStackTrace();
+        } catch (Throwable e) {
+            System.err.println("Failed to load options provider: " + className + ": " + e.getMessage());
             return null;
         }
     }

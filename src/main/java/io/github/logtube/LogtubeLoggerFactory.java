@@ -226,7 +226,8 @@ public class LogtubeLoggerFactory extends LifeCycle implements ILoggerFactory, I
             if (object instanceof LogtubeComponentConfigurator) {
                 ((LogtubeComponentConfigurator) object).configure(options);
             }
-        } catch (Exception ignored) {
+        } catch (Throwable e) {
+            System.err.println("Failed to load component: " + className + ": " + e.getMessage());
         }
     }
 
