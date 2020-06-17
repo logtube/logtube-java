@@ -1,40 +1,50 @@
 package io.github.logtube.core.loggers;
 
-import io.github.logtube.core.IEventLogger;
-import io.github.logtube.core.IEventMiddleware;
-import io.github.logtube.core.IEventProcessorFactory;
-import io.github.logtube.core.IMutableEvent;
+import io.github.logtube.core.*;
 import io.github.logtube.core.events.NOPEvent;
 import io.github.logtube.utils.ITopicAware;
 import io.github.logtube.utils.Reflections;
+import io.github.logtube.utils.Reloadable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * 普通日志器，具有一个 名字和一套主题规则，使用 共有的处理器生成日志事件，并交给用户
  */
-public class EventLogger implements IEventLogger {
+public class EventLogger implements IEventLogger, Reloadable {
 
     @NotNull
-    private final IEventProcessorFactory processorFactory;
+    private final IEventLoggerFactory loggerFactory;
 
     @NotNull
     private final String name;
 
     @Nullable
-    private final ITopicAware topicAware;
+    private ITopicAware topicAware;
+
+    @Nullable
+    private IEventProcessor processor;
 
     /**
      * 创建一个新的子日志器
      *
-     * @param processorFactory 父
-     * @param name             名字
-     * @param topicAware       主题过滤逻辑
+     * @param loggerFactory 父
+     * @param name          名字
      */
-    public EventLogger(@NotNull IEventProcessorFactory processorFactory, @NotNull String name, @Nullable ITopicAware topicAware) {
-        this.processorFactory = processorFactory;
+    public EventLogger(@NotNull IEventLoggerFactory loggerFactory, @NotNull String name) {
+        this.loggerFactory = loggerFactory;
         this.name = name;
-        this.topicAware = topicAware;
+        init();
+    }
+
+    public void init() {
+        this.topicAware = this.loggerFactory.getTopicAware(this.name);
+        this.processor = this.loggerFactory.getProcessor();
+    }
+
+    @Override
+    public void reload() {
+        init();
     }
 
     @Override
@@ -47,7 +57,11 @@ public class EventLogger implements IEventLogger {
         if (!isTopicEnabled(topic)) {
             return NOPEvent.getSingleton();
         }
-        IMutableEvent event = this.processorFactory.getProcessor().event()
+        IEventProcessor processor = this.processor;
+        if (processor == null) {
+            return NOPEvent.getSingleton();
+        }
+        IMutableEvent event = processor.event()
                 .topic(topic)
                 .extra("thread_name", Thread.currentThread().getName());
         StackTraceElement element = Reflections.getStackTraceElement();

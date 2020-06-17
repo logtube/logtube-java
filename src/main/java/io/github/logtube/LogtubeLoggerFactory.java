@@ -1,8 +1,8 @@
 package io.github.logtube;
 
 import io.github.logtube.core.IEventLogger;
+import io.github.logtube.core.IEventLoggerFactory;
 import io.github.logtube.core.IEventProcessor;
-import io.github.logtube.core.IEventProcessorFactory;
 import io.github.logtube.core.loggers.EventLogger;
 import io.github.logtube.core.outputs.*;
 import io.github.logtube.core.processors.EventProcessor;
@@ -20,7 +20,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-public class LogtubeLoggerFactory extends LifeCycle implements ILoggerFactory, IEventProcessorFactory {
+public class LogtubeLoggerFactory extends LifeCycle implements ILoggerFactory, IEventLoggerFactory, Reloadable {
 
     ///////////////////////  SINGLETON ////////////////////////////
 
@@ -55,14 +55,16 @@ public class LogtubeLoggerFactory extends LifeCycle implements ILoggerFactory, I
     private LogtubeLoggerFactory() {
     }
 
-    @NotNull
-    private ITopicAware findTopicAware(@NotNull String name) {
+    @Override
+    public @NotNull ITopicAware getTopicAware(@NotNull String name) {
+        ITopicAware rootTopics = this.rootTopics;
+        Map<String, ITopicAware> customTopics = this.customTopics;
         if (name.equals(Logger.ROOT_LOGGER_NAME)) {
-            return this.rootTopics;
+            return rootTopics;
         }
         String found = null;
         ITopicAware topics = null;
-        for (Map.Entry<String, ITopicAware> entry : this.customTopics.entrySet()) {
+        for (Map.Entry<String, ITopicAware> entry : customTopics.entrySet()) {
             String prefix = entry.getKey();
             ITopicAware value = entry.getValue();
             if (name.toLowerCase().startsWith(prefix)) {
@@ -76,7 +78,7 @@ public class LogtubeLoggerFactory extends LifeCycle implements ILoggerFactory, I
             }
         }
         if (topics == null) {
-            return this.rootTopics;
+            return rootTopics;
         }
         return topics;
     }
@@ -101,7 +103,7 @@ public class LogtubeLoggerFactory extends LifeCycle implements ILoggerFactory, I
         if (logger != null) {
             return logger;
         } else {
-            IEventLogger newInstance = new EventLogger(this, name, findTopicAware(name));
+            IEventLogger newInstance = new EventLogger(this, name);
             IEventLogger oldInstance = this.loggers.putIfAbsent(name, newInstance);
             return oldInstance == null ? newInstance : oldInstance;
         }
@@ -121,6 +123,15 @@ public class LogtubeLoggerFactory extends LifeCycle implements ILoggerFactory, I
         IEventProcessor processor = this.processor;
         this.processor = newProcessor;
         processor.stop();
+    }
+
+    private void reloadLoggers() {
+        this.loggers.forEach((name, l) -> {
+            if (l instanceof Reloadable) {
+                Reloadable r = (Reloadable) l;
+                r.reload();
+            }
+        });
     }
 
     private void init() {
@@ -217,6 +228,7 @@ public class LogtubeLoggerFactory extends LifeCycle implements ILoggerFactory, I
         this.rotationThread.setup(options.getRotationMode(), options.getRotationKeep(), logDirs, logSignals);
 
         this.swapProcessor(processor);
+        this.reloadLoggers();
     }
 
     private void configureComponent(String className, LogtubeOptions options) {
@@ -231,6 +243,7 @@ public class LogtubeLoggerFactory extends LifeCycle implements ILoggerFactory, I
         }
     }
 
+    @Override
     public synchronized void reload() {
         init();
     }
@@ -250,6 +263,7 @@ public class LogtubeLoggerFactory extends LifeCycle implements ILoggerFactory, I
         this.customTopics = new HashMap<>();
         this.options = LogtubeOptions.getDefault();
         this.swapProcessor(NOPProcessor.getSingleton());
+        this.reloadLoggers();
         super.doStop();
     }
 
