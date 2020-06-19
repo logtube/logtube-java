@@ -143,7 +143,11 @@ public interface IMutableEvent extends IEvent {
         for (int i = 0; i < kvs.length; i += 2) {
             Object k = kvs[i];
             Object v = kvs[i + 1];
-            if (k == null || v == null) {
+            if (k == null) {
+                continue;
+            }
+            if (v == null) {
+                extra.remove(k.toString());
                 continue;
             }
             if (v instanceof String || v instanceof Number || v instanceof Boolean) {
@@ -154,6 +158,16 @@ public interface IMutableEvent extends IEvent {
         }
         setExtra(extra);
         return this;
+    }
+
+    @Contract("_ -> this")
+    default @NotNull IMutableEvent xPath(@Nullable String path) {
+        return this.extra("path", path);
+    }
+
+    @Contract("_ -> this")
+    default @NotNull IMutableEvent xPathDigest(@Nullable String pathDigest) {
+        return this.extra("path_digest", pathDigest);
     }
 
     @Contract("_ -> this")
@@ -169,32 +183,24 @@ public interface IMutableEvent extends IEvent {
 
             return this.xExceptionClass(t.getClass().getCanonicalName())
                     .xExceptionStack(sw.toString());
+        } else {
+            return this.xExceptionClass(null).xExceptionStack(null);
         }
-        return this;
     }
 
     @Contract("_ -> this")
     default @NotNull IMutableEvent xExceptionStack(@Nullable String stack) {
-        if (stack != null) {
-            return this.extra("exception_stack", stack);
-        }
-        return this;
+        return this.extra("exception_stack", stack);
     }
 
     @Contract("_ -> this")
     default @NotNull IMutableEvent xExceptionClass(@Nullable String clazz) {
-        if (clazz != null) {
-            return this.extra("exception_class", clazz);
-        }
-        return this;
+        return this.extra("exception_class", clazz);
     }
 
     @Contract("_ -> this")
     default @NotNull IMutableEvent xThreadName(@Nullable String name) {
-        if (name != null) {
-            return this.extra("thread_name", name);
-        }
-        return this;
+        return this.extra("thread_name", name);
     }
 
     @Contract("_,_ -> this")
@@ -208,16 +214,18 @@ public interface IMutableEvent extends IEvent {
                     prefix + "class_line", element.getLineNumber(),
                     prefix + "method_name", element.getMethodName()
             );
+        } else {
+            return this.extras(
+                    prefix + "class_name", null,
+                    prefix + "class_line", null,
+                    prefix + "method_name", null
+            );
         }
-        return this;
     }
 
     @Contract("_ -> this")
     default @NotNull IMutableEvent xTargetProject(@Nullable String targetProject) {
-        if (targetProject != null) {
-            return this.extra("target_project", targetProject);
-        }
-        return this;
+        return this.extra("target_project", targetProject);
     }
 
 }
