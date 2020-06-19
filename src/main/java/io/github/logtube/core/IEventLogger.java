@@ -9,9 +9,6 @@ import org.slf4j.Marker;
 import org.slf4j.helpers.FormattingTuple;
 import org.slf4j.helpers.MessageFormatter;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
 /**
  * Logtube 暴露的主要接口，同时实现 slf4j 的 Logger 接口，包含大量糖方法
  */
@@ -89,15 +86,7 @@ public interface IEventLogger extends ITopicAware, Logger {
     }
 
     default void _message(@NotNull String topic, @NotNull String msg, @Nullable Throwable t) {
-        IMutableEvent event = topic(topic);
-        if (t != null) {
-            event.extra("exception_class", t.getClass().getCanonicalName());
-            StringWriter sw = new StringWriter();
-            t.printStackTrace(new PrintWriter(sw));
-            event.extra("exception_stack", sw.toString());
-        }
-        event.message(msg);
-        event.commit();
+        topic(topic).message(msg).xException(t).commit();
     }
 
     @Override

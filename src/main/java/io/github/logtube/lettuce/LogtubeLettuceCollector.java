@@ -55,9 +55,9 @@ public class LogtubeLettuceCollector implements CommandLatencyCollector {
             InetSocketAddress address = (InetSocketAddress) remote;
             event.extra("db_host", address.toString());
         }
-        event.extra("cmd", commandType.name());
-        event.extra("duration", completionLatency / (1000 * 1000)); // nanosecond
-        event.commit();
+        event.extra("cmd", commandType.name())
+                .xDuration(completionLatency / (1000 * 1000)) // nanosecond
+                .commit();
     }
 
     @Override

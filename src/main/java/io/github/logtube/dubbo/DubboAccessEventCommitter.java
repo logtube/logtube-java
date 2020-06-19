@@ -10,8 +10,7 @@ public class DubboAccessEventCommitter {
     private final long startAt = System.currentTimeMillis();
 
     public void commit() {
-        this.event.extra("duration", System.currentTimeMillis() - this.startAt);
-        this.event.commit();
+        this.event.xDuration(System.currentTimeMillis() - this.startAt).commit();
     }
 
 }

@@ -61,18 +61,10 @@ public class EventLogger implements IEventLogger, Reloadable {
         if (processor == null) {
             return NOPEvent.getSingleton();
         }
-        IMutableEvent event = processor.event()
+        return processor.event()
                 .topic(topic)
-                .extra("thread_name", Thread.currentThread().getName());
-        StackTraceElement element = Reflections.getStackTraceElement();
-        if (element != null) {
-            event.extras(
-                    "class_name", element.getClassName(),
-                    "class_line", element.getLineNumber(),
-                    "method_name", element.getMethodName()
-            );
-        }
-        return event;
+                .xThreadName(Thread.currentThread().getName())
+                .xStackTraceElement(null, Reflections.getStackTraceElement());
     }
 
     @Override

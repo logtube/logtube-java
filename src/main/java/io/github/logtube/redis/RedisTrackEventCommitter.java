@@ -34,9 +34,9 @@ public class RedisTrackEventCommitter {
          *  返回值大于等于logtube.filter.redis-min-result-size的redis日志
          */
         if (duration >= minDuration || resultSize >= minResultSize) {
-            event.extra("duration", duration);
-            event.extra("result_size", resultSize);
-            this.event.commit();
+            this.event.xDuration(duration)
+                    .extra("result_size", resultSize)
+                    .commit();
         }
     }
 

@@ -62,7 +62,7 @@ public class HttpAccessEventCommitter {
             params = Flatten.flattenParameters(httpRequest.getParameterMap());
         }
 
-        this.event.extra("duration", System.currentTimeMillis() - this.startAt);
+        this.event.xDuration(System.currentTimeMillis() - this.startAt);
 
         if (params != null) {
             this.event.extra("params", String.join(",", params));

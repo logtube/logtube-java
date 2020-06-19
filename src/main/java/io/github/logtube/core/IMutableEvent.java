@@ -5,6 +5,8 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -151,6 +153,70 @@ public interface IMutableEvent extends IEvent {
             }
         }
         setExtra(extra);
+        return this;
+    }
+
+    @Contract("_ -> this")
+    default @NotNull IMutableEvent xDuration(long duration) {
+        return this.extra("duration", duration);
+    }
+
+    @Contract("_ -> this")
+    default @NotNull IMutableEvent xException(@Nullable Throwable t) {
+        if (t != null) {
+            StringWriter sw = new StringWriter();
+            t.printStackTrace(new PrintWriter(sw));
+
+            return this.xExceptionClass(t.getClass().getCanonicalName())
+                    .xExceptionStack(sw.toString());
+        }
+        return this;
+    }
+
+    @Contract("_ -> this")
+    default @NotNull IMutableEvent xExceptionStack(@Nullable String stack) {
+        if (stack != null) {
+            return this.extra("exception_stack", stack);
+        }
+        return this;
+    }
+
+    @Contract("_ -> this")
+    default @NotNull IMutableEvent xExceptionClass(@Nullable String clazz) {
+        if (clazz != null) {
+            return this.extra("exception_class", clazz);
+        }
+        return this;
+    }
+
+    @Contract("_ -> this")
+    default @NotNull IMutableEvent xThreadName(@Nullable String name) {
+        if (name != null) {
+            return this.extra("thread_name", name);
+        }
+        return this;
+    }
+
+    @Contract("_ -> this")
+    default @NotNull IMutableEvent xStackTraceElement(@Nullable String prefix, @Nullable StackTraceElement element) {
+        if (element != null) {
+            if (prefix == null) {
+                prefix = "";
+            }
+            return this.extras(
+                    prefix + "class_name", element.getClassName(),
+                    prefix + "class_line", element.getLineNumber(),
+                    prefix + "method_name", element.getMethodName()
+            );
+        }
+        return this;
+    }
+
+    @Contract("_ -> this")
+    default @NotNull IMutableEvent xTargetProject(@Nullable String targetProject) {
+        if (targetProject != null) {
+            return this.extra("target_project", targetProject);
+        }
         return this;
     }
 

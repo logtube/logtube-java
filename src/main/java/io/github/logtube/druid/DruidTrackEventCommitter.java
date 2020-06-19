@@ -39,7 +39,7 @@ public class DruidTrackEventCommitter {
     public void commit() {
         try {
             // duration
-            this.event.extra("duration", System.currentTimeMillis() - this.startTime);
+            this.event.xDuration(System.currentTimeMillis() - this.startTime);
 
             // databaseUrl
             Connection connection = statement.getConnectionProxy();

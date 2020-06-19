@@ -189,8 +189,7 @@ public class MybatisTrackEventCommitter {
     }
 
     public void commit() {
-        this.event.extra("duration", System.currentTimeMillis() - this.startTime);
-        this.event.commit();
+        this.event.xDuration(System.currentTimeMillis() - this.startTime).commit();
     }
 
 }
