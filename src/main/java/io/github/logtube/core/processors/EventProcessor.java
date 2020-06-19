@@ -164,7 +164,7 @@ public class EventProcessor extends LifeCycle implements IEventProcessor {
         return new LoggerEvent().timestamp(System.currentTimeMillis());
     }
 
-    private IEvent decorate(@NotNull IMutableEvent e) {
+    private IEvent afterProcess(@NotNull IMutableEvent e) {
         return e
                 .topic(resolveTopic(e.getTopic()))
                 .hostname(getHostname())
@@ -172,7 +172,8 @@ public class EventProcessor extends LifeCycle implements IEventProcessor {
                 .project(getProject())
                 .crid(getCrid())
                 .crsrc(getCrsrc())
-                .extras("path", getPath(), "path_digest", getPathDigest());
+                .xPath(getPath())
+                .xPathDigest(getPathDigest());
     }
 
     @Override
@@ -199,7 +200,7 @@ public class EventProcessor extends LifeCycle implements IEventProcessor {
             }
             getOutputs().forEach(o -> {
                 try {
-                    o.appendEvent(decorate(this));
+                    o.appendEvent(afterProcess(this));
                 } catch (Exception ignored) {
                 }
             });
