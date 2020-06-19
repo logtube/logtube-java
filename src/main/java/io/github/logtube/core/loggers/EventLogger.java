@@ -64,7 +64,7 @@ public class EventLogger implements IEventLogger, Reloadable {
         return processor.event()
                 .topic(topic)
                 .xThreadName(Thread.currentThread().getName())
-                .xStackTraceElement(null, Reflections.getStackTraceElement());
+                .xStackTraceElement(Reflections.getStackTraceElement(), null);
     }
 
     @Override

@@ -197,8 +197,8 @@ public interface IMutableEvent extends IEvent {
         return this;
     }
 
-    @Contract("_ -> this")
-    default @NotNull IMutableEvent xStackTraceElement(@Nullable String prefix, @Nullable StackTraceElement element) {
+    @Contract("_,_ -> this")
+    default @NotNull IMutableEvent xStackTraceElement(@Nullable StackTraceElement element, @Nullable String prefix) {
         if (element != null) {
             if (prefix == null) {
                 prefix = "";
