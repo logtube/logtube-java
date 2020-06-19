@@ -177,14 +177,13 @@ public interface IMutableEvent extends IEvent {
 
     @Contract("_ -> this")
     default @NotNull IMutableEvent xException(@Nullable Throwable t) {
-        if (t != null) {
+        if (t == null) {
+            return this.xExceptionClass(null).xExceptionStack(null);
+        } else {
             StringWriter sw = new StringWriter();
             t.printStackTrace(new PrintWriter(sw));
-
             return this.xExceptionClass(t.getClass().getCanonicalName())
                     .xExceptionStack(sw.toString());
-        } else {
-            return this.xExceptionClass(null).xExceptionStack(null);
         }
     }
 
@@ -205,7 +204,13 @@ public interface IMutableEvent extends IEvent {
 
     @Contract("_,_ -> this")
     default @NotNull IMutableEvent xStackTraceElement(@Nullable StackTraceElement element, @Nullable String prefix) {
-        if (element != null) {
+        if (element == null) {
+            return this.extras(
+                    prefix + "class_name", null,
+                    prefix + "class_line", null,
+                    prefix + "method_name", null
+            );
+        } else {
             if (prefix == null) {
                 prefix = "";
             }
@@ -213,12 +218,6 @@ public interface IMutableEvent extends IEvent {
                     prefix + "class_name", element.getClassName(),
                     prefix + "class_line", element.getLineNumber(),
                     prefix + "method_name", element.getMethodName()
-            );
-        } else {
-            return this.extras(
-                    prefix + "class_name", null,
-                    prefix + "class_line", null,
-                    prefix + "method_name", null
             );
         }
     }
