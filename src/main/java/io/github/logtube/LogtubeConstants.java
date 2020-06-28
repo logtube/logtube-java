@@ -34,4 +34,7 @@ public class LogtubeConstants {
      */
     public static final String EXCLUSION_PATH_LIST_PARAM_NAME = "exclusionList";
 
+
+    public static final String[] TOPICS_AUTO_STACK_TRACE = new String[]{"error", "fatal"};
+
 }

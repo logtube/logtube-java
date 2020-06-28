@@ -1,5 +1,7 @@
 package io.github.logtube.core;
 
+import io.github.logtube.LogtubeConstants;
+import io.github.logtube.utils.Reflections;
 import io.github.logtube.utils.Strings;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -189,6 +191,36 @@ public interface IMutableEvent extends IEvent {
 
     @Contract("_ -> this")
     default @NotNull IMutableEvent xExceptionStack(@Nullable String stack) {
+        if (stack == null) {
+            boolean autoStackTrace = false;
+            for (String topic : LogtubeConstants.TOPICS_AUTO_STACK_TRACE) {
+                if (topic.equalsIgnoreCase(getTopic())) {
+                    autoStackTrace = true;
+                    break;
+                }
+            }
+
+            if (autoStackTrace) {
+                @Nullable StackTraceElement[] elements = Reflections.getStackTraceElements();
+                StringBuilder sb = new StringBuilder();
+                for (StackTraceElement element : elements) {
+                    if (element == null) {
+                        continue;
+                    }
+                    sb.append("\tat ");
+                    sb.append(element.getClassName());
+                    sb.append(".");
+                    sb.append(element.getMethodName());
+                    sb.append("(");
+                    sb.append(element.getFileName());
+                    sb.append(":");
+                    sb.append(element.getLineNumber());
+                    sb.append(")");
+                    sb.append("\n");
+                }
+                return this.extra("exception_stack", sb.toString());
+            }
+        }
         return this.extra("exception_stack", stack);
     }
 

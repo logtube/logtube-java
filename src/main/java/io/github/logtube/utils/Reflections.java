@@ -3,6 +3,8 @@ package io.github.logtube.utils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+
 public class Reflections {
 
     private static final String LOGTUBE_BOUNDARY_PREFIX = "io.github.logtube.";
@@ -26,6 +28,24 @@ public class Reflections {
             }
         }
         return null;
+    }
+
+    public static @Nullable StackTraceElement[] getStackTraceElements() {
+        ArrayList<StackTraceElement> result = new ArrayList<>();
+        boolean found = false;
+
+        StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
+
+        for (StackTraceElement element : stackTraceElements) {
+            if (isInternalClass(element.getClassName())) {
+                found = true;
+            } else {
+                if (found) {
+                    result.add(element);
+                }
+            }
+        }
+        return result.toArray(new StackTraceElement[0]);
     }
 
 }
