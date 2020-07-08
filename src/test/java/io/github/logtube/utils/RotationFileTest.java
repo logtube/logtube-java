@@ -21,7 +21,9 @@ public class RotationFileTest {
         files.add(Paths.get("others", "test.file.name2.ROT2020-06-10.log").toString());
         files.add(Paths.get("others", "test.file.name2.log").toString());
         files.add(Paths.get("others", "wired-something.log").toString());
-        HashMap<String, RotationFile> rotationFiles = RotationFile.fromFiles(files);
+        HashMap<String, RotationFile> rotationFiles = RotationFile.fromFiles(files, "name");
+        System.out.println(rotationFiles);
+        rotationFiles = RotationFile.fromFiles(files, "name2");
         System.out.println(rotationFiles);
     }
 

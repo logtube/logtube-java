@@ -15,6 +15,7 @@ public class RotationThread extends Thread {
     public RotationThread() {
         this.dirs = new HashSet<>();
         this.signalFiles = new HashSet<>();
+        this.project = "";
     }
 
     private enum Mode {
@@ -28,6 +29,9 @@ public class RotationThread extends Thread {
     private long size = 256 * 1024 * 1024;
 
     private int keep = 0;
+
+    @NotNull
+    private String project;
 
     @NotNull
     private Set<String> dirs;
@@ -48,7 +52,7 @@ public class RotationThread extends Thread {
         }
     }
 
-    public void setup(@NotNull String mode, int keep, @NotNull Set<String> dirs, @NotNull Set<String> signalFiles) {
+    public void setup(@NotNull String mode, int keep, @NotNull Set<String> dirs, @NotNull Set<String> signalFiles, @NotNull String project) {
         synchronized (this) {
             if (mode.equalsIgnoreCase("daily")) {
                 this.mode = Mode.Daily;
@@ -60,6 +64,7 @@ public class RotationThread extends Thread {
                 this.mode = Mode.None;
                 this.size = 0;
             }
+            this.project = project;
             this.keep = keep;
             this.dirs = dirs;
             this.signalFiles = signalFiles;
@@ -72,7 +77,7 @@ public class RotationThread extends Thread {
         Set<String> files = new HashSet<>();
         this.dirs.forEach((d) -> collectFiles(files, new File(d)));
         // 汇总成日志文件组
-        HashMap<String, RotationFile> rotationFiles = RotationFile.fromFiles(files);
+        HashMap<String, RotationFile> rotationFiles = RotationFile.fromFiles(files, this.project);
         // 对每组日志文件进行处理
         rotationFiles.forEach((filename, rf) -> {
             // 列出所有标记

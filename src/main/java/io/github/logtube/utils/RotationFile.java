@@ -47,9 +47,12 @@ public class RotationFile {
      * @param files 原始文件
      * @return 分组后的日志文件
      */
-    public static HashMap<String, RotationFile> fromFiles(@NotNull Set<String> files) {
+    public static HashMap<String, RotationFile> fromFiles(@NotNull Set<String> files, @NotNull String project) {
         HashMap<String, RotationFile> result = new HashMap<>();
         files.forEach((f) -> {
+            if (!(new File(f)).getName().contains("." + project + ".")) {
+                return;
+            }
             String[] recs = recoverFilename(f);
             RotationFile rf = result.get(recs[0]);
             if (rf == null) {

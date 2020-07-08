@@ -225,7 +225,13 @@ public class LogtubeLoggerFactory extends LifeCycle implements ILoggerFactory, I
         this.customTopics = customTopics;
         this.options = options;
 
-        this.rotationThread.setup(options.getRotationMode(), options.getRotationKeep(), logDirs, logSignals);
+        this.rotationThread.setup(
+                options.getRotationMode(),
+                options.getRotationKeep(),
+                logDirs,
+                logSignals,
+                processor.getProject()
+        );
 
         this.swapProcessor(processor);
         this.reloadLoggers();
