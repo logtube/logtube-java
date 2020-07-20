@@ -400,6 +400,7 @@ public class LogtubeOptions {
         ret.add(new HttpIgnore("HEAD", "/"));
         ret.add(new HttpIgnore("GET", "/check"));
         ret.add(new HttpIgnore("GET", "/favicon.ico"));
+        ret.add(new HttpIgnore("GET", "/actuator/health"));
         return ret.toArray(new HttpIgnore[0]);
     }
 

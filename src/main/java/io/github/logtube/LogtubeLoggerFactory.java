@@ -257,6 +257,7 @@ public class LogtubeLoggerFactory extends LifeCycle implements ILoggerFactory, I
     public synchronized void doStart() {
         super.doStart();
         this.rotationThread = new RotationThread();
+        this.rotationThread.setName("logtube-rotation");
         this.rotationThread.start();
         init();
     }

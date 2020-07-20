@@ -137,6 +137,10 @@ public class RotationThread extends Thread {
                 new File(filename).renameTo(new File(newFilename));
                 rotated.set(true);
             }
+            // 第三步，补救措施，检查基础文件状态
+            if (!new File(filename).exists()) {
+                rotated.set(true);
+            }
         });
         return rotated.get();
     }
@@ -155,7 +159,7 @@ public class RotationThread extends Thread {
 
     @Override
     public void run() {
-        while (!Thread.interrupted()) {
+        while (true) {
             try {
                 Thread.sleep(1000 * 60);
             } catch (InterruptedException ignored) {
@@ -170,7 +174,7 @@ public class RotationThread extends Thread {
                     if (rotateDirs()) {
                         touchSignals();
                     }
-                } catch (Exception e) {
+                } catch (Throwable e) {
                     // 日志系统出错，必然不能通过日志系统输出，只能靠 System.out 了
                     e.printStackTrace();
                 }
