@@ -19,12 +19,15 @@
 * 增加了自动日志切分功能
 
     参考配置文件中的 `logtube.rotation.mode`, `logtube.rotation.keep`
+    
+    **注意** 如果先前使用了系统的 `logrotate`，则信号文件 `/tmp/xlog.reopen.txt` 可能已经从属于 `root`用户，如果 Java 进程执行在非 `root` 用户下，则建议修改 `logtube.file.signal` 文件（以及 `file-json` 和 `file-plain` 的 `signal`)为新文件名，比如 `/tmp/xlog.reopen2.txt`
 
 * 增加了 HTTP 路径和方法例外（用以忽略 健康检查 产生的访问日志）
 
     参考配置文件中的 `logtube.filter.http-ignores` 字段
 
 https://github.com/logtube/logtube-java/blob/master/docs/after-unified-file-output/logtube.properties
+
 https://github.com/logtube/logtube-java/blob/master/docs/after-unified-file-output/logtube.yml
 
 ## 升级到 0.35 版本
