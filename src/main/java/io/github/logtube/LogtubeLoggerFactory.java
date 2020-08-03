@@ -252,6 +252,12 @@ public class LogtubeLoggerFactory extends LifeCycle implements ILoggerFactory, I
     @Override
     public synchronized void reload() {
         init();
+
+        this.getEventLogger(null)
+                .topic(LogtubeConstants.TOPIC_LIFECYCLE)
+                .xLifecycle(LogtubeConstants.LIFECYCLE_LOGTUBE_RELOAD)
+                .xLogtubeVersion(LogtubeConstants.VERSION)
+                .commit();
     }
 
     public synchronized void doStart() {
@@ -260,6 +266,12 @@ public class LogtubeLoggerFactory extends LifeCycle implements ILoggerFactory, I
         this.rotationThread.setName("logtube-rotation");
         this.rotationThread.start();
         init();
+
+        this.getEventLogger(null)
+                .topic(LogtubeConstants.TOPIC_LIFECYCLE)
+                .xLifecycle(LogtubeConstants.LIFECYCLE_BOOT)
+                .xLogtubeVersion(LogtubeConstants.VERSION)
+                .commit();
     }
 
     @Override

@@ -5,6 +5,14 @@ package io.github.logtube;
 
 public class LogtubeConstants {
 
+    public static final String VERSION = "0.37.0";
+
+    public static final String TOPIC_LIFECYCLE = "lifecycle";
+
+    public static final String LIFECYCLE_BOOT = "boot";
+
+    public static final String LIFECYCLE_LOGTUBE_RELOAD = "logtube-reload";
+
     /**
      * dubbo key for correlation id
      */

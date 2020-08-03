@@ -236,6 +236,9 @@ public interface IMutableEvent extends IEvent {
 
     @Contract("_,_ -> this")
     default @NotNull IMutableEvent xStackTraceElement(@Nullable StackTraceElement element, @Nullable String prefix) {
+        if (prefix == null) {
+            prefix = "";
+        }
         if (element == null) {
             return this.extras(
                     prefix + "class_name", null,
@@ -243,9 +246,6 @@ public interface IMutableEvent extends IEvent {
                     prefix + "method_name", null
             );
         } else {
-            if (prefix == null) {
-                prefix = "";
-            }
             return this.extras(
                     prefix + "class_name", element.getClassName(),
                     prefix + "class_line", element.getLineNumber(),
@@ -257,6 +257,16 @@ public interface IMutableEvent extends IEvent {
     @Contract("_ -> this")
     default @NotNull IMutableEvent xTargetProject(@Nullable String targetProject) {
         return this.extra("target_project", targetProject);
+    }
+
+    @Contract("_ -> this")
+    default @NotNull IMutableEvent xLogtubeVersion(@NotNull String version) {
+        return this.extra("logtube_version", version);
+    }
+
+    @Contract("_ -> this")
+    default @NotNull IMutableEvent xLifecycle(@NotNull String lifecycle) {
+        return this.extra("lifecycle", lifecycle);
     }
 
 }
