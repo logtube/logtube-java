@@ -10,6 +10,7 @@ import redis.clients.jedis.exceptions.JedisConnectionException;
 
 import java.util.ArrayList;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class EventRedisOutput extends BaseEventOutput {
@@ -25,7 +26,7 @@ public class EventRedisOutput extends BaseEventOutput {
     @NotNull
     private final ArrayBlockingQueue<String> queue = new ArrayBlockingQueue<>(QUEUE_CAPACITY);
 
-    private Thread worker = null;
+    private EventRedisOutputWorker worker = null;
 
     @NotNull
     private JedisPool createJedisPool(@NotNull String host) {
@@ -45,13 +46,13 @@ public class EventRedisOutput extends BaseEventOutput {
     @Override
     public void doStart() {
         super.doStart();
-        this.worker = new Thread(new EventRedisOutputWorker(this.hosts, this.key));
+        this.worker = new EventRedisOutputWorker(this.hosts, this.key);
         this.worker.start();
     }
 
     @Override
     public void doStop() {
-        this.worker.interrupt();
+        this.worker.exit();
         try {
             this.worker.join();
         } catch (InterruptedException ignored) {
@@ -65,7 +66,7 @@ public class EventRedisOutput extends BaseEventOutput {
         this.queue.offer(serializer.toString(e));
     }
 
-    private class EventRedisOutputWorker implements Runnable {
+    private class EventRedisOutputWorker extends Thread {
 
         private final ArrayList<JedisPool> pools = new ArrayList<>();
 
@@ -73,11 +74,18 @@ public class EventRedisOutput extends BaseEventOutput {
 
         private final AtomicLong cursor = new AtomicLong();
 
+        private boolean shouldExit = false;
+
         EventRedisOutputWorker(String[] hosts, String key) {
+            super("logtube-EventRedisOutputWorker");
             for (String host : hosts) {
                 this.pools.add(createJedisPool(host));
             }
             this.key = key;
+        }
+
+        public void exit() {
+            this.shouldExit = true;
         }
 
         @NotNull
@@ -106,12 +114,15 @@ public class EventRedisOutput extends BaseEventOutput {
 
         @Override
         public void run() {
-            while (!Thread.interrupted()) {
+            while (!this.shouldExit) {
                 // take a message
                 String message = null;
                 try {
-                    message = EventRedisOutput.this.queue.take();
+                    message = EventRedisOutput.this.queue.poll(5, TimeUnit.SECONDS);
                 } catch (Exception ignored) {
+                    continue;
+                }
+                if (message == null) {
                     continue;
                 }
                 // push a message

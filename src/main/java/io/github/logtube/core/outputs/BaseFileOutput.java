@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 public abstract class BaseFileOutput extends BaseEventOutput {
 
@@ -36,7 +37,7 @@ public abstract class BaseFileOutput extends BaseEventOutput {
     @NotNull
     private final ArrayBlockingQueue<IEvent> queue = new ArrayBlockingQueue<>(QUEUE_CAPACITY);
 
-    private Thread worker = null;
+    private EventFileOutputWorker worker = null;
 
     public BaseFileOutput(@NotNull String dir, Map<String, String> subdirMappings, @NotNull String signal) {
         this.dir = dir;
@@ -114,14 +115,14 @@ public abstract class BaseFileOutput extends BaseEventOutput {
         });
 
         // start worker
-        this.worker = new Thread(new EventFileOutputWorker());
+        this.worker = new EventFileOutputWorker();
         this.worker.start();
     }
 
     @Override
     public void doStop() {
         // shutdown worker
-        this.worker.interrupt();
+        this.worker.exit();
         try {
             this.worker.join();
         } catch (InterruptedException ignored) {
@@ -137,14 +138,28 @@ public abstract class BaseFileOutput extends BaseEventOutput {
         super.doStop();
     }
 
-    private class EventFileOutputWorker implements Runnable {
+    private class EventFileOutputWorker extends Thread {
+
+        public EventFileOutputWorker() {
+            super("logtube-FileOutputWorker");
+        }
+
+        private boolean shouldExit = false;
+
+        public void exit() {
+            this.shouldExit = true;
+        }
+
         @Override
         public void run() {
-            while (!Thread.interrupted()) {
+            while (!this.shouldExit) {
                 IEvent e = null;
                 try {
-                    e = BaseFileOutput.this.queue.take();
+                    e = BaseFileOutput.this.queue.poll(5, TimeUnit.SECONDS);
                 } catch (Exception ignored) {
+                    continue;
+                }
+                if (e == null) {
                     continue;
                 }
                 try {
