@@ -12,6 +12,12 @@ RC (Release Candidate, 发布候选) 代表尚在测试中，但是功能已经�
     
     也就是说，假设你在使用 `0.37.0` 版本，但是你看到了 `0.37.1` 发布了，那么无脑上 `0.37.1` 就对了
 
+## 升级到 0.38.0 版本
+
+* 增加了对 JVM 系统属性 和 环境变量的支持
+
+    现在可以使用 `java -Dlogtube.xxxxx=xxxxx` 的格式，或者环境变量 `logtube.xxxxx=xxxxx` 的格式，对 `logtube` 配置文件参数进行覆盖。
+
 ## 升级到 0.37.0 版本
 
 * 新增了生命周期日志，用以记录项目的启动事件 和 logtube 配置文件的重载事件
@@ -158,7 +164,7 @@ RC (Release Candidate, 发布候选) 代表尚在测试中，但是功能已经�
 <dependency>
     <groupId>io.github.logtube</groupId>
     <artifactId>logtube</artifactId>
-    <version>0.37.0</version>
+    <version>0.38.0</version>
 </dependency>
 ```
 

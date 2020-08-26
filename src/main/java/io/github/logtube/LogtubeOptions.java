@@ -14,6 +14,8 @@ import java.util.*;
 
 public class LogtubeOptions {
 
+    private static final String CUSTOM_CONFIG_FILE_KEY = "logtube.config-file";
+
     private static final String CUSTOM_TOPICS_PREFIX = "logtube.topics.";
 
     public static @NotNull String getHostname() {
@@ -33,7 +35,20 @@ public class LogtubeOptions {
     }
 
     public static @NotNull LogtubeOptions fromClasspath() {
-        Properties properties = propertiesFromFile("logtube.yml");
+        Properties properties = null;
+
+        String customFile = System.getProperty(CUSTOM_CONFIG_FILE_KEY);
+        if (customFile == null) {
+            customFile = System.getenv(CUSTOM_CONFIG_FILE_KEY);
+        }
+
+        if (customFile != null) {
+            properties = propertiesFromFile(customFile);
+        }
+
+        if (properties == null) {
+            properties = propertiesFromFile("logtube.yml");
+        }
 
         if (properties == null) {
             properties = propertiesFromFile("logtube.yaml");
@@ -46,6 +61,21 @@ public class LogtubeOptions {
         if (properties == null) {
             properties = new Properties();
             System.err.println("logtube failed to load config file, using default configs");
+        }
+
+        // load environment variables
+        for (Map.Entry<String, String> entry : System.getenv().entrySet()) {
+            String key = entry.getKey();
+            if (key.startsWith("logtube.")) {
+                properties.setProperty(key, entry.getValue());
+            }
+        }
+
+        // load system properties
+        for (String key : System.getProperties().stringPropertyNames()) {
+            if (key.startsWith("logtube.")) {
+                properties.setProperty(key, System.getProperty(key));
+            }
         }
 
         return new LogtubeOptions(properties);
@@ -71,7 +101,7 @@ public class LogtubeOptions {
                     System.err.println("unsupported file " + filename + ".");
                     return null;
                 }
-                String configFile = Strings.evaluateEnvironmentVariables(properties.getProperty("logtube.config-file"));
+                String configFile = Strings.evaluateEnvironmentVariables(properties.getProperty(CUSTOM_CONFIG_FILE_KEY));
                 if (configFile != null) {
                     if (configFile.equalsIgnoreCase("APOLLO")) {
                         return propertiesFromApollo();
