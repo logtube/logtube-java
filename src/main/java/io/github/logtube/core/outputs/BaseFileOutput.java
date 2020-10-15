@@ -142,6 +142,7 @@ public abstract class BaseFileOutput extends BaseEventOutput {
 
         public EventFileOutputWorker() {
             super("logtube-FileOutputWorker");
+            this.setDaemon(true);
         }
 
         private boolean shouldExit = false;
