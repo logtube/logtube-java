@@ -33,8 +33,25 @@ public class HttpAccessEventCommitter {
                 .extra("query", httpRequest.getQueryString())
                 .extra("header_user_token", httpRequest.getHeader("UserToken"))
                 .extra("header_app_info", Flatten.flattenJSON(httpRequest.getHeader("X-Defined-AppInfo")))
-                .extra("header_ver_info", Flatten.flattenJSON(httpRequest.getHeader("X-Defined-VerInfo")));
+                .extra("header_ver_info", Flatten.flattenJSON(httpRequest.getHeader("X-Defined-VerInfo")))
+                .extra("remote_addr", determineRemoteAddr(httpRequest));
         return this;
+    }
+
+    @NotNull
+    private static String determineRemoteAddr(HttpServletRequest request) {
+        String xff = request.getHeader("X-Forwarded-For");
+        if (xff != null && !xff.isEmpty()) {
+            String[] xffs = xff.split(",");
+            if (xffs.length > 0) {
+                return xffs[0].trim();
+            }
+        }
+        String ri = request.getHeader("X-Real-IP");
+        if (ri != null && !ri.isEmpty()) {
+            return ri.trim();
+        }
+        return request.getRemoteAddr();
     }
 
     @Contract("_ -> this")
