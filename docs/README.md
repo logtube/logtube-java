@@ -18,6 +18,8 @@ RC (Release Candidate, 发布候选) 代表尚在测试中，但是功能已经�
 
     现在可以使用 `java -Dlogtube.xxxxx=xxxxx` 的格式，或者环境变量 `logtube.xxxxx=xxxxx` 的格式，对 `logtube` 配置文件参数进行覆盖。
 
+* (0.38.1) 增加了 `x-access` 日志的 `x_remote_addr` 支持
+
 ## 升级到 0.37.x 版本
 
 * 新增了生命周期日志，用以记录项目的启动事件 和 logtube 配置文件的重载事件
