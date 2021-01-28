@@ -3,6 +3,7 @@ package io.github.logtube.druid;
 import com.alibaba.druid.proxy.jdbc.ConnectionProxyImpl;
 import com.alibaba.druid.proxy.jdbc.JdbcParameter;
 import com.alibaba.druid.proxy.jdbc.StatementProxy;
+import com.alibaba.druid.sql.SQLUtils;
 import io.github.logtube.Logtube;
 import io.github.logtube.core.IMutableEvent;
 import io.github.logtube.utils.Hex;
@@ -11,18 +12,22 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.Connection;
-import java.util.Comparator;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class DruidTrackEventCommitter {
 
     private final IMutableEvent event = Logtube.getLogger(DruidTrackEventCommitter.class).topic("x-druid-track");
 
     private final long startTime = System.currentTimeMillis();
+
+    private final Pattern hostPattern = Pattern.compile("(?<=//)((\\w)+(\\.)*)+\\w+");
+
+    private final Pattern dbPattern = Pattern.compile("(?<=/)([a-zA-Z][a-zA-Z0-9_]*)");
+
+    private final Pattern digestPattern = Pattern.compile("(\\'[A-Za-z0-9_-]*\\')|(\\\"[A-Za-z0-9_-]*\\\")|\\d+");
 
     private @NotNull StatementProxy statement;
 
@@ -45,13 +50,11 @@ public class DruidTrackEventCommitter {
             Connection connection = statement.getConnectionProxy();
             if (connection instanceof ConnectionProxyImpl) {
                 String url = ((ConnectionProxyImpl) connection).getDirectDataSource().getUrl();
-                Pattern hostPattern = Pattern.compile("(?<=//)((\\w)+(\\.)*)+\\w+");
                 Matcher hostMatcher = hostPattern.matcher(url);
                 if (hostMatcher.find()) {
                     this.event.extra("db_host", hostMatcher.group());
                 }
 
-                Pattern dbPattern = Pattern.compile("(?<=/)([a-zA-Z][a-zA-Z0-9_]*)");
                 Matcher dbMatcher = dbPattern.matcher(url);
 
                 //从jdbc:mysql://之后开始匹配
@@ -70,20 +73,22 @@ public class DruidTrackEventCommitter {
              * -select a, b, c from table where a = 123 and b = 'abc'
              * -替换为select a, b, c from table where a = :paramValue and b = :paramValue
              */
-            this.event.extra("sql_digest", Hex.md5(Pattern.compile("(\\'[A-Za-z0-9_-]*\\')|(\\\"[A-Za-z0-9_-]*\\\")|\\d+")
+            this.event.extra("sql_digest", Hex.md5(digestPattern
                     .matcher(afterReplaceIn).replaceAll(":paramValue")));
 
             // originalSql
             String rawSql = sql;
-            Map<Integer, JdbcParameter> paramsMap = statement.getParameters();
-            if (paramsMap != null) {
-                List<Object> values = paramsMap.entrySet().stream()
-                        .sorted(Comparator.comparing(Map.Entry::getKey))
-                        .map(e -> e.getValue().getValue())
-                        .collect(Collectors.toList());
-                for (Object v : values) {
-                    rawSql = rawSql.replaceFirst("\\?", Matcher.quoteReplacement(v == null ? "" : v.toString()));
+            int parametersSize = statement.getParametersSize();
+            if (parametersSize > 0) {
+                List<Object> parameters = new ArrayList<>(parametersSize);
+                for (int i = 0; i < parametersSize; ++i) {
+                    JdbcParameter jdbcParam = statement.getParameter(i);
+                    parameters.add(jdbcParam != null
+                            ? jdbcParam.getValue()
+                            : null);
                 }
+                String dbType = statement.getConnectionProxy().getDirectDataSource().getDbType();
+                rawSql = SQLUtils.format(sql, dbType, parameters, SQLUtils.DEFAULT_LCASE_FORMAT_OPTION);
             }
             this.event.extra("sql", rawSql);
         } catch (Throwable t) {
