@@ -1,9 +1,11 @@
 package io.github.logtube.core;
 
 import io.github.logtube.Logtube;
+import io.github.logtube.LogtubeLoggerFactory;
 import io.github.logtube.audit.XAudit;
 import io.github.logtube.perf.XPerf;
 import io.github.logtube.perf.XPerfCommitter;
+import io.github.logtube.utils.Dates;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +42,29 @@ public class LogtubeTest {
         logger.info("hello world");
         Thread thread = new Thread(() -> logger.info("hello world from child thread"));
         thread.start();
+    }
+
+    @Test
+    public void job() throws Exception {
+        Logtube.getProcessor().setCrid(null);
+        IEventLogger logger = Logtube.getLogger(LogtubeTest.class);
+        logger
+                // 固定为 "job"
+                .topic("job")
+                // 任务名称
+                .extra("job_name", "SomethingJob")
+                // 任务开始时间
+                .extra("started_at", Dates.formatLineTimestamp(System.currentTimeMillis()))
+                // 任务结束时间
+                .extra("ended_At", Dates.formatLineTimestamp(System.currentTimeMillis()))
+                // 任务持续时间（毫秒）
+                .xDuration(200)
+                // 任务执行结果 ok 或者 failed 两个值选一
+                .extra("result", "ok")
+                // 任务执行返回的详细文本信息，可供索引查询
+                .message("this is a message")
+                // 提交日志
+                .commit();
     }
 
 }

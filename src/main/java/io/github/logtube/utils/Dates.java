@@ -7,6 +7,13 @@ import java.util.Date;
 
 public class Dates {
 
+    private static final ThreadLocal<SimpleDateFormat> TIMESTAMP_FORMAT = new ThreadLocal<SimpleDateFormat>() {
+        @Override
+        public SimpleDateFormat get() {
+            return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS ZZZZZ");
+        }
+    };
+
     private static final ThreadLocal<SimpleDateFormat> LINE_TIMESTAMP_FORMAT = new ThreadLocal<SimpleDateFormat>() {
         @Override
         public SimpleDateFormat get() {
@@ -20,6 +27,10 @@ public class Dates {
             return new SimpleDateFormat("yyyy-MM-dd");
         }
     };
+
+    public static @NotNull String formatTimestamp(long epoch) {
+        return TIMESTAMP_FORMAT.get().format(new Date(epoch));
+    }
 
     public static @NotNull String formatLineTimestamp(long epoch) {
         return LINE_TIMESTAMP_FORMAT.get().format(new Date(epoch));

@@ -9,14 +9,18 @@ RC (Release Candidate, 发布候选) 代表尚在测试中，但是功能已经�
 * `X` 为主版本号，目前固定为 `0`，因为还没有实现严格的 API 向后兼容
 * `Y` 为次版本号，次版本号的变更代表新功能的引入
 * `Z` 为问题修复版本号，**尽量选择相同主次版本号下，Z 值最大的版本**
-    
-    也就是说，假设你在使用 `0.37.0` 版本，但是你看到了 `0.37.1` 发布了，那么无脑上 `0.37.1` 就对了
+
+  也就是说，假设你在使用 `0.37.0` 版本，但是你看到了 `0.37.1` 发布了，那么无脑上 `0.37.1` 就对了
+
+## 升级到 0.39.x 版本
+
+* 增加了对任务型代码通用的 XJob 工具类，详见文档末尾的 XJob 章节
 
 ## 升级到 0.38.x 版本
 
 * 增加了对 JVM 系统属性 和 环境变量的支持
 
-    现在可以使用 `java -Dlogtube.xxxxx=xxxxx` 的格式，或者环境变量 `logtube.xxxxx=xxxxx` 的格式，对 `logtube` 配置文件参数进行覆盖。
+  现在可以使用 `java -Dlogtube.xxxxx=xxxxx` 的格式，或者环境变量 `logtube.xxxxx=xxxxx` 的格式，对 `logtube` 配置文件参数进行覆盖。
 
 * (0.38.1) 增加了 `x-access` 日志的 `x_remote_addr` 支持
 
@@ -24,7 +28,7 @@ RC (Release Candidate, 发布候选) 代表尚在测试中，但是功能已经�
 
 * 新增了生命周期日志，用以记录项目的启动事件 和 logtube 配置文件的重载事件
 
-    只要 `logtube.file.topics` 为 `ALL`（也就是说，文件日志输出不额外过滤一遍主题）就可以无缝接入任何新增的主题
+  只要 `logtube.file.topics` 为 `ALL`（也就是说，文件日志输出不额外过滤一遍主题）就可以无缝接入任何新增的主题
 
 ## 升级到 0.36 版本
 
@@ -34,7 +38,7 @@ RC (Release Candidate, 发布候选) 代表尚在测试中，但是功能已经�
 
 * 所有输出改为了默认不开启，对于要启动的输出，比如 `console`, `file` (以及不再建议使用的 `file-plain`, `file-json`, `redis` 等)，需要写明 `enabled=true`
 
-    比如
+  比如
 
     ```properties
     logtube.file.enabled=true
@@ -42,23 +46,24 @@ RC (Release Candidate, 发布候选) 代表尚在测试中，但是功能已经�
 
 * 增加了自动日志切分功能
 
-    参考配置文件中的 `logtube.rotation.mode`, `logtube.rotation.keep`
-    
-    **注意** 如果先前使用了系统的 `logrotate`，则信号文件 `/tmp/xlog.reopen.txt` 可能已经从属于 `root`用户，如果 Java 进程执行在非 `root` 用户下，则建议修改 `logtube.file.signal` 文件（以及 `file-json` 和 `file-plain` 的 `signal`)为新文件名，比如 `/tmp/xlog.reopen2.txt`
+  参考配置文件中的 `logtube.rotation.mode`, `logtube.rotation.keep`
+
+  **注意** 如果先前使用了系统的 `logrotate`，则信号文件 `/tmp/xlog.reopen.txt` 可能已经从属于 `root`用户，如果 Java 进程执行在非 `root`
+  用户下，则建议修改 `logtube.file.signal` 文件（以及 `file-json` 和 `file-plain` 的 `signal`)为新文件名，比如 `/tmp/xlog.reopen2.txt`
 
 * 增加了 HTTP 路径和方法例外（用以忽略 健康检查 产生的访问日志）
 
-    参考配置文件中的 `logtube.filter.http-ignores` 字段
+  参考配置文件中的 `logtube.filter.http-ignores` 字段
 
-    https://github.com/logtube/logtube-java/blob/master/docs/after-0.33/logtube.properties
+  https://github.com/logtube/logtube-java/blob/master/docs/after-0.33/logtube.properties
 
-    https://github.com/logtube/logtube-java/blob/master/docs/after-0.33/logtube.yml
+  https://github.com/logtube/logtube-java/blob/master/docs/after-0.33/logtube.yml
 
 ## 升级到 0.35 版本
 
 * 增加了 `crsrc` 字段，用于互相调用时，声明自身的身份，并保留在日志内容里
 
-    `dubbo` 和 `rocketmq` 已经做了处理，但是如果在代码中使用了手动 HTTP 调用，需要补充以下代码，以将自身的 `project` 作为 `X-Correlation-Src` 头传递出去
+  `dubbo` 和 `rocketmq` 已经做了处理，但是如果在代码中使用了手动 HTTP 调用，需要补充以下代码，以将自身的 `project` 作为 `X-Correlation-Src` 头传递出去
 
     ```java
     conn.setRequestProperty(LogtubeConstants.HTTP_CRSRC_HEADER, Logtube.getProcessor().getProject());
@@ -77,7 +82,7 @@ RC (Release Candidate, 发布候选) 代表尚在测试中，但是功能已经�
 
 * 合并 `file-plain` 和 `file-json`，参考以下说明进行修改:
 
-    **Properties 格式**
+  **Properties 格式**
 
     * 删除 `logtube.file-json` 相关字段
     * 删除 `logtube.file-plain` 相关字段
@@ -96,7 +101,7 @@ RC (Release Candidate, 发布候选) 代表尚在测试中，但是功能已经�
         logtube.file.subdir-mappings=ALL=xlog,trace=others,debug=others
         ```
 
-    **YAML 格式**
+  **YAML 格式**
 
     * 删除 `file-plain` 字段
     * 删除 `file-json` 字段
@@ -120,9 +125,9 @@ RC (Release Candidate, 发布候选) 代表尚在测试中，但是功能已经�
 
 * 使用 fatal 级别
 
-    除了现有的级别之外，新加入了 `fatal` 级别，用以表示影响系统正常使用的错误。
+  除了现有的级别之外，新加入了 `fatal` 级别，用以表示影响系统正常使用的错误。
 
-    输出到 `fatal` 级别的日志为不可忽略的错误日志，一般会触发报警。
+  输出到 `fatal` 级别的日志为不可忽略的错误日志，一般会触发报警。
 
     ```java
     private static final IEventLogger LOGGER = Logtube.getLogger(XXXX.class);
@@ -132,7 +137,7 @@ RC (Release Candidate, 发布候选) 代表尚在测试中，但是功能已经�
 
 * 使用 warn 级别
 
-    先前 `warn` 级别是被合并进入 `info` 的，之后，`warn` 级别重新启用。
+  先前 `warn` 级别是被合并进入 `info` 的，之后，`warn` 级别重新启用。
 
     * 修改 `logtube.topic-mappings`，移除 `warn=info` 这一条重命名规则，保留其他规则
 
@@ -140,9 +145,9 @@ RC (Release Candidate, 发布候选) 代表尚在测试中，但是功能已经�
 
 * 使用 XAudit 输出审计日志
 
-    新增了一个 `x-audit` 主题用以汇总审计日志
+  新增了一个 `x-audit` 主题用以汇总审计日志
 
-    目前预置了一些字段，可以使用如下方式调用
+  目前预置了一些字段，可以使用如下方式调用
 
     ```java
     private static final IEventLogger LOGGER = Logtube.getLogger(XXXX.class);
@@ -157,12 +162,12 @@ RC (Release Candidate, 发布候选) 代表尚在测试中，但是功能已经�
             .commit() // 最后记得调用 commit
     ```
 
-
 # 安装使用
 
 1. 添加 Maven 依赖项
 
 ```xml
+
 <dependency>
     <groupId>io.github.logtube</groupId>
     <artifactId>logtube</artifactId>
@@ -174,23 +179,25 @@ RC (Release Candidate, 发布候选) 代表尚在测试中，但是功能已经�
 
 由于 Logtube Java SDK 已经实现了 `SLF4J` 接口，因此移除现有的 `logback-classic` 或其他 `SLF4J` 实现。
 
-一些快速开发包，出于简化开发流程的目的，会内嵌 `logback-classic` 依赖，但其本质上仍然只使用了 `SLF4J`接口，如 `spring-boot-starter-web`。这种情况下可以使用 `exclusion` 移除内嵌的 `logback-classic`。
+一些快速开发包，出于简化开发流程的目的，会内嵌 `logback-classic` 依赖，但其本质上仍然只使用了 `SLF4J`接口，如 `spring-boot-starter-web`。这种情况下可以使用 `exclusion`
+移除内嵌的 `logback-classic`。
 
 **最终需要确保执行 `mvn dependency:tree` 不会出现 `logback-classic`**
 
 参见：https://github.com/logtube/logtube-demo/blob/master/app/pom.xml
 
 ```xml
-<dependency>
-   <groupId>org.springframework.boot</groupId>
-   <artifactId>spring-boot-starter-web</artifactId>
 
-   <exclusions>
-       <exclusion>
-          <groupId>ch.qos.logback</groupId>
-          <artifactId>logback-classic</artifactId>
-       </exclusion>
-   </exclusions>
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-web</artifactId>
+
+  <exclusions>
+    <exclusion>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+    </exclusion>
+  </exclusions>
 </dependency>
 ```
 
@@ -234,12 +241,10 @@ https://github.com/logtube/logtube-java/blob/master/docs/before-0.33/logtube.yml
 ```properties
 # 文件：logtube.properties
 logtube.config-file=logtube-dev.properties # 此处可以通过启用 resources filtering 和 ${} 占位符来通过 pom.xml 中的 Profile properties 进行切换
-
 # 文件：logtube-dev.properties
 #
 # dev 环境的配置内容
 # ...
-
 # 文件：logtube-test.properties
 #
 # test 环境的配置内容
@@ -257,24 +262,24 @@ logtube.config-file=APOLLO
 
 **【注意】 当前版本使用apollo，需要把app.id和apollo.meta配置放到META-INF/app.properties中。**
 
-
 **使用环境变量**
 
-`logtube.properties` 中，允许使用 `${KEY}` 语法访问环境变量 
+`logtube.properties` 中，允许使用 `${KEY}` 语法访问环境变量
 
 ##### 3. HTTP访问日志配置
 
 ###### 3.1 常规Web项目，修改 `web.xml`，添加 `LogtubeHttpFilter`
 
 ```xml
+
 <filter>
-    <filter-name>xLogFilter</filter-name>
-    <filter-class>io.github.logtube.http.LogtubeHttpFilter</filter-class>
+  <filter-name>xLogFilter</filter-name>
+  <filter-class>io.github.logtube.http.LogtubeHttpFilter</filter-class>
 </filter>
 
 <filter-mapping>
-    <filter-name>xLogFilter</filter-name>
-    <url-pattern>/*</url-pattern>
+<filter-name>xLogFilter</filter-name>
+<url-pattern>/*</url-pattern>
 </filter-mapping>
 ```
 
@@ -282,13 +287,13 @@ logtube.config-file=APOLLO
 
 ```java
 @Bean
-public FilterRegistrationBean xlogFilter() {
-    FilterRegistrationBean<LogtubeHttpFilter> bean = new FilterRegistrationBean<>();
-    bean.setFilter(new LogtubeHttpFilter());
-    bean.addUrlPatterns("/*");
-    bean.setOrder(Ordered.HIGHEST_PRECEDENCE + 1);
-    return bean;
-}
+public FilterRegistrationBean xlogFilter(){
+        FilterRegistrationBean<LogtubeHttpFilter> bean=new FilterRegistrationBean<>();
+        bean.setFilter(new LogtubeHttpFilter());
+        bean.addUrlPatterns("/*");
+        bean.setOrder(Ordered.HIGHEST_PRECEDENCE+1);
+        return bean;
+        }
 ```
 
 ##### 4. Dubbo访问日志配置
@@ -312,6 +317,7 @@ dubboLogProviderFilter=io.github.logtube.dubbo27.LogtubeDubboProviderFilter
 **【注意】 如果META-INF、dubbo目录不存在则需要手工创建，如果com.alibaba.dubbo.rpc.Filter已经存在则在文件中追加上面的内容。**
 
 ##### 5. Redis访问日志监控
+
 Logtube重写了Client类，使用LogtubeJedisCluster继承JedisCluster，LogtubeJedisPool继承JedisPool，修改了内部对Client的使用。
 
 操作步骤：
@@ -321,9 +327,7 @@ Logtube重写了Client类，使用LogtubeJedisCluster继承JedisCluster，Logtub
 3. 若代码中存在直接使用new Jedis()的地方，使用LogtubeJedis替换Jedis；
 4. 验证基本功能。
 
-
 ##### 6. 数据库操作日志配置
-
 
 ###### 6.1 添加druid过滤器配置
 
@@ -340,45 +344,45 @@ druid.filters.xLogSql=io.github.logtube.druid.LogtubeDruidFilter
 设置`druid.filters`属性，可以通过java代码或配置文件
 
 ```java
-DruidDataSource ds = new DruidDataSource();
-ds.setFilters("xLogSql");
+DruidDataSource ds=new DruidDataSource();
+        ds.setFilters("xLogSql");
 
 //也可以在启动类中添加
-System.setProperty("druid.filters", "xLogSql");
+        System.setProperty("druid.filters","xLogSql");
 ```
 
 或
 
 ```properties
 <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" 
-  init-method="init" destroy-method="close"> 
-  <property name="filters" value="xLogSql" /> 
-  <property name="proxyFilters"> 
-   <list> 
-    <ref bean="xLogSql" /> 
-   </list> 
-  </property> 
- </bean>
-
+init-method="init" destroy-method="close"> 
+<property name="filters" value="xLogSql" /> 
+<property name="proxyFilters"> 
+<list>
+<ref bean="xLogSql" /> 
+</list>
+</property>
+</bean>
 <bean id="xLogSql" class="io.github.logtube.druid.LogtubeDruidFilter"> 
 
 ```
 
 ##### 7. CRID配置
 
-如果是在代码中发起Http请求，则需要在创建连接时为HttpURLConnection添加Request Property，Key: LogtubeConstants.HTTP_CRID_HEADER，value：Logtube.getProcessor().getCrid()。
+如果是在代码中发起Http请求，则需要在创建连接时为HttpURLConnection添加Request Property，Key:
+LogtubeConstants.HTTP_CRID_HEADER，value：Logtube.getProcessor().getCrid()。
 
 ```java
-  private HttpURLConnection openHttpURLConnection(URL url, ClientRequest clientRequest, String method) throws IOException {
-    HttpURLConnection.setFollowRedirects(true);
-    HttpURLConnection conn;
-    conn = (HttpURLConnection) url.openConnection();
-    conn.setRequestMethod(method);
-    conn.setRequestProperty("Content-Type", clientRequest.getContentType());
-    conn.setRequestProperty("User-Agent", clientRequest.getUserAgent());
-    conn.setRequestProperty(LogtubeConstants.HTTP_CRID_HEADER, Logtube.getProcessor().getCrid());
-    conn.setRequestProperty(LogtubeConstants.HTTP_CRSRC_HEADER, Logtube.getProcessor().getProject());
-    return conn;
+  private HttpURLConnection openHttpURLConnection(URL url,ClientRequest clientRequest,String method)throws IOException{
+        HttpURLConnection.setFollowRedirects(true);
+        HttpURLConnection conn;
+        conn=(HttpURLConnection)url.openConnection();
+        conn.setRequestMethod(method);
+        conn.setRequestProperty("Content-Type",clientRequest.getContentType());
+        conn.setRequestProperty("User-Agent",clientRequest.getUserAgent());
+        conn.setRequestProperty(LogtubeConstants.HTTP_CRID_HEADER,Logtube.getProcessor().getCrid());
+        conn.setRequestProperty(LogtubeConstants.HTTP_CRSRC_HEADER,Logtube.getProcessor().getProject());
+        return conn;
 ```
 
 ##### 8. XXL-JOB配置
@@ -398,26 +402,26 @@ Logtube 和传统 Logger 最大的区别在于，Logtube 使用 **主题** 这�
 ##### 1. 使用传统的 SLF4J Logger
 
 ```java
-Logger logger = LoggerFactory.getLogger(LogtubeTest.class);
-logger.info("hello world");
-logger.warn("warn test");
-logger.trace("hello world {}", "222");
+Logger logger=LoggerFactory.getLogger(LogtubeTest.class);
+        logger.info("hello world");
+        logger.warn("warn test");
+        logger.trace("hello world {}","222");
 ```
 
 ##### 2. 使用 IEventLogger
 
 ```java
-IEventLogger logger = Logtube.getLogger(LogtubeTest.class);
+IEventLogger logger=Logtube.getLogger(LogtubeTest.class);
 
 // 传统纯文本日志
-logger.info("hello world");
+        logger.info("hello world");
 
 // 传统纯文本日志（带关键字，生产环境要求 INFO 必须有关键字）
-logger.keyword("关键字1", "关键字2").info("hello world");
-logger.withK("关键字1", "关键字2").info("hello world"); // 等价写法
+        logger.keyword("关键字1","关键字2").info("hello world");
+        logger.withK("关键字1","关键字2").info("hello world"); // 等价写法
 
 // 使用 extra 字段的结构化日志，需要用 commit() 做结束
-logger.topic("custom-topic").extras("key1", "val1", "key2", "val2").message("hello world").commit();
+        logger.topic("custom-topic").extras("key1","val1","key2","val2").message("hello world").commit();
 ```
 
 **IEventLogger** 新增了一个新的传统级别 `fatal`，只有影响系统可用性的高级别错误，才应该输出到这个级别
@@ -432,62 +436,77 @@ XPerf 可以用于对某个操作进行计时，便于性能分析
 
 ```java
 // 首先，必须为当前类创建 IEventLogger，比如
-private static final IEventLogger logger = Logtube.getLogger(LogtubeTest.class);
+private static final IEventLogger logger=Logtube.getLogger(LogtubeTest.class);
 
-private void someMethod() {
-  // 然后创建 XPerfCommitter
-  XPerfCommitter committer = XPerf.create(logger)
-                                    .setAction("some_action")
-                                    .setActionDetail("some action detail");
-  // 执行某个耗时操作
-  Thread.sleep(2000);
-  // 设置某个值
-  committer.setValueInteger(100);
-  // 提交 XPerfCommitter
-  committer.commit()
-}
+private void someMethod(){
+        // 然后创建 XPerfCommitter
+        XPerfCommitter committer=XPerf.create(logger)
+        .setAction("some_action")
+        .setActionDetail("some action detail");
+        // 执行某个耗时操作
+        Thread.sleep(2000);
+        // 设置某个值
+        committer.setValueInteger(100);
+        // 提交 XPerfCommitter
+        committer.commit()
+        }
 ```
 
 ##### 5. 使用 XAudit
 
 ```java
 // 首先，必须为当前类创建 IEventLogger，比如
-private static final IEventLogger logger = Logtube.getLogger(LogtubeTest.class);
+private static final IEventLogger logger=Logtube.getLogger(LogtubeTest.class);
 
-private void someMethod() {
-    XAudit.create(logger)
+private void someMethod(){
+        XAudit.create(logger)
         .setUserCode("2020020201")
         .setUserName("刘德华")
         .setIP("10.10.10.10")
         .setAction("some_action")
         // 等各种 Setter
         .commit() // 最后记得调用 commit
-}
+        }
 ```
+
+##### 6. 使用 XJob
+
+```java
+// 创建 Commiter 同时指定任务名称，比如 UpdateUserTicketJob
+XJobCommitter c=XJob.create(eventLogger, /* jobName = */ "sleep_1s_job");
+
+// 按照需要添加关键字
+        c.addKeyword("time1s","something else")
+        // 开始计时
+        .markStart();
+
+// 执行耗时的任务
+        Thread.sleep(1000);
+
+// 结束计时
+        c.markEnd()
+        // 记录结果
+        .setResult(/* success = */ true, /* message = */ "sleep succeeded")
+        // 提交
+        .commit();
+```
+
 # Logtube较xlog的变动
 
 Logtube 内置一些常用的过滤器和工具，先前使用 XLog 的用户需要更新类名和引用
 
-|XLog | Logtube |
-|:--|:--|
-| net.landzero.xlog.druid.XLogFilter |  io.github.logtube.druid.LogtubeDruidFilter|
-| net.landzero.xlog.dubbo.XLogConsumerFilter |  io.github.logtube.dubbo.LogtubeDubboConsumerFilter|
-| net.landzero.xlog.dubbo.XLogProviderFilter |  io.github.logtube.dubbo.LogtubeDubboProviderFilter|
-| net.landzero.xlog.http.XLogFilter |  io.github.logtube.http.LogtubeHttpFilter|
-| net.landzero.xlog.mybatis.XLogInterceptor |  io.github.logtube.mybatis.LogtubeMybatisFilter|
-| net.landzero.xlog.perf.XPerf |  io.github.logtube.perf.XPerf|
-|net.landzero.xlog.redis.XLogJedis  |  io.github.logtube.redis.LogtubeJedis|
-| net.landzero.xlog.redis.XLogJedisPool |  io.github.logtube.redis.LogtubeJedisPool|
-|net.landzero.xlog.redis.XLogJedisCluster  |  io.github.logtube.redis.LogtubeJedisCluster|
-| net.landzero.xlog.XLog |  io.github.logtube.Logtube|
+|XLog | Logtube | |:--|:--| | net.landzero.xlog.druid.XLogFilter | io.github.logtube.druid.LogtubeDruidFilter| |
+net.landzero.xlog.dubbo.XLogConsumerFilter | io.github.logtube.dubbo.LogtubeDubboConsumerFilter| |
+net.landzero.xlog.dubbo.XLogProviderFilter | io.github.logtube.dubbo.LogtubeDubboProviderFilter| |
+net.landzero.xlog.http.XLogFilter | io.github.logtube.http.LogtubeHttpFilter| |
+net.landzero.xlog.mybatis.XLogInterceptor | io.github.logtube.mybatis.LogtubeMybatisFilter| |
+net.landzero.xlog.perf.XPerf | io.github.logtube.perf.XPerf| |net.landzero.xlog.redis.XLogJedis |
+io.github.logtube.redis.LogtubeJedis| | net.landzero.xlog.redis.XLogJedisPool |
+io.github.logtube.redis.LogtubeJedisPool| |net.landzero.xlog.redis.XLogJedisCluster |
+io.github.logtube.redis.LogtubeJedisCluster| | net.landzero.xlog.XLog | io.github.logtube.Logtube|
 
 获取 CRID
 
-|XLog | Logtube |
-|:--|:--|
-| XLog.crid() |  Logtube.getProcessor().getCrid()|
+|XLog | Logtube | |:--|:--| | XLog.crid() | Logtube.getProcessor().getCrid()|
 
-HTTP Header 常量
-|XLog | Logtube |
-|:--|:--|
-|Constants.HTTP_CRID_HEADER|LogtubeConstants.HTTP_CRID_HEADER|
+HTTP Header 常量 |XLog | Logtube | |:--|:--| |Constants.HTTP_CRID_HEADER|LogtubeConstants.HTTP_CRID_HEADER|
