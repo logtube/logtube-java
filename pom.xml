@@ -24,7 +24,7 @@
 
     <groupId>io.github.logtube</groupId>
     <artifactId>logtube</artifactId>
-    <version>0.38.1</version>
+    <version>0.39.0</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Logtube Java SDK</description>
