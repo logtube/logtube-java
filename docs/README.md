@@ -471,6 +471,8 @@ private void someMethod(){
 
 ##### 6. 使用 XJob
 
+* 升级 SDK 到 0.39.0 之后的写法
+
 ```java
 // 创建 Commiter 同时指定任务名称，比如 UpdateUserTicketJob
 XJobCommitter c=XJob.create(eventLogger, /* jobName = */ "sleep_1s_job");
@@ -488,6 +490,29 @@ XJobCommitter c=XJob.create(eventLogger, /* jobName = */ "sleep_1s_job");
         // 记录结果
         .setResult(/* success = */ true, /* message = */ "sleep succeeded")
         // 提交
+        .commit();
+```
+
+* 在 SDK 0.39.0 之前的写法
+
+```java
+IEventLogger logger = Logtube.getLogger(LogtubeTest.class);
+logger
+        // 固定为 "job"
+        .topic("job")
+        // 任务名称
+        .extra("job_name", "SomethingJob")
+        // 任务开始时间
+        .extra("started_at", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS ZZZZZ").format(System.currentTimeMillis()))
+        // 任务结束时间
+        .extra("ended_At", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS ZZZZZ").format(System.currentTimeMillis()))
+        // 任务持续时间（毫秒）
+        .extra("duration", 200)
+        // 任务执行结果 ok 或者 failed 两个值选一
+        .extra("result", "ok")
+        // 任务执行返回的详细文本信息，可供索引查询
+        .message("this is a message")
+        // 提交日志
         .commit();
 ```
 
