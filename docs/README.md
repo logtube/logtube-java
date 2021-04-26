@@ -15,6 +15,8 @@ RC (Release Candidate, 发布候选) 代表尚在测试中，但是功能已经�
 ## 升级到 0.39.x 版本
 
 * 增加了对任务型代码通用的 XJob 工具类，详见文档末尾的 XJob 章节
+  
+* (0.39.1) 使用毫秒 Epoch 作为 XJob 的时间戳类型
 
 ## 升级到 0.38.x 版本
 
@@ -471,7 +473,9 @@ private void someMethod(){
 
 ##### 6. 使用 XJob
 
-* 升级 SDK 到 0.39.0 之后的写法
+**警告，请使用 0.39.1 SDK, 0.39.0 SDK 存在问题无法产生有效的 XJob 日志**
+
+* 升级 SDK 到 0.39.x 之后的写法
 
 ```java
 // 创建 Commiter 同时指定任务名称，比如 UpdateUserTicketJob
@@ -493,7 +497,7 @@ XJobCommitter c=XJob.create(eventLogger, /* jobName = */ "sleep_1s_job");
         .commit();
 ```
 
-* 在 SDK 0.39.0 之前的写法
+* 在 SDK 0.39.x 之前的写法
 
 ```java
 IEventLogger logger = Logtube.getLogger(LogtubeTest.class);
@@ -503,9 +507,9 @@ logger
         // 任务名称
         .extra("job_name", "SomethingJob")
         // 任务开始时间
-        .extra("started_at", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS ZZZZZ").format(System.currentTimeMillis()))
+        .extra("started_at", System.currentTimeMillis())
         // 任务结束时间
-        .extra("ended_At", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS ZZZZZ").format(System.currentTimeMillis()))
+        .extra("ended_at", currentTimeMillis())
         // 任务持续时间（毫秒）
         .extra("duration", 200)
         // 任务执行结果 ok 或者 failed 两个值选一

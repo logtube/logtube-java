@@ -36,7 +36,7 @@ public class XJobCommitter {
     @Contract("_->this")
     public XJobCommitter markStart(long epoch) {
         this.startedAt = epoch;
-        this.event.extra("started_at", Dates.formatTimestamp(epoch));
+        this.event.extra("started_at", epoch);
         return this;
     }
 
@@ -47,7 +47,7 @@ public class XJobCommitter {
 
     @Contract("_->this")
     public XJobCommitter markEnd(long epoch) {
-        this.event.extra("ended_at", Dates.formatTimestamp(epoch))
+        this.event.extra("ended_at", epoch)
                 .extra("duration", epoch - this.startedAt);
         return this;
     }
