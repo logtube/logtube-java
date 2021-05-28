@@ -18,6 +18,8 @@ RC (Release Candidate, 发布候选) 代表尚在测试中，但是功能已经�
 
 * (0.39.1) 使用毫秒 Epoch 作为 XJob 的时间戳类型
 
+* (0.39.2) XJob 工具类在开始和结束任务时都会产生日志条目
+
 ## 升级到 0.38.x 版本
 
 * 增加了对 JVM 系统属性 和 环境变量的支持
@@ -478,8 +480,10 @@ private void someMethod(){
 * 升级 SDK 到 0.39.x 之后的写法
 
 ```java
-// 创建 Commiter 同时指定任务名称，比如 UpdateUserTicketJob
+// 0.39.1 创建 Commiter 同时指定任务名称，比如 UpdateUserTicketJob
 XJobCommitter c=XJob.create(eventLogger, /* jobName = */ "sleep_1s_job");
+// 0.39.2 创建 Commiter 同时指定任务名称，比如 UpdateUserTicketJob
+XJobCommitter c=XJob.create(eventLogger, /* jobName = */ "sleep_1s_job", /* jobId = */ "xxxx-xxxx-xxx-xxx-xxx");
 
 // 按照需要添加关键字
         c.addKeyword("time1s","something else")
@@ -501,7 +505,7 @@ XJobCommitter c=XJob.create(eventLogger, /* jobName = */ "sleep_1s_job");
 
 ```java
 IEventLogger logger=Logtube.getLogger(LogtubeTest.class);
-logger
+        logger
         // 固定为 "job"
         .topic("job")
         // 任务名称

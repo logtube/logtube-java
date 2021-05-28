@@ -5,7 +5,7 @@ package io.github.logtube;
 
 public class LogtubeConstants {
 
-    public static final String VERSION = "0.39.1";
+    public static final String VERSION = "0.39.2";
 
     public static final String TOPIC_LIFECYCLE = "lifecycle";
 
