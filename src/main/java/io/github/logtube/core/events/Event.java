@@ -5,6 +5,7 @@ import io.github.logtube.utils.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -167,6 +168,15 @@ public class Event implements IMutableEvent {
     @Override
     public void commit() {
         throw new RuntimeException("never call Event#commit");
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        Event e = (Event) super.clone();
+        if (this.extra != null) {
+            e.extra = new HashMap<>(this.extra);
+        }
+        return e;
     }
 
 }

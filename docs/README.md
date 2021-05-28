@@ -15,7 +15,7 @@ RC (Release Candidate, 发布候选) 代表尚在测试中，但是功能已经�
 ## 升级到 0.39.x 版本
 
 * 增加了对任务型代码通用的 XJob 工具类，详见文档末尾的 XJob 章节
-  
+
 * (0.39.1) 使用毫秒 Epoch 作为 XJob 的时间戳类型
 
 ## 升级到 0.38.x 版本
@@ -191,15 +191,15 @@ RC (Release Candidate, 发布候选) 代表尚在测试中，但是功能已经�
 ```xml
 
 <dependency>
-  <groupId>org.springframework.boot</groupId>
-  <artifactId>spring-boot-starter-web</artifactId>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
 
-  <exclusions>
-    <exclusion>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-classic</artifactId>
-    </exclusion>
-  </exclusions>
+    <exclusions>
+        <exclusion>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+        </exclusion>
+    </exclusions>
 </dependency>
 ```
 
@@ -275,8 +275,8 @@ logtube.config-file=APOLLO
 ```xml
 
 <filter>
-  <filter-name>xLogFilter</filter-name>
-  <filter-class>io.github.logtube.http.LogtubeHttpFilter</filter-class>
+    <filter-name>xLogFilter</filter-name>
+    <filter-class>io.github.logtube.http.LogtubeHttpFilter</filter-class>
 </filter>
 
 <filter-mapping>
@@ -500,20 +500,20 @@ XJobCommitter c=XJob.create(eventLogger, /* jobName = */ "sleep_1s_job");
 * 在 SDK 0.39.x 之前的写法
 
 ```java
-IEventLogger logger = Logtube.getLogger(LogtubeTest.class);
+IEventLogger logger=Logtube.getLogger(LogtubeTest.class);
 logger
         // 固定为 "job"
         .topic("job")
         // 任务名称
-        .extra("job_name", "SomethingJob")
+        .extra("job_name","SomethingJob")
         // 任务开始时间
-        .extra("started_at", System.currentTimeMillis())
+        .extra("started_at",System.currentTimeMillis())
         // 任务结束时间
-        .extra("ended_at", currentTimeMillis())
+        .extra("ended_at",currentTimeMillis())
         // 任务持续时间（毫秒）
-        .extra("duration", 200)
+        .extra("duration",200)
         // 任务执行结果 ok 或者 failed 两个值选一
-        .extra("result", "ok")
+        .extra("result","ok")
         // 任务执行返回的详细文本信息，可供索引查询
         .message("this is a message")
         // 提交日志

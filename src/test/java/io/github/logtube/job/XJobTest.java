@@ -9,7 +9,7 @@ public class XJobTest {
     @Test
     public void sleep1s() throws InterruptedException {
         IEventLogger eventLogger = Logtube.getLogger(XJobTest.class);
-        XJobCommitter c = XJob.create(eventLogger, "sleep_1s_job")
+        XJobCommitter c = XJob.create(eventLogger, "sleep_1s_job", "aaaaabbbbb")
                 .addKeyword("time1s", "something else")
                 .markStart();
         Thread.sleep(1000);

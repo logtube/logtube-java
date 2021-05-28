@@ -9,4 +9,8 @@ public class XJob {
         return new XJobCommitter(logger.topic("job")).setJobName(jobName);
     }
 
+    public static XJobCommitter create(IEventLogger logger, @NotNull String jobName, @NotNull String jobId) {
+        return new XJobCommitter(logger.topic("job")).setJobName(jobName).setJobId(jobId);
+    }
+
 }

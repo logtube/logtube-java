@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * 一个只读的日志事件
  */
-public interface IEvent {
+public interface IEvent extends Cloneable {
 
     /**
      * 事件发生时间
@@ -80,4 +80,5 @@ public interface IEvent {
      */
     @Nullable Map<String, Object> getExtra();
 
+    Object clone() throws CloneNotSupportedException;
 }

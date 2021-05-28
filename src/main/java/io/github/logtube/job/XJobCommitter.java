@@ -1,7 +1,6 @@
 package io.github.logtube.job;
 
 import io.github.logtube.core.IMutableEvent;
-import io.github.logtube.utils.Dates;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,6 +22,12 @@ public class XJobCommitter {
     }
 
     @Contract("_->this")
+    public XJobCommitter setJobId(@NotNull String jobId) {
+        this.event.extra("job_id", jobId);
+        return this;
+    }
+
+    @Contract("_->this")
     public XJobCommitter addKeyword(@NotNull Object... keyword) {
         this.event.keyword(keyword);
         return this;
@@ -37,6 +42,10 @@ public class XJobCommitter {
     public XJobCommitter markStart(long epoch) {
         this.startedAt = epoch;
         this.event.extra("started_at", epoch);
+        try {
+            ((IMutableEvent) this.event.clone()).extra("result", "started").commit();
+        } catch (CloneNotSupportedException ignored) {
+        }
         return this;
     }
 

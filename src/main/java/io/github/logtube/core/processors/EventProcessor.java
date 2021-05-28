@@ -206,6 +206,11 @@ public class EventProcessor extends LifeCycle implements IEventProcessor {
             });
         }
 
+        @Override
+        public Object clone() throws CloneNotSupportedException {
+            return super.clone();
+        }
+
     }
 
     private static class CridThreadLocal extends InheritableThreadLocal<String> {

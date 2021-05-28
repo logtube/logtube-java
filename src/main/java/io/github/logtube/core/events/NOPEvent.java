@@ -125,4 +125,9 @@ public class NOPEvent implements IMutableEvent {
     public void commit() {
     }
 
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+
 }

@@ -1,7 +1,6 @@
 package io.github.logtube.core;
 
 import io.github.logtube.Logtube;
-import io.github.logtube.LogtubeLoggerFactory;
 import io.github.logtube.audit.XAudit;
 import io.github.logtube.perf.XPerf;
 import io.github.logtube.perf.XPerfCommitter;
